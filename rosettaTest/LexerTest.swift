@@ -19,50 +19,50 @@ class LexerTest: XCTestCase {
     
     func testReadIdentifier() throws {
         var input = "myIdentifer"
-        var lexer = Lexer(withString: input)
+        var lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readIdentifier(), input)
         
         input = "with_underscore"
-        lexer = Lexer(withString: input)
+        lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readIdentifier(), input)
         
         input = "with spaces"
-        lexer = Lexer(withString: input)
+        lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readIdentifier(), "with")
         XCTAssertEqual(lexer.currentColumn, 4)
         
         input = "#nothing"
-        lexer = Lexer(withString: input)
+        lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readIdentifier(), "")
         XCTAssertEqual(lexer.currentColumn, 0)
         
         input = "a single letter"
-        lexer = Lexer(withString: input)
+        lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readIdentifier(), "a")
         XCTAssertEqual(lexer.currentColumn, 1)
     }
     
     func testReadInteger() throws {
         var input = "555"
-        var lexer = Lexer(withString: input)
+        var lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readNumber(), input)
         
         input = "22 22"
-        lexer = Lexer(withString: input)
+        lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readNumber(), "22")
         
         input = "#22 22"
-        lexer = Lexer(withString: input)
+        lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readNumber(), "")
         XCTAssertEqual(lexer.currentColumn, 0)
         
         input = "42 22"
-        lexer = Lexer(withString: input)
+        lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readNumber(), "42")
         XCTAssertEqual(lexer.currentColumn, 2)
         
         input = "1"
-        lexer = Lexer(withString: input)
+        lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readNumber(), "1")
     }
 
@@ -171,12 +171,8 @@ class LexerTest: XCTestCase {
             Token(type: .semicolon, literal: ";"),
             Token(type: .eof, literal: "")
         ]
-        /*
-         10 == 10; 10 != 9;
-         10 >= 10; 10 <= 9;
-         */
         
-        let lexer = Lexer(withString: input)
+        var lexer = MonkeyLexer(withString: input)
         for t in tokens {
             let next = lexer.nextToken()
             XCTAssertEqual(next, t)

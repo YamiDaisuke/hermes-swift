@@ -7,128 +7,50 @@
 
 import Foundation
 
-class Lexer {
-    let filePath: URL?
-    let input: String?
+/// This protocol describes the interface for any language
+/// lexer
+protocol Lexer {
+    var currentLineNumber: Int { get set }
+    var currentColumn: Int { get set }
+
     
-    private var currentLineNumber = 0
-    private(set) var currentColumn = 0
-    private var nextColumn = 0
+    /// Should read this `Lexer` input source and return the next parsed
+    /// `Token` instance
+    /// - Returns: A valid `Token` instance for the current language
+    mutating func nextToken() -> Token
+}
+
+
+/// A Lexer that uses a file as the input for processing
+protocol FileLexer: Lexer {
+    var filePath: URL? { get }
     
-    private var currentLine: String? = nil
+    /// Reads the next line in the file and moves the
+    /// `currentLineNumber` and `currentColumn`
+    /// pointers of the `Lexer` to the right value
+    mutating func readLine()
+}
+
+/// A Lexer that uses a `String` as input for processing
+protocol StringLexer: Lexer {
+    var input: String? { get }
+}
+
+
+extension Lexer {
     
-    init(withFilePath filePath: URL) {
-        self.filePath = filePath
-        self.input = nil
-    }
-    
-    init(withString input: String) {
-        self.input = input
-        self.filePath = nil
-    }
-    
-    func nextToken() -> Token {
-        var token: Token = Token(type: .eof, literal: "")
-        
-        guard let input = self.input else {
-            return token
-        }
-        
-        self.skipWhitespace()
-        
-        guard self.currentColumn < input.count else {
-            return token
-        }
-        
-        let currentIndex = input.index(input.startIndex, offsetBy: self.currentColumn)
-        
-        
-        let char = input[currentIndex]
-        
-        var next = ""
-        if (self.currentColumn + 1) < input.count {
-            let nextIndex = input.index(input.startIndex, offsetBy: self.currentColumn + 1)
-            next = String(input[nextIndex])
-        }
-        
-        switch char {
-        case "=":
-            if next == "=" {
-                token = Token(type: .equals, literal: String(char) + next)
-                self.currentColumn += 1
-            } else {
-                token = Token(type: .assign, literal: String(char))
-            }
-        case "+":
-            token = Token(type: .plus, literal: String(char))
-        case "-":
-            token = Token(type: .minus, literal: String(char))
-        case "!":
-            if next == "=" {
-                token = Token(type: .notEquals, literal: String(char) + next)
-                self.currentColumn += 1
-            } else {
-                token = Token(type: .bang, literal: String(char))
-            }
-        case "*":
-            token = Token(type: .asterisk, literal: String(char))
-        case "/":
-            token = Token(type: .slash, literal: String(char))
-        case "<":
-            if next == "=" {
-                token = Token(type: .lte, literal: String(char) + next)
-                self.currentColumn += 1
-            } else {
-                token = Token(type: .lt, literal: String(char))
-            }
-        case ">":
-            if next == "=" {
-                token = Token(type: .gte, literal: String(char) + next)
-                self.currentColumn += 1
-            } else {
-                token = Token(type: .gt, literal: String(char))
-            }
-        case ";":
-            token = Token(type: .semicolon, literal: String(char))
-        case "(":
-            token = Token(type: .lparen, literal: String(char))
-        case ")":
-            token = Token(type: .rparen, literal: String(char))
-        case ",":
-            token = Token(type: .comma, literal: String(char))
-        case "{":
-            token = Token(type: .lbrace, literal: String(char))
-        case "}":
-            token = Token(type: .rbrace, literal: String(char))
-        default:
-            if char.isIdentifierLetter {
-                let literal = self.readIdentifier()
-                let type: Token.Kind = Token.Kind.keywords.contains(literal) ? literal : .identifier
-                return Token(type: type, literal: literal)
-            } else if char.isNumber {
-                let literal = self.readNumber()
-                return Token(type: .int, literal: literal)
-            }
-            token = Token(type: .ilegal, literal: String(char))
-        }
-        
-        self.currentColumn += 1
-        return token
-    }
-    
-    private func readLine() {
-        // TODO:
-    }
-    
-    internal func skipWhitespace() {
-        guard let input = self.input else {
-            return
-        }
-        
+    /// Skips characters in the input source while a condition is met, starting from
+    ///
+    /// `Lexer.currentColumn`
+    /// - Parameters:
+    ///   - input: Input source to check for `predicate`
+    ///   - predicate: An expression that indicates wich characters to skip
+    mutating func skip(fromInput input: String, while predicate: (Character) -> Bool) {
+        // TODO: Handle line breaks
         let startIndex = self.currentColumn
         var steps = 0
         for char in String(input[startIndex...]) {
-            if char.isWhitespace {
+            if predicate(char) {
                 steps += 1
             } else {
                 break
@@ -138,34 +60,19 @@ class Lexer {
         self.currentColumn += steps
     }
     
-    internal func readIdentifier() -> String {
-        guard let input = self.input else {
-            return ""
-        }
-        
+    
+    /// Returns a sub-string from the input starting from `Lexer.currentColumn`
+    /// until the first character that not met the condition
+    /// - Parameters:
+    ///   - input: The input to take the sub-string from
+    ///   - predicate: An expression that indicates wich characters to take
+    /// - Returns: A sub-string that mets the condition from the `while` predicate 
+    mutating func read(fromInput input: String, while predicate: (Character) -> Bool) -> String {
+        // TODO: Handle line breaks
         let startIndex = self.currentColumn
         var steps = 0
         for char in input[self.currentColumn...] {
-            if char.isIdentifierLetter {
-                steps += 1
-            } else {
-                break
-            }
-        }
-        
-        self.currentColumn += steps
-        return String(input[startIndex..<self.currentColumn])
-    }
-    
-    internal func readNumber() -> String {
-        guard let input = self.input else {
-            return ""
-        }
-        
-        let startIndex = self.currentColumn
-        var steps = 0
-        for char in input[startIndex...] {
-            if char.isNumber {
+            if predicate(char) {
                 steps += 1
             } else {
                 break
