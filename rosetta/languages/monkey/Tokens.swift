@@ -7,12 +7,6 @@
 
 import Foundation
 
-// Special
-extension Token.Kind {
-    static let ilegal = Token.Kind("ilegal")
-    static let eof = Token.Kind("eof")
-}
-
 // Identifiers and literals
 extension Token.Kind {
     static let identifier = Token.Kind("identifier")

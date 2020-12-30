@@ -7,5 +7,5 @@
 
 import Foundation
 
-print("Hello, World!")
-
+let repl = Repl(lexer: MonkeyLexer())
+repl.run()

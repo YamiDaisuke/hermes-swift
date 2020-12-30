@@ -25,3 +25,9 @@ extension Token: Equatable {
         return lhs.type == rhs.type && lhs.literal == rhs.literal
     }
 }
+
+// Special
+extension Token.Kind {
+    static let ilegal = Token.Kind("ilegal")
+    static let eof = Token.Kind("eof")
+}

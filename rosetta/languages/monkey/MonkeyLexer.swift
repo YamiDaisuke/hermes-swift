@@ -9,13 +9,18 @@ import Foundation
 
 struct MonkeyLexer: Lexer, StringLexer, FileLexer {
     let filePath: URL?
-    let input: String?
+    var input: String?
     
     var currentLineNumber = 0
     var currentColumn = 0
     private var nextColumn = 0
     
     private var currentLine: String? = nil
+    
+    init() {
+        self.filePath = nil
+        self.input = ""
+    }
     
     init(withFilePath filePath: URL) {
         self.filePath = filePath

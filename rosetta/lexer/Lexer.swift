@@ -33,7 +33,7 @@ protocol FileLexer: Lexer {
 
 /// A Lexer that uses a `String` as input for processing
 protocol StringLexer: Lexer {
-    var input: String? { get }
+    var input: String? { get set }
 }
 
 
