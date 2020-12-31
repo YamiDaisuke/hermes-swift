@@ -11,19 +11,22 @@ import Foundation
 /// lexer
 protocol Lexer {
     var currentLineNumber: Int { get set }
+    /// The position of the current `Character` in the current line
     var currentColumn: Int { get set }
 
+    /// The line we are currently tokenizing
+    var currentLine: String { get set }
+    /// The `Character` we are currently tokenizing and a peek of
+    /// the next one
+    var readingChars: (current: Character?, next: Character?)? { get set }
+    
+    /// How many `Characters` we have actually read
+    var readCharacterCount: Int { get set }
     
     /// Should read this `Lexer` input source and return the next parsed
     /// `Token` instance
     /// - Returns: A valid `Token` instance for the current language
     mutating func nextToken() -> Token
-}
-
-
-/// A Lexer that uses a file as the input for processing
-protocol FileLexer: Lexer {
-    var filePath: URL? { get }
     
     /// Reads the next line in the file and moves the
     /// `currentLineNumber` and `currentColumn`
@@ -31,55 +34,126 @@ protocol FileLexer: Lexer {
     mutating func readLine()
 }
 
+
+/// A Lexer that uses a file as the input for processing
+protocol FileLexer: Lexer {
+    var filePath: URL? { get }
+}
+
 /// A Lexer that uses a `String` as input for processing
 protocol StringLexer: Lexer {
-    var input: String? { get set }
+    var input: String { get set }
 }
 
 
 extension Lexer {
     
-    /// Skips characters in the input source while a condition is met, starting from
+    
+    /// Reads the next `Character` from the input and updates the column, line, and
+    /// character pointers accordingly
     ///
-    /// `Lexer.currentColumn`
-    /// - Parameters:
-    ///   - input: Input source to check for `predicate`
-    ///   - predicate: An expression that indicates wich characters to skip
-    mutating func skip(fromInput input: String, while predicate: (Character) -> Bool) {
-        // TODO: Handle line breaks
-        let startIndex = self.currentColumn
-        var steps = 0
-        for char in String(input[startIndex...]) {
-            if predicate(char) {
-                steps += 1
-            } else {
-                break
-            }
+    /// - Returns: The `Character` at the new position and the `Character` as a `Tuple`
+    @discardableResult mutating func readChar() -> (current: Character?, next: Character?) {
+        self.currentColumn += 1
+        guard self.currentColumn < currentLine.count else {
+            // TODO: Should we set currentColum to some special value
+            self.readingChars = (current: nil, next: nil)
+            return self.readingChars!
         }
         
-        self.currentColumn += steps
+        let char = currentLine[self.currentColumn]
+        if char.isNewline {
+            self.readLine()
+            return self.readChar()
+        }
+        
+        var next: Character? = nil
+        if (self.currentColumn + 1) < currentLine.count {
+            let nextIndex = currentLine.index(currentLine.startIndex, offsetBy: self.currentColumn + 1)
+            next = currentLine[nextIndex]
+        }
+        
+        self.readingChars = (current: char, next: next)
+        return self.readingChars!
     }
     
     
-    /// Returns a sub-string from the input starting from `Lexer.currentColumn`
-    /// until the first character that not met the condition
+    /// Skips characters in the input source while a condition is met, starting from
+    /// the `self.currentColumn`. This function might move the current columm and line
+    /// pointer accordingly to the number of character skiped
+    ///
+    /// `Lexer.currentColumn`
+    /// - Parameters:
+    ///   - predicate: An expression that indicates wich characters to skip
+    mutating func skip(while predicate: (Character) -> Bool) {
+        // If we haven't start reading the current line let's start
+        if self.currentColumn == -1 {
+            self.readChar()
+        }
+        
+        guard let first = self.readingChars?.current, predicate(first) else {
+            return
+        }
+        
+        repeat {
+            guard let _ = self.readingChars?.current else {
+                break
+            }
+            self.readChar()
+        } while self.readingChars?.current != nil && predicate(self.readingChars!.current!)
+    }
+    
+    
+    /// Returns a sub-string from the input starting from `self.currentColumn`
+    /// until the first character that not met the condition. This function might move the
+    /// current columm and line pointer accordingly to the number of character read
+    ///
     /// - Parameters:
     ///   - input: The input to take the sub-string from
     ///   - predicate: An expression that indicates wich characters to take
     /// - Returns: A sub-string that mets the condition from the `while` predicate 
-    mutating func read(fromInput input: String, while predicate: (Character) -> Bool) -> String {
-        // TODO: Handle line breaks
-        let startIndex = self.currentColumn
-        var steps = 0
-        for char in input[self.currentColumn...] {
-            if predicate(char) {
-                steps += 1
+    mutating func read(while predicate: (Character) -> Bool) -> String {
+        guard let first = self.readingChars?.current, predicate(first) else {
+            return ""
+        }
+        
+        var output = ""
+        repeat {
+            guard let current = self.readingChars?.current else {
+                break
+            }
+            output += String(current)
+            self.readChar()
+        } while self.readingChars?.current != nil && predicate(self.readingChars!.current!)
+        
+        return output
+    }
+}
+
+extension StringLexer {
+    
+    /// Moves column, line index and line pointers to the next line in the original
+    /// `self.input`
+    mutating func readLine() {
+        self.currentLineNumber += 1
+        self.currentColumn = -1
+        
+        guard self.input.count > 0 else {
+            return
+        }
+        
+        let start = self.readCharacterCount
+        var count = 0
+        for c in input[start...] {
+            if !c.isNewline {
+                count += 1
             } else {
+                count += 1
                 break
             }
         }
         
-        self.currentColumn += steps
-        return String(input[startIndex..<self.currentColumn])
+        self.readCharacterCount += count
+        self.currentLine = String(input[start..<(start + count)])
     }
 }

@@ -1,13 +1,13 @@
 //
-//  LexerTest.swift
+//  MonkeyLexerTests.swift
 //  rosettaTest
 //
-//  Created by Franklin Cruz on 28-12-20.
+//  Created by Franklin Cruz on 31-12-20.
 //
 
 import XCTest
 
-class LexerTest: XCTestCase {
+class MonkeyLexerTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -16,9 +16,9 @@ class LexerTest: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-    
+
     func testReadIdentifier() throws {
-        var input = "myIdentifer"
+        var input = "myIdentifier"
         var lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readIdentifier(), input)
         
@@ -178,12 +178,53 @@ class LexerTest: XCTestCase {
             XCTAssertEqual(next, t)
         }
     }
+    
+    func testNextTokenWithLineNumber() throws {
+        let input = """
+        let five = 5;
+        let ten = 10;
+        
+        let add = fn(x, y) {
+             x + y;
+        };
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        """
+        let tokens: [Token] = [
+            Token(type: .let, literal: "let", line: 1, column: 0),
+            Token(type: .identifier, literal: "five", line: 1, column: 4),
+            Token(type: .assign, literal: "=", line: 1, column: 9),
+            Token(type: .int, literal: "5", line: 1, column: 11),
+            Token(type: .semicolon, literal: ";", line: 1, column: 12),
+            Token(type: .let, literal: "let", line: 2, column: 0),
+            Token(type: .identifier, literal: "ten", line: 2, column: 4),
+            Token(type: .assign, literal: "=", line: 2, column: 8),
+            Token(type: .int, literal: "10", line: 2, column: 10),
+            Token(type: .semicolon, literal: ";", line: 2, column: 12),
+            Token(type: .let, literal: "let", line: 4, column: 0),
+            Token(type: .identifier, literal: "add", line: 4, column: 4),
+            Token(type: .assign, literal: "=", line: 4, column: 8),
+            Token(type: .function, literal: "fn", line: 4, column: 10),
+            Token(type: .lparen, literal: "(", line: 4, column: 12),
+            Token(type: .identifier, literal: "x", line: 4, column: 13),
+            Token(type: .comma, literal: ",", line: 4, column: 14),
+            Token(type: .identifier, literal: "y", line: 4, column: 16),
+            Token(type: .rparen, literal: ")", line: 4, column: 17),
+            Token(type: .lbrace, literal: "{", line: 4, column: 19),
+            Token(type: .identifier, literal: "x", line: 5, column: 5),
+            Token(type: .plus, literal: "+", line: 5, column: 7),
+            Token(type: .identifier, literal: "y", line: 5, column: 9),
+            Token(type: .semicolon, literal: ";", line: 5, column: 10),
+            Token(type: .rbrace, literal: "}", line: 6, column: 0),
+            Token(type: .semicolon, literal: ";", line: 6, column: 1),
+            Token(type: .eof, literal: "", line: 7, column: 0)
+        ]
+        
+        var lexer = MonkeyLexer(withString: input)
+        for t in tokens.prefix(20) {
+            let next = lexer.nextToken()
+            XCTAssertEqual(next, t)
+            XCTAssertEqual(next.line, t.line)
+            XCTAssertEqual(next.column, t.column)
         }
     }
-
 }

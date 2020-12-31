@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// Represents any token within a code block
 struct Token {
     typealias Kind = String
@@ -15,9 +14,9 @@ struct Token {
     let type: Token.Kind
     let literal: String
     
-    let file: String? = nil
-    let line: Int? = nil
-    let column: Int? = nil
+    var file: String? = nil
+    var line: Int? = nil
+    var column: Int? = nil
 }
 
 extension Token: Equatable {

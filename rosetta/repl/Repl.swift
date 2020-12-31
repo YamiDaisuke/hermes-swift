@@ -23,7 +23,7 @@ class Repl {
         print(welcomeMessage)
         while true {
             print(prompt, terminator: " ")
-            lexer.input = readLine()
+            lexer.input = readLine() ?? ""
             var t = lexer.nextToken()
             while t.type != Token.Kind.eof {
                 print("\t%s", t)

@@ -8,14 +8,17 @@
 import Foundation
 
 struct MonkeyLexer: Lexer, StringLexer, FileLexer {
+    var readingChars: (current: Character?, next: Character?)?
+    
     let filePath: URL?
-    var input: String?
+    var input: String
     
     var currentLineNumber = 0
     var currentColumn = 0
-    private var nextColumn = 0
     
-    private var currentLine: String? = nil
+    var readCharacterCount = 0
+    
+    var currentLine = ""
     
     init() {
         self.filePath = nil
@@ -24,43 +27,41 @@ struct MonkeyLexer: Lexer, StringLexer, FileLexer {
     
     init(withFilePath filePath: URL) {
         self.filePath = filePath
-        self.input = nil
+        self.input = ""
     }
     
     init(withString input: String) {
         self.input = input
         self.filePath = nil
+        
+        self.readLine()
+        self.readChar()
     }
     
     mutating func nextToken() -> Token {
-        var token: Token = Token(type: .eof, literal: "")
-        
-        guard let input = self.input else {
-            return token
+        guard !self.input.isEmpty else {
+            return Token(type: .eof, literal: "", line: self.currentLineNumber, column: self.currentColumn)
         }
         
         self.skipWhitespace()
         
-        guard self.currentColumn < input.count else {
-            return token
+        guard let char = self.readingChars?.current else {
+            return Token(type: .eof, literal: "", line: self.currentLineNumber, column: self.currentColumn)
         }
-        
-        let currentIndex = input.index(input.startIndex, offsetBy: self.currentColumn)
-        
-        
-        let char = input[currentIndex]
         
         var next = ""
-        if (self.currentColumn + 1) < input.count {
-            let nextIndex = input.index(input.startIndex, offsetBy: self.currentColumn + 1)
-            next = String(input[nextIndex])
+        if let nextChar = self.readingChars?.next {
+            next = String(nextChar)
         }
         
+        let startLine = self.currentLineNumber
+        let startColumn = self.currentColumn
+        var token = Token(type: .eof, literal: "")
         switch char {
         case "=":
             if next == "=" {
                 token = Token(type: .equals, literal: String(char) + next)
-                self.currentColumn += 1
+                self.readChar()
             } else {
                 token = Token(type: .assign, literal: String(char))
             }
@@ -71,7 +72,7 @@ struct MonkeyLexer: Lexer, StringLexer, FileLexer {
         case "!":
             if next == "=" {
                 token = Token(type: .notEquals, literal: String(char) + next)
-                self.currentColumn += 1
+                self.readChar()
             } else {
                 token = Token(type: .bang, literal: String(char))
             }
@@ -82,14 +83,14 @@ struct MonkeyLexer: Lexer, StringLexer, FileLexer {
         case "<":
             if next == "=" {
                 token = Token(type: .lte, literal: String(char) + next)
-                self.currentColumn += 1
+                self.readChar()
             } else {
                 token = Token(type: .lt, literal: String(char))
             }
         case ">":
             if next == "=" {
                 token = Token(type: .gte, literal: String(char) + next)
-                self.currentColumn += 1
+                self.readChar()
             } else {
                 token = Token(type: .gt, literal: String(char))
             }
@@ -109,43 +110,30 @@ struct MonkeyLexer: Lexer, StringLexer, FileLexer {
             if char.isIdentifierLetter {
                 let literal = self.readIdentifier()
                 let type: Token.Kind = Token.Kind.keywords.contains(literal) ? literal : .identifier
-                return Token(type: type, literal: literal)
+                return Token(type: type, literal: literal, line: startLine, column: startColumn)
             } else if char.isNumber {
                 let literal = self.readNumber()
-                return Token(type: .int, literal: literal)
+                return Token(type: .int, literal: literal, line: startLine, column: startColumn)
             }
             token = Token(type: .ilegal, literal: String(char))
         }
         
-        self.currentColumn += 1
+        self.readChar()
+        token.line = startLine
+        token.column = startColumn
         return token
     }
     
-    func readLine() {
-        // TODO:
-    }
-    
     internal mutating func skipWhitespace() {
-        guard let input = self.input else {
-            return
-        }
-        
-        self.skip(fromInput: input) { $0.isWhitespace }
+        self.skip { $0.isWhitespace }
     }
     
     mutating func readIdentifier() -> String {
-        guard let input = self.input else {
-            return ""
-        }
-        
-        return self.read(fromInput: input) { $0.isIdentifierLetter }
+        return self.read { $0.isIdentifierLetter }
     }
     
     mutating func readNumber() -> String {
-        guard let input = self.input else {
-            return ""
-        }
         // TODO: Support floating points
-        return self.read(fromInput: input) { $0.isNumber }
+        return self.read { $0.isNumber }
     }
 }
