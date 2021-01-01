@@ -10,17 +10,17 @@ import Foundation
 /// Represents any token within a code block
 struct Token {
     typealias Kind = String
-    
+
     let type: Token.Kind
     let literal: String
-    
-    var file: String? = nil
-    var line: Int? = nil
-    var column: Int? = nil
+
+    var file: String?
+    var line: Int?
+    var column: Int?
 }
 
 extension Token: Equatable {
-    static func ==(lhs: Token, rhs: Token) -> Bool {
+    static func == (lhs: Token, rhs: Token) -> Bool {
         return lhs.type == rhs.type && lhs.literal == rhs.literal
     }
 }

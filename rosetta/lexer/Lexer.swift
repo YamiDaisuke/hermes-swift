@@ -19,21 +19,20 @@ protocol Lexer {
     /// The `Character` we are currently tokenizing and a peek of
     /// the next one
     var readingChars: (current: Character?, next: Character?)? { get set }
-    
+
     /// How many `Characters` we have actually read
     var readCharacterCount: Int { get set }
-    
+
     /// Should read this `Lexer` input source and return the next parsed
     /// `Token` instance
     /// - Returns: A valid `Token` instance for the current language
     mutating func nextToken() -> Token
-    
+
     /// Reads the next line in the file and moves the
     /// `currentLineNumber` and `currentColumn`
     /// pointers of the `Lexer` to the right value
     mutating func readLine()
 }
-
 
 /// A Lexer that uses a file as the input for processing
 protocol FileLexer: Lexer {
@@ -45,10 +44,7 @@ protocol StringLexer: Lexer {
     var input: String { get set }
 }
 
-
 extension Lexer {
-    
-    
     /// Reads the next `Character` from the input and updates the column, line, and
     /// character pointers accordingly
     ///
@@ -60,24 +56,23 @@ extension Lexer {
             self.readingChars = (current: nil, next: nil)
             return self.readingChars!
         }
-        
+
         let char = currentLine[self.currentColumn]
         if char.isNewline {
             self.readLine()
             return self.readChar()
         }
-        
-        var next: Character? = nil
+
+        var next: Character?
         if (self.currentColumn + 1) < currentLine.count {
             let nextIndex = currentLine.index(currentLine.startIndex, offsetBy: self.currentColumn + 1)
             next = currentLine[nextIndex]
         }
-        
+
         self.readingChars = (current: char, next: next)
         return self.readingChars!
     }
-    
-    
+
     /// Skips characters in the input source while a condition is met, starting from
     /// the `self.currentColumn`. This function might move the current columm and line
     /// pointer accordingly to the number of character skiped
@@ -90,20 +85,19 @@ extension Lexer {
         if self.currentColumn == -1 {
             self.readChar()
         }
-        
+
         guard let first = self.readingChars?.current, predicate(first) else {
             return
         }
-        
+
         repeat {
-            guard let _ = self.readingChars?.current else {
+            guard self.readingChars?.current != nil else {
                 break
             }
             self.readChar()
         } while self.readingChars?.current != nil && predicate(self.readingChars!.current!)
     }
-    
-    
+
     /// Returns a sub-string from the input starting from `self.currentColumn`
     /// until the first character that not met the condition. This function might move the
     /// current columm and line pointer accordingly to the number of character read
@@ -111,12 +105,12 @@ extension Lexer {
     /// - Parameters:
     ///   - input: The input to take the sub-string from
     ///   - predicate: An expression that indicates wich characters to take
-    /// - Returns: A sub-string that mets the condition from the `while` predicate 
+    /// - Returns: A sub-string that mets the condition from the `while` predicate
     mutating func read(while predicate: (Character) -> Bool) -> String {
         guard let first = self.readingChars?.current, predicate(first) else {
             return ""
         }
-        
+
         var output = ""
         repeat {
             guard let current = self.readingChars?.current else {
@@ -125,34 +119,34 @@ extension Lexer {
             output += String(current)
             self.readChar()
         } while self.readingChars?.current != nil && predicate(self.readingChars!.current!)
-        
+
         return output
     }
 }
 
 extension StringLexer {
-    
+
     /// Moves column, line index and line pointers to the next line in the original
     /// `self.input`
     mutating func readLine() {
         self.currentLineNumber += 1
         self.currentColumn = -1
-        
+
         guard self.input.count > 0 else {
             return
         }
-        
+
         let start = self.readCharacterCount
         var count = 0
-        for c in input[start...] {
-            if !c.isNewline {
+        for char in input[start...] {
+            if !char.isNewline {
                 count += 1
             } else {
                 count += 1
                 break
             }
         }
-        
+
         self.readCharacterCount += count
         self.currentLine = String(input[start..<(start + count)])
     }

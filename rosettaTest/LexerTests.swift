@@ -7,23 +7,24 @@
 
 import XCTest
 
+// swiftlint:disable function_body_length
 class LexerTest: XCTestCase {
 
     struct AStringLexer: Lexer, StringLexer {
         var readingChars: (current: Character?, next: Character?)?
-        
+
         var currentLineNumber = 0
         var currentColumn = 0
         var currentLine = ""
         var readCharacterCount = 0
-        
+
         mutating func nextToken() -> Token {
             return Token.init(type: .eof, literal: "")
         }
-        
+
         var input: String
     }
-    
+
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -31,10 +32,10 @@ class LexerTest: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-    
+
     func testReadChar() throws {
         let input = "My\nline\n"
-        
+
         var lexer = AStringLexer(input: input)
         lexer.readLine()
         lexer.readChar()
@@ -71,7 +72,7 @@ class LexerTest: XCTestCase {
         XCTAssertEqual(lexer.currentLineNumber, 3)
         XCTAssertEqual(output?.current, nil)
         XCTAssertEqual(output?.next, nil)
-        
+
         lexer = AStringLexer(input: "li")
         lexer.readLine()
         lexer.readChar()
@@ -84,11 +85,11 @@ class LexerTest: XCTestCase {
         XCTAssertEqual(output?.current, nil)
         XCTAssertEqual(output?.next, nil)
     }
-    
+
     func testReadline() throws {
         // Ideal case
         let input = "My Text with\nline breaks\n"
-        
+
         var lexer = AStringLexer(input: input)
         lexer.readLine()
         XCTAssertEqual(lexer.currentLine, "My Text with\n")
@@ -100,18 +101,18 @@ class LexerTest: XCTestCase {
         XCTAssertEqual(lexer.currentColumn, -1)
         XCTAssertEqual(lexer.currentLineNumber, 2)
         XCTAssertEqual(lexer.readCharacterCount, input.count)
-        
+
         // Empty String
-        
+
         lexer = AStringLexer(input: "")
         lexer.readLine()
         XCTAssertEqual(lexer.currentLine, "")
         XCTAssertEqual(lexer.currentColumn, -1)
         XCTAssertEqual(lexer.currentLineNumber, 1)
         XCTAssertEqual(lexer.readCharacterCount, 0)
-        
+
         // Initial empty String
-        
+
         lexer = AStringLexer(input: "\nHello there")
         lexer.readLine()
         XCTAssertEqual(lexer.currentLine, "\n")

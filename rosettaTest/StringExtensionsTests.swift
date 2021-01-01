@@ -18,20 +18,20 @@ class StringExtensionsTests: XCTestCase {
     }
 
     func testIntSubscripts() throws {
-        
+
         let myString = "my string for testing"
-        
+
         let first = myString[0]
         XCTAssertEqual(first, "m")
-        
+
         let second = myString[1]
         XCTAssertEqual(second, "y")
-        
-        var my = myString[0..<2]
-        XCTAssertEqual(my, "my")
-        my = myString[0...1]
-        XCTAssertEqual(my, "my")
-        
+
+        var mySubstring = myString[0..<2]
+        XCTAssertEqual(mySubstring, "my")
+        mySubstring = myString[0...1]
+        XCTAssertEqual(mySubstring, "my")
+
         let testing = myString[14...]
         XCTAssertEqual(testing, "testing")
     }
