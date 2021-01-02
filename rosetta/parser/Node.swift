@@ -9,7 +9,7 @@ import Foundation
 
 /// All elements in the Parser AST should implement
 /// this protocol
-protocol Node {
+protocol Node: CustomStringConvertible {
     var token: Token { get set }
     var literal: String { get }
 }

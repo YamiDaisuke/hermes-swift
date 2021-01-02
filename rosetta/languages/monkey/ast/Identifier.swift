@@ -12,4 +12,8 @@ import Foundation
 struct Identifier: Expression {
     var token: Token
     var value: String
+
+    var description: String {
+        value
+    }
 }

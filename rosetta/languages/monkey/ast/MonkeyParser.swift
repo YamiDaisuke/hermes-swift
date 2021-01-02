@@ -90,5 +90,9 @@ struct MonkeyParser: Parser {
             self.literal = ""
             self.token = Token(type: .eof, literal: "")
         }
+
+        var description: String {
+            "<Expression Placeholder>"
+        }
     }
 }

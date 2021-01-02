@@ -14,4 +14,8 @@ struct LetStatement: Statement {
     var name: Identifier
 
     var value: Expression
+
+    var description: String {
+        "\(token.literal) \(name) = \(value);"
+    }
 }
