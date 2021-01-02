@@ -43,6 +43,8 @@ struct MonkeyParser: Parser {
         switch token.type {
         case Token.Kind.let:
             return try parseLetStatement()
+        case Token.Kind.return:
+            return try parseReturnStatement()
         default:
             return nil
         }
@@ -64,6 +66,18 @@ struct MonkeyParser: Parser {
         }
 
         return LetStatement(token: token, name: name, value: Dummy(literal: ""))
+    }
+
+    mutating func parseReturnStatement() throws -> ReturnStatement? {
+        guard let token = self.currentToken, token.type == .return else {
+            return nil
+        }
+
+        while self.currentToken?.type != .semicolon {
+            self.readToken()
+        }
+
+        return ReturnStatement(token: token, value: Dummy(literal: ""))
     }
 
     /// Temporal struct just to use a placeholder while we

@@ -60,4 +60,23 @@ class MonkeyParserTests: XCTestCase {
             XCTAssertEqual(letStatement?.name.literal, expectedIdentifier[index])
         }
     }
+
+    func testReturnStatement() throws {
+        let input = """
+        return 5;
+        return 10;
+        return 99994343;
+        """
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertNotNil(program)
+        XCTAssertEqual(program?.statements.count, 3)
+
+        for statement in program!.statements {
+            let returnStatement = statement as? ReturnStatement
+            XCTAssertNotNil(returnStatement)
+        }
+    }
 }
