@@ -12,6 +12,19 @@
 		F8685D31259D3D3200677A8B /* MonkeyLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */; };
 		F8685D36259D42DF00677A8B /* Repl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D35259D42DF00677A8B /* Repl.swift */; };
 		F8685D52259E355600677A8B /* MonkeyLexerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D51259E355600677A8B /* MonkeyLexerTests.swift */; };
+		F86BC19E259FEC370039337E /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86BC19D259FEC370039337E /* ParseError.swift */; };
+		F86BC1A3259FED590039337E /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86BC19D259FEC370039337E /* ParseError.swift */; };
+		F882F931259E8F760069DCD6 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F930259E8F760069DCD6 /* Node.swift */; };
+		F882F932259E8F760069DCD6 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F930259E8F760069DCD6 /* Node.swift */; };
+		F882F938259FA81E0069DCD6 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F937259FA81E0069DCD6 /* Program.swift */; };
+		F882F939259FA81E0069DCD6 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F937259FA81E0069DCD6 /* Program.swift */; };
+		F882F93E259FA8DE0069DCD6 /* LetStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F93D259FA8DE0069DCD6 /* LetStatement.swift */; };
+		F882F93F259FA8DE0069DCD6 /* LetStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F93D259FA8DE0069DCD6 /* LetStatement.swift */; };
+		F882F945259FA9B40069DCD6 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F944259FA9B40069DCD6 /* Parser.swift */; };
+		F882F946259FA9B40069DCD6 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F944259FA9B40069DCD6 /* Parser.swift */; };
+		F882F94A259FA9C30069DCD6 /* MonkeyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F949259FA9C30069DCD6 /* MonkeyParser.swift */; };
+		F882F94B259FA9C30069DCD6 /* MonkeyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F949259FA9C30069DCD6 /* MonkeyParser.swift */; };
+		F882F94F259FAB690069DCD6 /* MonkeyParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F94E259FAB690069DCD6 /* MonkeyParserTests.swift */; };
 		F8B49BF125993C2C005D91E7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49BF025993C2C005D91E7 /* main.swift */; };
 		F8B49BFB25993EA6005D91E7 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49BFA25993EA6005D91E7 /* Token.swift */; };
 		F8B49D90259A64AD005D91E7 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49D8F259A64AD005D91E7 /* Tokens.swift */; };
@@ -51,6 +64,13 @@
 		F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyLexer.swift; sourceTree = "<group>"; };
 		F8685D35259D42DF00677A8B /* Repl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repl.swift; sourceTree = "<group>"; };
 		F8685D51259E355600677A8B /* MonkeyLexerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyLexerTests.swift; sourceTree = "<group>"; };
+		F86BC19D259FEC370039337E /* ParseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseError.swift; sourceTree = "<group>"; };
+		F882F930259E8F760069DCD6 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		F882F937259FA81E0069DCD6 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
+		F882F93D259FA8DE0069DCD6 /* LetStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetStatement.swift; sourceTree = "<group>"; };
+		F882F944259FA9B40069DCD6 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		F882F949259FA9C30069DCD6 /* MonkeyParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParser.swift; sourceTree = "<group>"; };
+		F882F94E259FAB690069DCD6 /* MonkeyParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParserTests.swift; sourceTree = "<group>"; };
 		F8B49BED25993C2C005D91E7 /* rosetta */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = rosetta; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8B49BF025993C2C005D91E7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		F8B49BFA25993EA6005D91E7 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
@@ -88,6 +108,26 @@
 			path = repl;
 			sourceTree = "<group>";
 		};
+		F882F92F259E8EDE0069DCD6 /* parser */ = {
+			isa = PBXGroup;
+			children = (
+				F882F930259E8F760069DCD6 /* Node.swift */,
+				F882F937259FA81E0069DCD6 /* Program.swift */,
+				F882F944259FA9B40069DCD6 /* Parser.swift */,
+				F86BC19D259FEC370039337E /* ParseError.swift */,
+			);
+			path = parser;
+			sourceTree = "<group>";
+		};
+		F882F93C259FA8950069DCD6 /* ast */ = {
+			isa = PBXGroup;
+			children = (
+				F882F93D259FA8DE0069DCD6 /* LetStatement.swift */,
+				F882F949259FA9C30069DCD6 /* MonkeyParser.swift */,
+			);
+			path = ast;
+			sourceTree = "<group>";
+		};
 		F8B49BE425993C2C005D91E7 = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +149,7 @@
 		F8B49BEF25993C2C005D91E7 /* rosetta */ = {
 			isa = PBXGroup;
 			children = (
+				F882F92F259E8EDE0069DCD6 /* parser */,
 				F8685D34259D42CE00677A8B /* repl */,
 				F8B49D8D259A648B005D91E7 /* languages */,
 				F8B49BF825993E10005D91E7 /* lexer */,
@@ -138,6 +179,7 @@
 		F8B49D8E259A6498005D91E7 /* monkey */ = {
 			isa = PBXGroup;
 			children = (
+				F882F93C259FA8950069DCD6 /* ast */,
 				F8B49D8F259A64AD005D91E7 /* Tokens.swift */,
 				F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */,
 			);
@@ -151,6 +193,7 @@
 				F8B49DE4259A926C005D91E7 /* LexerTests.swift */,
 				F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */,
 				F8685D51259E355600677A8B /* MonkeyLexerTests.swift */,
+				F882F94E259FAB690069DCD6 /* MonkeyParserTests.swift */,
 			);
 			path = rosettaTest;
 			sourceTree = "<group>";
@@ -165,6 +208,7 @@
 				F8B49BE925993C2C005D91E7 /* Sources */,
 				F8B49BEA25993C2C005D91E7 /* Frameworks */,
 				F8B49BEB25993C2C005D91E7 /* CopyFiles */,
+				F86BC193259FAF0D0039337E /* Lint */,
 			);
 			buildRules = (
 			);
@@ -239,15 +283,42 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		F86BC193259FAF0D0039337E /* Lint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Lint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		F8B49BE925993C2C005D91E7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				F8B49BF125993C2C005D91E7 /* main.swift in Sources */,
+				F882F945259FA9B40069DCD6 /* Parser.swift in Sources */,
 				F8B49BFB25993EA6005D91E7 /* Token.swift in Sources */,
 				F8685D36259D42DF00677A8B /* Repl.swift in Sources */,
+				F882F931259E8F760069DCD6 /* Node.swift in Sources */,
+				F882F94A259FA9C30069DCD6 /* MonkeyParser.swift in Sources */,
 				F8B49DEC259AA79C005D91E7 /* StringExtensions.swift in Sources */,
+				F86BC19E259FEC370039337E /* ParseError.swift in Sources */,
+				F882F93E259FA8DE0069DCD6 /* LetStatement.swift in Sources */,
+				F882F938259FA81E0069DCD6 /* Program.swift in Sources */,
 				F8B49D94259A88CC005D91E7 /* Lexer.swift in Sources */,
 				F8B49D90259A64AD005D91E7 /* Tokens.swift in Sources */,
 				F8685D2E259D3D1100677A8B /* MonkeyLexer.swift in Sources */,
@@ -258,14 +329,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F882F939259FA81E0069DCD6 /* Program.swift in Sources */,
+				F882F94F259FAB690069DCD6 /* MonkeyParserTests.swift in Sources */,
 				F8B49DEF259AB9A4005D91E7 /* StringExtensions.swift in Sources */,
 				F8685D31259D3D3200677A8B /* MonkeyLexer.swift in Sources */,
 				F8B49DE1259A9228005D91E7 /* Lexer.swift in Sources */,
+				F882F932259E8F760069DCD6 /* Node.swift in Sources */,
+				F882F94B259FA9C30069DCD6 /* MonkeyParser.swift in Sources */,
 				F8685BDC259BA27100677A8B /* StringExtensionsTests.swift in Sources */,
 				F8B49DE5259A926C005D91E7 /* LexerTests.swift in Sources */,
 				F8B49DE8259A9291005D91E7 /* Tokens.swift in Sources */,
+				F882F946259FA9B40069DCD6 /* Parser.swift in Sources */,
 				F8B49DDE259A91DB005D91E7 /* Token.swift in Sources */,
+				F882F93F259FA8DE0069DCD6 /* LetStatement.swift in Sources */,
 				F8685D52259E355600677A8B /* MonkeyLexerTests.swift in Sources */,
+				F86BC1A3259FED590039337E /* ParseError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
