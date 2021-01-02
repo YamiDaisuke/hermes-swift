@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// Root `Node` for any Monkey Language script
-struct Program: Node {
+/// Root for any Monkey Language script
+struct Program {
     var statements: [Statement]
     var literal: String {
         if let first = statements.first {

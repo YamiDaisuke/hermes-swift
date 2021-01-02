@@ -10,8 +10,4 @@ import Foundation
 struct ReturnStatement: Statement {
     var token: Token
     var value: Expression
-
-    var literal: String {
-        return token.literal
-    }
 }

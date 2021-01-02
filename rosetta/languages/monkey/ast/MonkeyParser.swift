@@ -65,7 +65,7 @@ struct MonkeyParser: Parser {
             self.readToken()
         }
 
-        return LetStatement(token: token, name: name, value: Dummy(literal: ""))
+        return LetStatement(token: token, name: name, value: Dummy())
     }
 
     mutating func parseReturnStatement() throws -> ReturnStatement? {
@@ -77,12 +77,18 @@ struct MonkeyParser: Parser {
             self.readToken()
         }
 
-        return ReturnStatement(token: token, value: Dummy(literal: ""))
+        return ReturnStatement(token: token, value: Dummy())
     }
 
     /// Temporal struct just to use a placeholder while we
     /// implement expression parsing
     struct Dummy: Expression {
         var literal: String
+        var token: Token
+
+        init() {
+            self.literal = ""
+            self.token = Token(type: .eof, literal: "")
+        }
     }
 }
