@@ -79,4 +79,54 @@ class MonkeyParserTests: XCTestCase {
             XCTAssertNotNil(returnStatement)
         }
     }
+
+    // MARK: Expressions
+
+    func testIdentifierExpression() throws {
+        let input = """
+        foobar;
+        """
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertNotNil(program)
+        XCTAssertEqual(program?.statements.count, 1)
+
+        let expressionStmt = program?.statements.first as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        let identifier = expressionStmt?.expression as? Identifier
+        XCTAssertNotNil(identifier)
+        XCTAssertEqual(identifier?.value, "foobar")
+        XCTAssertEqual(identifier?.literal, "foobar")
+    }
+
+    func testIntLiteralExpression() throws {
+        let input = """
+        5;
+        100;
+        """
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertNotNil(program)
+        XCTAssertEqual(program?.statements.count, 2)
+
+        var expressionStmt = program?.statements[0] as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        var identifier = expressionStmt?.expression as? IntegerLiteral
+        XCTAssertNotNil(identifier)
+        XCTAssertEqual(identifier?.value, 5)
+        XCTAssertEqual(identifier?.literal, "5")
+
+        expressionStmt = program?.statements[1] as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        identifier = expressionStmt?.expression as? IntegerLiteral
+        XCTAssertNotNil(identifier)
+        XCTAssertEqual(identifier?.value, 100)
+        XCTAssertEqual(identifier?.literal, "100")
+    }
 }

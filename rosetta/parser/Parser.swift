@@ -9,9 +9,18 @@ import Foundation
 
 /// Base protocol for a language `Parser`
 protocol Parser {
+    /// Will hold helper functions thar will be used to parse expression
+    /// components based on how they are used
+    typealias PrefixParseFunc = (_ token: Token?) throws -> Expression?
+    typealias InfixParseFunc = (_ lhs: Expression, _ token: Token?) throws -> Expression?
+
     var lexer: Lexer { get set }
     var currentToken: Token? { get set }
     var nextToken: Token? { get set }
+
+    /// Maping of the helper functions to the corresponding `Token.Kind`
+    var prefixParseFuncs: [Token.Kind: PrefixParseFunc] { get set }
+    var infixParseFuncs: [Token.Kind: InfixParseFunc] { get set }
 
     mutating func readToken()
     mutating func parseProgram() throws -> Program?
@@ -19,7 +28,6 @@ protocol Parser {
 }
 
 extension Parser {
-
     /// Reads the next `Token` from the associated `Lexer`
     mutating func readToken() {
         self.currentToken = self.nextToken

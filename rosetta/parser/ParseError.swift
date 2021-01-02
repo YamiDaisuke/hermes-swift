@@ -58,7 +58,7 @@ struct MissingExpected: ParseError {
     var line: Int?
     var column: Int?
 
-    init(type: Token.Kind, line: Int?, column: Int?) {
+    init(type: Token.Kind, line: Int? = nil, column: Int? = nil) {
         self.message = "Expected token \(type)"
         self.line = line
         self.column = column

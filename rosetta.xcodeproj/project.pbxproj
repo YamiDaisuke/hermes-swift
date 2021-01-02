@@ -20,6 +20,8 @@
 		F86BC1B225A11A990039337E /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86BC1B125A11A990039337E /* Identifier.swift */; };
 		F86BC1B525A11A9B0039337E /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86BC1B125A11A990039337E /* Identifier.swift */; };
 		F86BC1B825A11A9E0039337E /* ExpressionStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86BC1AD25A11A8E0039337E /* ExpressionStatement.swift */; };
+		F86BC1BE25A12F370039337E /* IntegerLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86BC1BD25A12F370039337E /* IntegerLiteral.swift */; };
+		F86BC1C125A12FAF0039337E /* IntegerLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86BC1BD25A12F370039337E /* IntegerLiteral.swift */; };
 		F882F931259E8F760069DCD6 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F930259E8F760069DCD6 /* Node.swift */; };
 		F882F932259E8F760069DCD6 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F930259E8F760069DCD6 /* Node.swift */; };
 		F882F938259FA81E0069DCD6 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F937259FA81E0069DCD6 /* Program.swift */; };
@@ -74,6 +76,7 @@
 		F86BC1A625A1158A0039337E /* ReturnStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnStatement.swift; sourceTree = "<group>"; };
 		F86BC1AD25A11A8E0039337E /* ExpressionStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionStatement.swift; sourceTree = "<group>"; };
 		F86BC1B125A11A990039337E /* Identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifier.swift; sourceTree = "<group>"; };
+		F86BC1BD25A12F370039337E /* IntegerLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerLiteral.swift; sourceTree = "<group>"; };
 		F882F930259E8F760069DCD6 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		F882F937259FA81E0069DCD6 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		F882F93D259FA8DE0069DCD6 /* LetStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetStatement.swift; sourceTree = "<group>"; };
@@ -136,6 +139,7 @@
 				F86BC1A625A1158A0039337E /* ReturnStatement.swift */,
 				F86BC1AD25A11A8E0039337E /* ExpressionStatement.swift */,
 				F86BC1B125A11A990039337E /* Identifier.swift */,
+				F86BC1BD25A12F370039337E /* IntegerLiteral.swift */,
 			);
 			path = ast;
 			sourceTree = "<group>";
@@ -330,6 +334,7 @@
 				F882F94A259FA9C30069DCD6 /* MonkeyParser.swift in Sources */,
 				F8B49DEC259AA79C005D91E7 /* StringExtensions.swift in Sources */,
 				F86BC1A725A1158A0039337E /* ReturnStatement.swift in Sources */,
+				F86BC1BE25A12F370039337E /* IntegerLiteral.swift in Sources */,
 				F86BC19E259FEC370039337E /* ParseError.swift in Sources */,
 				F882F93E259FA8DE0069DCD6 /* LetStatement.swift in Sources */,
 				F882F938259FA81E0069DCD6 /* Program.swift in Sources */,
@@ -346,6 +351,7 @@
 			files = (
 				F882F939259FA81E0069DCD6 /* Program.swift in Sources */,
 				F882F94F259FAB690069DCD6 /* MonkeyParserTests.swift in Sources */,
+				F86BC1C125A12FAF0039337E /* IntegerLiteral.swift in Sources */,
 				F8B49DEF259AB9A4005D91E7 /* StringExtensions.swift in Sources */,
 				F86BC1B825A11A9E0039337E /* ExpressionStatement.swift in Sources */,
 				F8685D31259D3D3200677A8B /* MonkeyLexer.swift in Sources */,
