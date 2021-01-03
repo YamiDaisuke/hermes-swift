@@ -7,24 +7,33 @@
 
 import Foundation
 
+/// Parse expression construct with operator prefixing
+/// <prefix operator><expression>
+protocol PrefixParser {
+    func parse<P>(_ parser: inout P) throws -> Expression? where P: Parser
+}
+
+/// Parse expression construct with operator infixing
+/// <expression> <infix operator> <expression>
+protocol InfixParser {
+    func parse<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser
+}
+
 /// Base protocol for a language `Parser`
 protocol Parser {
-    /// Will hold helper functions thar will be used to parse expression
-    /// components based on how they are used
-    typealias PrefixParseFunc = (_ token: Token?) throws -> Expression?
-    typealias InfixParseFunc = (_ lhs: Expression, _ token: Token?) throws -> Expression?
-
     var lexer: Lexer { get set }
     var currentToken: Token? { get set }
     var nextToken: Token? { get set }
 
-    /// Maping of the helper functions to the corresponding `Token.Kind`
-    var prefixParseFuncs: [Token.Kind: PrefixParseFunc] { get set }
-    var infixParseFuncs: [Token.Kind: InfixParseFunc] { get set }
+    /// Will hold helper functions thar will be used to parse expression
+    /// components based on how they are used
+    var prefixParser: PrefixParser { get set }
+    var infixParser: InfixParser { get set }
 
     mutating func readToken()
     mutating func parseProgram() throws -> Program?
     mutating func parseStatement() throws -> Statement?
+    mutating func parseExpression(withPrecedence precedence: Int) throws -> Expression?
 }
 
 extension Parser {

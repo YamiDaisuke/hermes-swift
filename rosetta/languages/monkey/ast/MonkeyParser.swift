@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Precedence: Int {
+enum MonkeyPrecedence: Int {
     case lowest
     case equals // ==
     case lessGreater // > or <
@@ -23,28 +23,14 @@ struct MonkeyParser: Parser {
     var currentToken: Token?
     var nextToken: Token?
 
-    var prefixParseFuncs: [Token.Kind: PrefixParseFunc] = [:]
-    var infixParseFuncs: [Token.Kind: InfixParseFunc] = [:]
+    var prefixParser: PrefixParser
+    var infixParser: InfixParser
 
     init(lexer: Lexer) {
         self.lexer = lexer
-
-        // Register parsing functions
-        self.prefixParseFuncs[.identifier] = { token in
-            guard let token = token, token.type == .identifier else {
-                return nil
-            }
-
-            return Identifier(token: token, value: token.literal)
-        }
-
-        self.prefixParseFuncs[.int] = { token in
-            guard let token = token, token.type == .int else {
-                return nil
-            }
-
-            return try IntegerLiteral(token: token)
-        }
+        let expressionParser = ExpressionParser()
+        self.prefixParser = expressionParser
+        self.infixParser = expressionParser
     }
 
     mutating func parseProgram() throws -> Program? {
@@ -119,7 +105,7 @@ struct MonkeyParser: Parser {
             return nil
         }
 
-        guard let expression = try parseExpression(withPrecedence: .lowest) else {
+        guard let expression = try parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
             return nil
         }
 
@@ -130,16 +116,13 @@ struct MonkeyParser: Parser {
         return ExpressionStatement(token: token, expression: expression)
     }
 
-    mutating func parseExpression(withPrecedence precedence: Precedence) throws -> Expression? {
+    mutating func parseExpression(withPrecedence precedence: Int) throws -> Expression? {
         guard let token = self.currentToken else {
             return nil
         }
 
-        guard let prefix = self.prefixParseFuncs[token.type] else {
-            return nil
-        }
+        let leftExpression = try self.prefixParser.parse(&self)
 
-        let leftExpression = try prefix(token)
         return leftExpression
     }
 
@@ -157,5 +140,59 @@ struct MonkeyParser: Parser {
         var description: String {
             "<Expression Placeholder>"
         }
+    }
+}
+
+struct ExpressionParser: PrefixParser, InfixParser {
+    func parse<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken else {
+            return nil
+        }
+
+        switch token.type {
+        case Token.Kind.identifier:
+            return try parseIdentifier(&parser)
+        case Token.Kind.int:
+            return try parseInteger(&parser)
+        case Token.Kind.bang, Token.Kind.minus:
+            return try parsePrefix(&parser)
+        default:
+            throw MissingPrefixFunc(token: token)
+        }
+    }
+
+    func parse<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
+        return nil
+    }
+
+    func parseIdentifier<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .identifier else {
+            return nil
+        }
+
+        return Identifier(token: token, value: token.literal)
+    }
+
+    func parseInteger<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .int else {
+            return nil
+        }
+
+        return try IntegerLiteral(token: token)
+    }
+
+    func parsePrefix<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .bang || token.type == .minus else {
+            return nil
+        }
+
+        parser.readToken()
+
+        guard let rhs = try parser.parseExpression(withPrecedence: MonkeyPrecedence.prefix.rawValue) else {
+            // TODO: Throw the right error
+            return nil
+        }
+
+        return PrefixExpression(token: token, operatorSymbol: token.literal, rhs: rhs)
     }
 }

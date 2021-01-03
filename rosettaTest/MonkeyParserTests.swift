@@ -129,4 +129,32 @@ class MonkeyParserTests: XCTestCase {
         XCTAssertEqual(identifier?.value, 100)
         XCTAssertEqual(identifier?.literal, "100")
     }
+
+    func testPrefixExpressions() throws {
+        let tests = [
+            (input: "!5;", operator: "!", int: 5),
+            (input: "-15;", operator: "-", int: 15)
+        ]
+
+        for test in tests {
+            let lexer = MonkeyLexer(withString: test.input)
+            var parser = MonkeyParser(lexer: lexer)
+
+            let program = try parser.parseProgram()
+            XCTAssertNotNil(program)
+            XCTAssertEqual(program?.statements.count, 1)
+
+            let expressionStmt = program?.statements[0] as? ExpressionStatement
+            XCTAssertNotNil(expressionStmt)
+
+            let prefix = expressionStmt?.expression as? PrefixExpression
+            XCTAssertNotNil(prefix)
+            XCTAssertEqual(prefix?.operatorSymbol, test.operator)
+
+            let integer = prefix?.rhs as? IntegerLiteral
+            XCTAssertNotNil(integer)
+            XCTAssertEqual(integer?.value, test.int)
+            XCTAssertEqual(integer?.literal, test.int.description)
+        }
+    }
 }
