@@ -18,10 +18,27 @@ enum MonkeyPrecedence: Int {
 }
 
 struct MonkeyParser: Parser {
+    static let precedences: [Token.Kind: MonkeyPrecedence] = [
+        .equals: .equals,
+        .notEquals: .equals,
+        .lt: .lessGreater,
+        .gt: .lessGreater,
+        .plus: .sum,
+        .minus: .sum,
+        .slash: .product,
+        .asterisk: .product
+    ]
+
     var lexer: Lexer
 
     var currentToken: Token?
+    var currentPrecendece: Int {
+        (MonkeyParser.precedences[currentToken?.type ?? .ilegal] ?? .lowest).rawValue
+    }
     var nextToken: Token?
+    var nextPrecendece: Int {
+        (MonkeyParser.precedences[nextToken?.type ?? .ilegal] ?? .lowest).rawValue
+    }
 
     var prefixParser: PrefixParser
     var infixParser: InfixParser
@@ -117,11 +134,15 @@ struct MonkeyParser: Parser {
     }
 
     mutating func parseExpression(withPrecedence precedence: Int) throws -> Expression? {
-        guard let token = self.currentToken else {
+        var leftExpression = try self.prefixParser.parse(&self)
+        guard leftExpression != nil else {
             return nil
         }
 
-        let leftExpression = try self.prefixParser.parse(&self)
+        while self.nextToken?.type != .semicolon && precedence < self.nextPrecendece {
+            self.readToken()
+            leftExpression = try self.infixParser.parse(&self, lhs: leftExpression!)
+        }
 
         return leftExpression
     }
@@ -162,7 +183,18 @@ struct ExpressionParser: PrefixParser, InfixParser {
     }
 
     func parse<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
-        return nil
+        guard let token = parser.currentToken else {
+            return nil
+        }
+
+        let precedence = parser.currentPrecendece
+        parser.readToken()
+        guard let rhs = try parser.parseExpression(withPrecedence: precedence) else {
+            // TODO: Throw the right error
+            return nil
+        }
+
+        return InfixExpression(token: token, lhs: lhs, operatorSymbol: token.literal, rhs: rhs)
     }
 
     func parseIdentifier<P>(_ parser: inout P) throws -> Expression? where P: Parser {

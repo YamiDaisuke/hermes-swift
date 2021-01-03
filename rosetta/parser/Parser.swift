@@ -23,7 +23,9 @@ protocol InfixParser {
 protocol Parser {
     var lexer: Lexer { get set }
     var currentToken: Token? { get set }
+    var currentPrecendece: Int { get }
     var nextToken: Token? { get set }
+    var nextPrecendece: Int { get }
 
     /// Will hold helper functions thar will be used to parse expression
     /// components based on how they are used

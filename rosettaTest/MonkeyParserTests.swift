@@ -157,4 +157,68 @@ class MonkeyParserTests: XCTestCase {
             XCTAssertEqual(integer?.literal, test.int.description)
         }
     }
+
+    func testInfixExpressions() throws {
+        let tests = [
+            (input: "5 + 5;", lhs: 5, operator: "+", rhs: 5),
+            (input: "5 - 5;", lhs: 5, operator: "-", rhs: 5),
+            (input: "5 * 5;", lhs: 5, operator: "*", rhs: 5),
+            (input: "5 / 5;", lhs: 5, operator: "/", rhs: 5),
+            (input: "5 > 5;", lhs: 5, operator: ">", rhs: 5),
+            (input: "5 < 5;", lhs: 5, operator: "<", rhs: 5),
+            (input: "5 == 5;", lhs: 5, operator: "==", rhs: 5),
+            (input: "5 != 5;", lhs: 5, operator: "!=", rhs: 5)
+        ]
+
+        for test in tests {
+            let lexer = MonkeyLexer(withString: test.input)
+            var parser = MonkeyParser(lexer: lexer)
+
+            let program = try parser.parseProgram()
+            XCTAssertNotNil(program)
+            XCTAssertEqual(program?.statements.count, 1)
+
+            let expressionStmt = program?.statements[0] as? ExpressionStatement
+            XCTAssertNotNil(expressionStmt)
+
+            let infix = expressionStmt?.expression as? InfixExpression
+            XCTAssertNotNil(infix)
+            XCTAssertEqual(infix?.operatorSymbol, test.operator)
+
+            let lhs = infix?.lhs as? IntegerLiteral
+            XCTAssertNotNil(lhs)
+            XCTAssertEqual(lhs?.value, test.lhs)
+            XCTAssertEqual(lhs?.literal, test.lhs.description)
+
+            let rhs = infix?.rhs as? IntegerLiteral
+            XCTAssertNotNil(rhs)
+            XCTAssertEqual(rhs?.value, test.rhs)
+            XCTAssertEqual(rhs?.literal, test.rhs.description)
+        }
+    }
+
+    func testExpressions() throws {
+        let tests = [
+            ("-a * b", "((-a) * b)\n"),
+            ("!-a", "(!(-a))\n"),
+            ("a + b - c", "((a + b) - c)\n"),
+            ("a * b * c", "((a * b) * c)\n"),
+            ("a * b / c", "((a * b) / c)\n"),
+            ("a + b * c + d / e - f", "(((a + (b * c)) + (d / e)) - f)\n"),
+            ("3 + 4; -5 * 5", "(3 + 4)\n((-5) * 5)\n"),
+            ("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))\n"),
+            ("5 < 4 != 3 > 4", "((5 < 4) != (3 > 4))\n"),
+            ("3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))\n"),
+            ("3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))\n")
+        ]
+
+        for test in tests {
+            let lexer = MonkeyLexer(withString: test.0)
+            var parser = MonkeyParser(lexer: lexer)
+
+            let program = try parser.parseProgram()
+            XCTAssertNotNil(program)
+            XCTAssertEqual(program?.description, test.1)
+        }
+    }
 }
