@@ -9,7 +9,7 @@ import Foundation
 
 /// Throw this error when an invalid integer
 /// literal is found in the input script 
-struct InvalidIntegerLiteal: ParseError {
+struct InvalidIntegerLiteral: ParseError {
     var message: String
     var line: Int?
     var column: Int?
@@ -30,7 +30,7 @@ struct IntegerLiteral: Expression {
     init(token: Token) throws {
         self.token = token
         guard let intValue = Int(token.literal) else {
-            throw InvalidIntegerLiteal(literal: token.literal, line: token.line, column: token.column)
+            throw InvalidIntegerLiteral(literal: token.literal, line: token.line, column: token.column)
         }
         self.value = intValue
     }

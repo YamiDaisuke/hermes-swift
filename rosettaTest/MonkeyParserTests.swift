@@ -96,10 +96,7 @@ class MonkeyParserTests: XCTestCase {
 
         let expressionStmt = program?.statements.first as? ExpressionStatement
         XCTAssertNotNil(expressionStmt)
-        let identifier = expressionStmt?.expression as? Identifier
-        XCTAssertNotNil(identifier)
-        XCTAssertEqual(identifier?.value, "foobar")
-        XCTAssertEqual(identifier?.literal, "foobar")
+        assertIdentifier(expression: expressionStmt?.expression, expected: "foobar")
     }
 
     func testIntLiteralExpression() throws {
@@ -117,23 +114,41 @@ class MonkeyParserTests: XCTestCase {
 
         var expressionStmt = program?.statements[0] as? ExpressionStatement
         XCTAssertNotNil(expressionStmt)
-        var identifier = expressionStmt?.expression as? IntegerLiteral
-        XCTAssertNotNil(identifier)
-        XCTAssertEqual(identifier?.value, 5)
-        XCTAssertEqual(identifier?.literal, "5")
+        assertIntegerLiteral(expression: expressionStmt?.expression, expected: 5)
 
         expressionStmt = program?.statements[1] as? ExpressionStatement
         XCTAssertNotNil(expressionStmt)
-        identifier = expressionStmt?.expression as? IntegerLiteral
-        XCTAssertNotNil(identifier)
-        XCTAssertEqual(identifier?.value, 100)
-        XCTAssertEqual(identifier?.literal, "100")
+        assertIntegerLiteral(expression: expressionStmt?.expression, expected: 100)
+    }
+
+    func testBooleanExpression() throws {
+        let input = """
+        true;
+        false;
+        """
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertNotNil(program)
+        XCTAssertEqual(program?.statements.count, 2)
+
+        var expressionStmt = program?.statements[0] as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        assertBoolLiteral(expression: expressionStmt?.expression, expected: true)
+
+        expressionStmt = program?.statements[1] as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        assertBoolLiteral(expression: expressionStmt?.expression, expected: false)
     }
 
     func testPrefixExpressions() throws {
-        let tests = [
-            (input: "!5;", operator: "!", int: 5),
-            (input: "-15;", operator: "-", int: 15)
+        let tests: [(input: String, operator: String, value: Any)] = [
+            (input: "!5;", operator: "!", value: 5),
+            (input: "-15;", operator: "-", value: 15),
+            (input: "!true;", operator: "!", value: true),
+            (input: "!false;", operator: "!", value: false)
         ]
 
         for test in tests {
@@ -151,15 +166,19 @@ class MonkeyParserTests: XCTestCase {
             XCTAssertNotNil(prefix)
             XCTAssertEqual(prefix?.operatorSymbol, test.operator)
 
-            let integer = prefix?.rhs as? IntegerLiteral
-            XCTAssertNotNil(integer)
-            XCTAssertEqual(integer?.value, test.int)
-            XCTAssertEqual(integer?.literal, test.int.description)
+            if let intValue = test.value as? Int {
+                assertIntegerLiteral(expression: prefix?.rhs, expected: intValue)
+            }
+
+            if let boolValue = test.value as? Bool {
+                assertBoolLiteral(expression: prefix?.rhs, expected: boolValue)
+            }
+
         }
     }
 
     func testInfixExpressions() throws {
-        let tests = [
+        let tests: [(input: String, lhs: Any, operator: String, rhs: Any)] = [
             (input: "5 + 5;", lhs: 5, operator: "+", rhs: 5),
             (input: "5 - 5;", lhs: 5, operator: "-", rhs: 5),
             (input: "5 * 5;", lhs: 5, operator: "*", rhs: 5),
@@ -167,7 +186,10 @@ class MonkeyParserTests: XCTestCase {
             (input: "5 > 5;", lhs: 5, operator: ">", rhs: 5),
             (input: "5 < 5;", lhs: 5, operator: "<", rhs: 5),
             (input: "5 == 5;", lhs: 5, operator: "==", rhs: 5),
-            (input: "5 != 5;", lhs: 5, operator: "!=", rhs: 5)
+            (input: "5 != 5;", lhs: 5, operator: "!=", rhs: 5),
+            (input: "true == true;", lhs: true, operator: "==", rhs: true),
+            (input: "true != false;", lhs: true, operator: "!=", rhs: false),
+            (input: "false == false;", lhs: false, operator: "==", rhs: false)
         ]
 
         for test in tests {
@@ -185,15 +207,21 @@ class MonkeyParserTests: XCTestCase {
             XCTAssertNotNil(infix)
             XCTAssertEqual(infix?.operatorSymbol, test.operator)
 
-            let lhs = infix?.lhs as? IntegerLiteral
-            XCTAssertNotNil(lhs)
-            XCTAssertEqual(lhs?.value, test.lhs)
-            XCTAssertEqual(lhs?.literal, test.lhs.description)
+            if let intValue = test.lhs as? Int {
+                assertIntegerLiteral(expression: infix?.lhs, expected: intValue)
+            }
 
-            let rhs = infix?.rhs as? IntegerLiteral
-            XCTAssertNotNil(rhs)
-            XCTAssertEqual(rhs?.value, test.rhs)
-            XCTAssertEqual(rhs?.literal, test.rhs.description)
+            if let intValue = test.rhs as? Int {
+                assertIntegerLiteral(expression: infix?.rhs, expected: intValue)
+            }
+
+            if let boolValue = test.lhs as? Bool {
+                assertBoolLiteral(expression: infix?.lhs, expected: boolValue)
+            }
+
+            if let boolValue = test.rhs as? Bool {
+                assertBoolLiteral(expression: infix?.rhs, expected: boolValue)
+            }
         }
     }
 
@@ -209,7 +237,11 @@ class MonkeyParserTests: XCTestCase {
             ("5 > 4 == 3 < 4", "((5 > 4) == (3 < 4))\n"),
             ("5 < 4 != 3 > 4", "((5 < 4) != (3 > 4))\n"),
             ("3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))\n"),
-            ("3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))\n")
+            ("3 + 4 * 5 == 3 * 1 + 4 * 5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))\n"),
+            ("true", "true\n"),
+            ("false", "false\n"),
+            ("3 > 5 == false", "((3 > 5) == false)\n"),
+            ("3 > 5 == true", "((3 > 5) == true)\n")
         ]
 
         for test in tests {
@@ -220,5 +252,28 @@ class MonkeyParserTests: XCTestCase {
             XCTAssertNotNil(program)
             XCTAssertEqual(program?.description, test.1)
         }
+    }
+
+    // MARK: Utils
+
+    func assertIntegerLiteral(expression: Expression?, expected: Int) {
+        let integer = expression as? IntegerLiteral
+        XCTAssertNotNil(integer)
+        XCTAssertEqual(integer?.value, expected)
+        XCTAssertEqual(integer?.literal, expected.description)
+    }
+
+    func assertBoolLiteral(expression: Expression?, expected: Bool) {
+        let boolean = expression as? BooleanLiteral
+        XCTAssertNotNil(boolean)
+        XCTAssertEqual(boolean?.value, expected)
+        XCTAssertEqual(boolean?.literal, expected.description)
+    }
+
+    func assertIdentifier(expression: Expression?, expected: String) {
+        let identifier = expression as? Identifier
+        XCTAssertNotNil(identifier)
+        XCTAssertEqual(identifier?.value, expected)
+        XCTAssertEqual(identifier?.literal, expected)
     }
 }
