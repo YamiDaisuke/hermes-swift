@@ -179,6 +179,8 @@ struct ExpressionParser: PrefixParser, InfixParser {
             return try parsePrefix(&parser)
         case Token.Kind.true, Token.Kind.false:
             return try parseBoolean(&parser)
+        case Token.Kind.lparen:
+            return try parseGroupedExpression(&parser)
         default:
             throw MissingPrefixFunc(token: token)
         }
@@ -221,6 +223,18 @@ struct ExpressionParser: PrefixParser, InfixParser {
         }
 
         return try BooleanLiteral(token: token)
+    }
+
+    func parseGroupedExpression<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .lparen else {
+            return nil
+        }
+
+        parser.readToken()
+        let expression = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue)
+
+        try parser.expectNext(toBe: .rparen)
+        return expression
     }
 
     func parsePrefix<P>(_ parser: inout P) throws -> Expression? where P: Parser {

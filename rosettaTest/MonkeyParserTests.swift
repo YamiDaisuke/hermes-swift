@@ -241,7 +241,12 @@ class MonkeyParserTests: XCTestCase {
             ("true", "true\n"),
             ("false", "false\n"),
             ("3 > 5 == false", "((3 > 5) == false)\n"),
-            ("3 > 5 == true", "((3 > 5) == true)\n")
+            ("3 > 5 == true", "((3 > 5) == true)\n"),
+            ("1 + (2 + 3) + 4", "((1 + (2 + 3)) + 4)\n"),
+            ("(5 + 5) * 2", "((5 + 5) * 2)\n"),
+            ("2 / (5 + 5)", "(2 / (5 + 5))\n"),
+            ("-(5 + 5)", "(-(5 + 5))\n"),
+            ("!(true == true)", "(!(true == true))\n")
         ]
 
         for test in tests {
