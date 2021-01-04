@@ -11,7 +11,7 @@ extension String {
     /// Returns `true` if this `String` contains only characters consider
     /// a valid letter for identifiers
     public var isLetter: Bool {
-        self ~= "[a-zA-Z_]"
+        self =~ "[a-zA-Z_]"
     }
 }
 
@@ -23,6 +23,7 @@ extension Character {
     }
 }
 
+infix operator =~
 extension String {
     /// Compares a `String` against another string containing a regular expression
     ///
@@ -30,7 +31,7 @@ extension String {
     ///   - lhs: The `String` to match
     ///   - rhs: A `String` containing a valid regular expression to match againts `lhs`
     /// - Returns: `true` if `lhs` matches the regular expression in `rhs` or `false` otherwise
-    static func ~= (lhs: String, rhs: String) -> Bool {
+    static func =~ (lhs: String, rhs: String) -> Bool {
         guard let regex = try? NSRegularExpression(pattern: rhs) else { return false }
         let range = NSRange(location: 0, length: lhs.utf16.count)
         return regex.firstMatch(in: lhs, options: [], range: range) != nil
