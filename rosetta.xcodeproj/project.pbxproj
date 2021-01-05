@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F8625BD925A533B0001F555D /* MonkeyParserStatementsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8625BD825A533B0001F555D /* MonkeyParserStatementsTests.swift */; };
 		F8685BDC259BA27100677A8B /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */; };
 		F8685D2E259D3D1100677A8B /* MonkeyLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */; };
 		F8685D31259D3D3200677A8B /* MonkeyLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */; };
@@ -42,7 +43,7 @@
 		F882F946259FA9B40069DCD6 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F944259FA9B40069DCD6 /* Parser.swift */; };
 		F882F94A259FA9C30069DCD6 /* MonkeyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F949259FA9C30069DCD6 /* MonkeyParser.swift */; };
 		F882F94B259FA9C30069DCD6 /* MonkeyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F949259FA9C30069DCD6 /* MonkeyParser.swift */; };
-		F882F94F259FAB690069DCD6 /* MonkeyParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F94E259FAB690069DCD6 /* MonkeyParserTests.swift */; };
+		F882F94F259FAB690069DCD6 /* MonkeyParserExpressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F94E259FAB690069DCD6 /* MonkeyParserExpressionTests.swift */; };
 		F8B49BF125993C2C005D91E7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49BF025993C2C005D91E7 /* main.swift */; };
 		F8B49BFB25993EA6005D91E7 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49BFA25993EA6005D91E7 /* Token.swift */; };
 		F8B49D90259A64AD005D91E7 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49D8F259A64AD005D91E7 /* Tokens.swift */; };
@@ -78,6 +79,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F8625BD825A533B0001F555D /* MonkeyParserStatementsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParserStatementsTests.swift; sourceTree = "<group>"; };
 		F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyLexer.swift; sourceTree = "<group>"; };
 		F8685D35259D42DF00677A8B /* Repl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repl.swift; sourceTree = "<group>"; };
@@ -97,7 +99,7 @@
 		F882F93D259FA8DE0069DCD6 /* LetStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetStatement.swift; sourceTree = "<group>"; };
 		F882F944259FA9B40069DCD6 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		F882F949259FA9C30069DCD6 /* MonkeyParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParser.swift; sourceTree = "<group>"; };
-		F882F94E259FAB690069DCD6 /* MonkeyParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParserTests.swift; sourceTree = "<group>"; };
+		F882F94E259FAB690069DCD6 /* MonkeyParserExpressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParserExpressionTests.swift; sourceTree = "<group>"; };
 		F8B49BED25993C2C005D91E7 /* rosetta */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = rosetta; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8B49BF025993C2C005D91E7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		F8B49BFA25993EA6005D91E7 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
@@ -229,7 +231,8 @@
 				F8B49DE4259A926C005D91E7 /* LexerTests.swift */,
 				F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */,
 				F8685D51259E355600677A8B /* MonkeyLexerTests.swift */,
-				F882F94E259FAB690069DCD6 /* MonkeyParserTests.swift */,
+				F882F94E259FAB690069DCD6 /* MonkeyParserExpressionTests.swift */,
+				F8625BD825A533B0001F555D /* MonkeyParserStatementsTests.swift */,
 			);
 			path = rosettaTest;
 			sourceTree = "<group>";
@@ -377,7 +380,8 @@
 				F86BC22D25A3D5520039337E /* IfExpression.swift in Sources */,
 				F86BC1D625A23C590039337E /* BooleanLiteral.swift in Sources */,
 				F882F939259FA81E0069DCD6 /* Program.swift in Sources */,
-				F882F94F259FAB690069DCD6 /* MonkeyParserTests.swift in Sources */,
+				F8625BD925A533B0001F555D /* MonkeyParserStatementsTests.swift in Sources */,
+				F882F94F259FAB690069DCD6 /* MonkeyParserExpressionTests.swift in Sources */,
 				F86BC1C125A12FAF0039337E /* IntegerLiteral.swift in Sources */,
 				F8B49DEF259AB9A4005D91E7 /* StringExtensions.swift in Sources */,
 				F86BC1B825A11A9E0039337E /* ExpressionStatement.swift in Sources */,
