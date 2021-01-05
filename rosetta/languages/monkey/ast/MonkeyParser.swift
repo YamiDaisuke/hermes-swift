@@ -164,6 +164,28 @@ struct MonkeyParser: Parser {
     }
 }
 
+extension Parser {
+    /// This method belongs  to `MonkeyParser` because is not generic to any language
+    /// however to avoid unnecesary complexity with the mutability inside the prefix and
+    /// infix parser I have decided to add it as an extension of the generic `Parser` `protocol`
+    mutating func parseBlockStatement() throws -> BlockStatement? {
+        guard let token = self.currentToken, token.type == .lbrace else {
+            return nil
+        }
+
+        var statements: [Statement] = []
+        self.readToken()
+        while self.currentToken?.type != .rbrace && self.currentToken?.type != .eof {
+            if let statement = try self.parseStatement() {
+                statements.append(statement)
+            }
+            self.readToken()
+        }
+
+        return BlockStatement(token: token, statements: statements)
+    }
+}
+
 struct ExpressionParser: PrefixParser, InfixParser {
     func parse<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken else {
@@ -181,6 +203,8 @@ struct ExpressionParser: PrefixParser, InfixParser {
             return try parseBoolean(&parser)
         case Token.Kind.lparen:
             return try parseGroupedExpression(&parser)
+        case Token.Kind.if:
+            return try parseIfExpression(&parser)
         default:
             throw MissingPrefixFunc(token: token)
         }
@@ -235,6 +259,42 @@ struct ExpressionParser: PrefixParser, InfixParser {
 
         try parser.expectNext(toBe: .rparen)
         return expression
+    }
+
+    func parseIfExpression<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .if else {
+            return nil
+        }
+
+        try parser.expectNext(toBe: .lparen)
+
+        parser.readToken()
+
+        guard let condition = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
+            return nil
+        }
+
+        try parser.expectNext(toBe: .rparen)
+        try parser.expectNext(toBe: .lbrace)
+
+        guard let consequence = try parser.parseBlockStatement() else {
+            return nil
+        }
+
+        var alternative: BlockStatement?
+        if parser.nextToken?.type == .else {
+            parser.readToken()
+
+            try parser.expectNext(toBe: .lbrace)
+            alternative = try parser.parseBlockStatement()
+        }
+
+        return IfExpression(
+            token: token,
+            condition: condition,
+            consequence: consequence,
+            alternative: alternative
+        )
     }
 
     func parsePrefix<P>(_ parser: inout P) throws -> Expression? where P: Parser {

@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Throw this error if there is no known way to parse a given `Token`
+/// as a prefix operator 
 struct MissingPrefixFunc: ParseError {
     var message: String
     var line: Int?
@@ -19,6 +21,8 @@ struct MissingPrefixFunc: ParseError {
     }
 }
 
+/// Represent expressions in the form of:
+/// `<operator><expression>`
 struct PrefixExpression: Expression {
     var token: Token
     var operatorSymbol: String

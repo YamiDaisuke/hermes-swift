@@ -259,7 +259,60 @@ class MonkeyParserTests: XCTestCase {
         }
     }
 
+    func testIfExpression() throws {
+        let input = "if (x < y) { x }"
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertNotNil(program)
+        XCTAssertEqual(program?.statements.count, 1)
+        let expressionStatement = program?.statements.first as? ExpressionStatement
+        let ifExpression = expressionStatement?.expression as? IfExpression
+        XCTAssertNotNil(ifExpression)
+        assertInfixExpression(expression: ifExpression?.condition, lhs: "x", operatorSymbol: "<", rhs: "y")
+
+        XCTAssertEqual(ifExpression?.consequence.statements.count, 1)
+        XCTAssertNotNil(ifExpression?.consequence.statements.first)
+        let consequence = ifExpression?.consequence.statements.first as? ExpressionStatement
+        assertIdentifier(expression: consequence?.expression, expected: "x")
+
+        XCTAssertNil(ifExpression?.alternative)
+    }
+
+    func testIfElseExpression() throws {
+        let input = "if (x < y) { x } else { y }"
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertNotNil(program)
+        XCTAssertEqual(program?.statements.count, 1)
+        let expressionStatement = program?.statements.first as? ExpressionStatement
+        let ifExpression = expressionStatement?.expression as? IfExpression
+        XCTAssertNotNil(ifExpression)
+        assertInfixExpression(expression: ifExpression?.condition, lhs: "x", operatorSymbol: "<", rhs: "y")
+
+        XCTAssertEqual(ifExpression?.consequence.statements.count, 1)
+        XCTAssertNotNil(ifExpression?.consequence.statements.first)
+        let consequence = ifExpression?.consequence.statements.first as? ExpressionStatement
+        assertIdentifier(expression: consequence?.expression, expected: "x")
+
+        XCTAssertNotNil(ifExpression?.alternative)
+        let alternative = ifExpression?.alternative?.statements.first as? ExpressionStatement
+        assertIdentifier(expression: alternative?.expression, expected: "y")
+    }
+
     // MARK: Utils
+    func assertInfixExpression(expression: Expression?, lhs: String, operatorSymbol: String, rhs: String) {
+        let infix = expression as? InfixExpression
+        XCTAssertNotNil(infix)
+        XCTAssertEqual(infix?.lhs.literal, lhs)
+        XCTAssertEqual(infix?.operatorSymbol, operatorSymbol)
+        XCTAssertEqual(infix?.rhs.literal, rhs)
+    }
 
     func assertIntegerLiteral(expression: Expression?, expected: Int) {
         let integer = expression as? IntegerLiteral

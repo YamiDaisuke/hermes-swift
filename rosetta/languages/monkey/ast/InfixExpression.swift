@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Represent expressions in the form of:
+/// `<expression> <operator> <expression>`
 struct InfixExpression: Expression {
     var token: Token
     var lhs: Expression
