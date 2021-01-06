@@ -231,6 +231,25 @@ class MonkeyParserExpressionTests: XCTestCase {
         assertIdentifier(expression: alternative?.expression, expected: "y")
     }
 
+    func testFunctionLiteral() throws {
+        let input = "fn(x, y) { x + y; }"
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertNotNil(program)
+        XCTAssertEqual(program?.statements.count, 1)
+        let expressionStatement = program?.statements.first as? ExpressionStatement
+        let function = expressionStatement?.expression as? FuctionLiteral
+        XCTAssertEqual(function?.params.count, 2)
+        XCTAssertEqual(function?.params[0].value, "x")
+        XCTAssertEqual(function?.params[1].value, "y")
+        XCTAssertEqual(function?.body.statements.count, 1)
+        let bodyExpression = function?.body.statements.first as? ExpressionStatement
+        assertInfixExpression(expression: bodyExpression?.expression, lhs: "x", operatorSymbol: "+", rhs: "y")
+    }
+
     // MARK: Utils
     func assertInfixExpression(expression: Expression?, lhs: String, operatorSymbol: String, rhs: String) {
         let infix = expression as? InfixExpression

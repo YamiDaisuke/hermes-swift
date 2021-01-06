@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		F8625BD925A533B0001F555D /* MonkeyParserStatementsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8625BD825A533B0001F555D /* MonkeyParserStatementsTests.swift */; };
+		F8625BDF25A5348C001F555D /* FunctionLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8625BDE25A5348C001F555D /* FunctionLiteral.swift */; };
+		F8625BE025A5348C001F555D /* FunctionLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8625BDE25A5348C001F555D /* FunctionLiteral.swift */; };
 		F8685BDC259BA27100677A8B /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */; };
 		F8685D2E259D3D1100677A8B /* MonkeyLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */; };
 		F8685D31259D3D3200677A8B /* MonkeyLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */; };
@@ -80,6 +82,7 @@
 
 /* Begin PBXFileReference section */
 		F8625BD825A533B0001F555D /* MonkeyParserStatementsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParserStatementsTests.swift; sourceTree = "<group>"; };
+		F8625BDE25A5348C001F555D /* FunctionLiteral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FunctionLiteral.swift; sourceTree = "<group>"; };
 		F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyLexer.swift; sourceTree = "<group>"; };
 		F8685D35259D42DF00677A8B /* Repl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repl.swift; sourceTree = "<group>"; };
@@ -151,6 +154,7 @@
 		F882F93C259FA8950069DCD6 /* ast */ = {
 			isa = PBXGroup;
 			children = (
+				F8625BDE25A5348C001F555D /* FunctionLiteral.swift */,
 				F882F93D259FA8DE0069DCD6 /* LetStatement.swift */,
 				F882F949259FA9C30069DCD6 /* MonkeyParser.swift */,
 				F86BC1A625A1158A0039337E /* ReturnStatement.swift */,
@@ -354,6 +358,7 @@
 				F86BC23125A3E0AD0039337E /* BlockStatement.swift in Sources */,
 				F882F945259FA9B40069DCD6 /* Parser.swift in Sources */,
 				F8B49BFB25993EA6005D91E7 /* Token.swift in Sources */,
+				F8625BDF25A5348C001F555D /* FunctionLiteral.swift in Sources */,
 				F8685D36259D42DF00677A8B /* Repl.swift in Sources */,
 				F882F931259E8F760069DCD6 /* Node.swift in Sources */,
 				F86BC1CC25A211770039337E /* InfixExpression.swift in Sources */,
@@ -402,6 +407,7 @@
 				F8685D52259E355600677A8B /* MonkeyLexerTests.swift in Sources */,
 				F86BC1A3259FED590039337E /* ParseError.swift in Sources */,
 				F86BC1C825A134BA0039337E /* PrefixExpression.swift in Sources */,
+				F8625BE025A5348C001F555D /* FunctionLiteral.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

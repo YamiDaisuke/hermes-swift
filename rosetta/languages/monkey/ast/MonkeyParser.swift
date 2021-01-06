@@ -164,28 +164,6 @@ struct MonkeyParser: Parser {
     }
 }
 
-extension Parser {
-    /// This method belongs  to `MonkeyParser` because is not generic to any language
-    /// however to avoid unnecesary complexity with the mutability inside the prefix and
-    /// infix parser I have decided to add it as an extension of the generic `Parser` `protocol`
-    mutating func parseBlockStatement() throws -> BlockStatement? {
-        guard let token = self.currentToken, token.type == .lbrace else {
-            return nil
-        }
-
-        var statements: [Statement] = []
-        self.readToken()
-        while self.currentToken?.type != .rbrace && self.currentToken?.type != .eof {
-            if let statement = try self.parseStatement() {
-                statements.append(statement)
-            }
-            self.readToken()
-        }
-
-        return BlockStatement(token: token, statements: statements)
-    }
-}
-
 struct ExpressionParser: PrefixParser, InfixParser {
     func parse<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken else {
@@ -205,6 +183,8 @@ struct ExpressionParser: PrefixParser, InfixParser {
             return try parseGroupedExpression(&parser)
         case Token.Kind.if:
             return try parseIfExpression(&parser)
+        case Token.Kind.function:
+            return try parseFunctionLiteral(&parser)
         default:
             throw MissingPrefixFunc(token: token)
         }
@@ -277,7 +257,7 @@ struct ExpressionParser: PrefixParser, InfixParser {
         try parser.expectNext(toBe: .rparen)
         try parser.expectNext(toBe: .lbrace)
 
-        guard let consequence = try parser.parseBlockStatement() else {
+        guard let consequence = try self.parseBlockStatement(parser: &parser) else {
             return nil
         }
 
@@ -286,7 +266,7 @@ struct ExpressionParser: PrefixParser, InfixParser {
             parser.readToken()
 
             try parser.expectNext(toBe: .lbrace)
-            alternative = try parser.parseBlockStatement()
+            alternative = try parseBlockStatement(parser: &parser)
         }
 
         return IfExpression(
@@ -295,6 +275,67 @@ struct ExpressionParser: PrefixParser, InfixParser {
             consequence: consequence,
             alternative: alternative
         )
+    }
+
+    func parseFunctionLiteral<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .function else {
+            return nil
+        }
+
+        try parser.expectNext(toBe: .lparen)
+        let params = try self.parseFunctionParams(parser: &parser)
+
+        try parser.expectNext(toBe: .lbrace)
+
+        guard let body = try self.parseBlockStatement(parser: &parser) else {
+            return nil
+        }
+
+        return FuctionLiteral(token: token, params: params, body: body)
+    }
+
+    func parseFunctionParams<P>(parser: inout P) throws -> [Identifier] where P: Parser {
+        var identifiers: [Identifier] = []
+
+        guard parser.nextToken?.type != .lparen else {
+            parser.readToken()
+            return identifiers
+        }
+
+        parser.readToken()
+
+        if let token = parser.currentToken, token.type == .identifier {
+            identifiers.append(Identifier(token: token, value: token.literal))
+        }
+
+        while parser.nextToken?.type == .comma {
+            parser.readToken()
+            parser.readToken()
+            if let token = parser.currentToken, token.type == .identifier {
+                identifiers.append(Identifier(token: token, value: token.literal))
+            }
+        }
+
+        try parser.expectNext(toBe: .rparen)
+
+        return identifiers
+    }
+
+    func parseBlockStatement<P>(parser: inout P) throws -> BlockStatement? where P: Parser {
+        guard let token = parser.currentToken, token.type == .lbrace else {
+            return nil
+        }
+
+        var statements: [Statement] = []
+        parser.readToken()
+        while parser.currentToken?.type != .rbrace && parser.currentToken?.type != .eof {
+            if let statement = try parser.parseStatement() {
+                statements.append(statement)
+            }
+            parser.readToken()
+        }
+
+        return BlockStatement(token: token, statements: statements)
     }
 
     func parsePrefix<P>(_ parser: inout P) throws -> Expression? where P: Parser {
