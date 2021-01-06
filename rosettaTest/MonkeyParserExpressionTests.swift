@@ -172,7 +172,10 @@ class MonkeyParserExpressionTests: XCTestCase {
             ("(5 + 5) * 2", "((5 + 5) * 2)\n"),
             ("2 / (5 + 5)", "(2 / (5 + 5))\n"),
             ("-(5 + 5)", "(-(5 + 5))\n"),
-            ("!(true == true)", "(!(true == true))\n")
+            ("!(true == true)", "(!(true == true))\n"),
+            ("a + add(b * c) + d", "((a + add((b * c))) + d)\n"),
+            ("add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))", "add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))\n"),
+            ("add(a + b + c * d / f + g)", "add((((a + b) + ((c * d) / f)) + g))\n")
         ]
 
         for test in tests {
@@ -248,6 +251,25 @@ class MonkeyParserExpressionTests: XCTestCase {
         XCTAssertEqual(function?.body.statements.count, 1)
         let bodyExpression = function?.body.statements.first as? ExpressionStatement
         assertInfixExpression(expression: bodyExpression?.expression, lhs: "x", operatorSymbol: "+", rhs: "y")
+    }
+
+    func testCallExpression() throws {
+        let input = "add(1, 2 * 3, 4 + 5)"
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertNotNil(program)
+        XCTAssertEqual(program?.statements.count, 1)
+
+        let expressionStatement = program?.statements.first as? ExpressionStatement
+        let call = expressionStatement?.expression as? CallExpression
+
+        assertIdentifier(expression: call?.function, expected: "add")
+        assertIntegerLiteral(expression: call?.args[0], expected: 1)
+        assertInfixExpression(expression: call?.args[1], lhs: "2", operatorSymbol: "*", rhs: "3")
+        assertInfixExpression(expression: call?.args[2], lhs: "4", operatorSymbol: "+", rhs: "5")
     }
 
     // MARK: Utils

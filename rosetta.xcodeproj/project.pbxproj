@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F815D2E625A67278001AE969 /* ExpressionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F815D2E525A67278001AE969 /* ExpressionParser.swift */; };
+		F815D2E725A67278001AE969 /* ExpressionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F815D2E525A67278001AE969 /* ExpressionParser.swift */; };
 		F8625BD925A533B0001F555D /* MonkeyParserStatementsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8625BD825A533B0001F555D /* MonkeyParserStatementsTests.swift */; };
 		F8625BDF25A5348C001F555D /* FunctionLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8625BDE25A5348C001F555D /* FunctionLiteral.swift */; };
 		F8625BE025A5348C001F555D /* FunctionLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8625BDE25A5348C001F555D /* FunctionLiteral.swift */; };
+		F8625BE625A546C7001F555D /* CallExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8625BE525A546C7001F555D /* CallExpression.swift */; };
+		F8625BEC25A5485D001F555D /* CallExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8625BE525A546C7001F555D /* CallExpression.swift */; };
 		F8685BDC259BA27100677A8B /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */; };
 		F8685D2E259D3D1100677A8B /* MonkeyLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */; };
 		F8685D31259D3D3200677A8B /* MonkeyLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */; };
@@ -81,8 +85,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F815D2E525A67278001AE969 /* ExpressionParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionParser.swift; sourceTree = "<group>"; };
 		F8625BD825A533B0001F555D /* MonkeyParserStatementsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParserStatementsTests.swift; sourceTree = "<group>"; };
 		F8625BDE25A5348C001F555D /* FunctionLiteral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FunctionLiteral.swift; sourceTree = "<group>"; };
+		F8625BE525A546C7001F555D /* CallExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallExpression.swift; sourceTree = "<group>"; };
 		F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyLexer.swift; sourceTree = "<group>"; };
 		F8685D35259D42DF00677A8B /* Repl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repl.swift; sourceTree = "<group>"; };
@@ -166,6 +172,8 @@
 				F86BC1D225A23AEA0039337E /* BooleanLiteral.swift */,
 				F86BC22B25A3D5510039337E /* IfExpression.swift */,
 				F86BC23025A3E0AD0039337E /* BlockStatement.swift */,
+				F8625BE525A546C7001F555D /* CallExpression.swift */,
+				F815D2E525A67278001AE969 /* ExpressionParser.swift */,
 			);
 			path = ast;
 			sourceTree = "<group>";
@@ -362,6 +370,7 @@
 				F8685D36259D42DF00677A8B /* Repl.swift in Sources */,
 				F882F931259E8F760069DCD6 /* Node.swift in Sources */,
 				F86BC1CC25A211770039337E /* InfixExpression.swift in Sources */,
+				F815D2E625A67278001AE969 /* ExpressionParser.swift in Sources */,
 				F882F94A259FA9C30069DCD6 /* MonkeyParser.swift in Sources */,
 				F8B49DEC259AA79C005D91E7 /* StringExtensions.swift in Sources */,
 				F86BC1A725A1158A0039337E /* ReturnStatement.swift in Sources */,
@@ -371,6 +380,7 @@
 				F882F938259FA81E0069DCD6 /* Program.swift in Sources */,
 				F86BC22C25A3D5520039337E /* IfExpression.swift in Sources */,
 				F8B49D94259A88CC005D91E7 /* Lexer.swift in Sources */,
+				F8625BE625A546C7001F555D /* CallExpression.swift in Sources */,
 				F8B49D90259A64AD005D91E7 /* Tokens.swift in Sources */,
 				F86BC1B225A11A990039337E /* Identifier.swift in Sources */,
 				F8685D2E259D3D1100677A8B /* MonkeyLexer.swift in Sources */,
@@ -398,6 +408,7 @@
 				F8685BDC259BA27100677A8B /* StringExtensionsTests.swift in Sources */,
 				F8B49DE5259A926C005D91E7 /* LexerTests.swift in Sources */,
 				F8B49DE8259A9291005D91E7 /* Tokens.swift in Sources */,
+				F8625BEC25A5485D001F555D /* CallExpression.swift in Sources */,
 				F86BC23225A3E0AD0039337E /* BlockStatement.swift in Sources */,
 				F882F946259FA9B40069DCD6 /* Parser.swift in Sources */,
 				F86BC1CF25A232350039337E /* InfixExpression.swift in Sources */,
@@ -407,6 +418,7 @@
 				F8685D52259E355600677A8B /* MonkeyLexerTests.swift in Sources */,
 				F86BC1A3259FED590039337E /* ParseError.swift in Sources */,
 				F86BC1C825A134BA0039337E /* PrefixExpression.swift in Sources */,
+				F815D2E725A67278001AE969 /* ExpressionParser.swift in Sources */,
 				F8625BE025A5348C001F555D /* FunctionLiteral.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
