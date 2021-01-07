@@ -99,11 +99,13 @@ struct MonkeyParser: Parser {
 
         try expectNext(toBe: .assign)
 
-        while self.currentToken?.type != .semicolon {
-            self.readToken()
+        self.readToken()
+        guard let expression = try parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
+            return nil
         }
+        try expectNext(toBe: .semicolon)
 
-        return LetStatement(token: token, name: name, value: Dummy())
+        return LetStatement(token: token, name: name, value: expression)
     }
 
     mutating func parseReturnStatement() throws -> ReturnStatement? {
@@ -111,11 +113,13 @@ struct MonkeyParser: Parser {
             return nil
         }
 
-        while self.currentToken?.type != .semicolon {
-            self.readToken()
+        self.readToken()
+        guard let expression = try parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
+            return nil
         }
+        try expectNext(toBe: .semicolon)
 
-        return ReturnStatement(token: token, value: Dummy())
+        return ReturnStatement(token: token, value: expression)
     }
 
     mutating func parseExpressionStatement() throws -> ExpressionStatement? {

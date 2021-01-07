@@ -17,7 +17,6 @@ class MonkeyParserExpressionTests: XCTestCase {
         var parser = MonkeyParser(lexer: lexer)
 
         let program = try parser.parseProgram()
-        XCTAssertNotNil(program)
         XCTAssertEqual(program?.statements.count, 1)
 
         let expressionStmt = program?.statements.first as? ExpressionStatement
@@ -35,7 +34,6 @@ class MonkeyParserExpressionTests: XCTestCase {
         var parser = MonkeyParser(lexer: lexer)
 
         let program = try parser.parseProgram()
-        XCTAssertNotNil(program)
         XCTAssertEqual(program?.statements.count, 2)
 
         var expressionStmt = program?.statements[0] as? ExpressionStatement
@@ -48,25 +46,21 @@ class MonkeyParserExpressionTests: XCTestCase {
     }
 
     func testBooleanExpression() throws {
-        let input = """
-        true;
-        false;
-        """
+        let tests = [
+            ("true;", true),
+            ("false;", false)
+        ]
 
-        let lexer = MonkeyLexer(withString: input)
-        var parser = MonkeyParser(lexer: lexer)
+        for test in tests {
+            let lexer = MonkeyLexer(withString: test.0)
+            var parser = MonkeyParser(lexer: lexer)
 
-        let program = try parser.parseProgram()
-        XCTAssertNotNil(program)
-        XCTAssertEqual(program?.statements.count, 2)
-
-        var expressionStmt = program?.statements[0] as? ExpressionStatement
-        XCTAssertNotNil(expressionStmt)
-        assertBoolLiteral(expression: expressionStmt?.expression, expected: true)
-
-        expressionStmt = program?.statements[1] as? ExpressionStatement
-        XCTAssertNotNil(expressionStmt)
-        assertBoolLiteral(expression: expressionStmt?.expression, expected: false)
+            let program = try parser.parseProgram()
+            XCTAssertEqual(program?.statements.count, 1)
+            let expressionStmt = program?.statements[0] as? ExpressionStatement
+            XCTAssertNotNil(expressionStmt)
+            assertBoolLiteral(expression: expressionStmt?.expression, expected: test.1)
+        }
     }
 
     func testPrefixExpressions() throws {
@@ -82,7 +76,6 @@ class MonkeyParserExpressionTests: XCTestCase {
             var parser = MonkeyParser(lexer: lexer)
 
             let program = try parser.parseProgram()
-            XCTAssertNotNil(program)
             XCTAssertEqual(program?.statements.count, 1)
 
             let expressionStmt = program?.statements[0] as? ExpressionStatement
@@ -123,7 +116,6 @@ class MonkeyParserExpressionTests: XCTestCase {
             var parser = MonkeyParser(lexer: lexer)
 
             let program = try parser.parseProgram()
-            XCTAssertNotNil(program)
             XCTAssertEqual(program?.statements.count, 1)
 
             let expressionStmt = program?.statements[0] as? ExpressionStatement
@@ -183,7 +175,6 @@ class MonkeyParserExpressionTests: XCTestCase {
             var parser = MonkeyParser(lexer: lexer)
 
             let program = try parser.parseProgram()
-            XCTAssertNotNil(program)
             XCTAssertEqual(program?.description, test.1)
         }
     }
@@ -195,7 +186,6 @@ class MonkeyParserExpressionTests: XCTestCase {
         var parser = MonkeyParser(lexer: lexer)
 
         let program = try parser.parseProgram()
-        XCTAssertNotNil(program)
         XCTAssertEqual(program?.statements.count, 1)
         let expressionStatement = program?.statements.first as? ExpressionStatement
         let ifExpression = expressionStatement?.expression as? IfExpression
@@ -217,7 +207,6 @@ class MonkeyParserExpressionTests: XCTestCase {
         var parser = MonkeyParser(lexer: lexer)
 
         let program = try parser.parseProgram()
-        XCTAssertNotNil(program)
         XCTAssertEqual(program?.statements.count, 1)
         let expressionStatement = program?.statements.first as? ExpressionStatement
         let ifExpression = expressionStatement?.expression as? IfExpression
@@ -241,7 +230,6 @@ class MonkeyParserExpressionTests: XCTestCase {
         var parser = MonkeyParser(lexer: lexer)
 
         let program = try parser.parseProgram()
-        XCTAssertNotNil(program)
         XCTAssertEqual(program?.statements.count, 1)
         let expressionStatement = program?.statements.first as? ExpressionStatement
         let function = expressionStatement?.expression as? FuctionLiteral
@@ -260,7 +248,6 @@ class MonkeyParserExpressionTests: XCTestCase {
         var parser = MonkeyParser(lexer: lexer)
 
         let program = try parser.parseProgram()
-        XCTAssertNotNil(program)
         XCTAssertEqual(program?.statements.count, 1)
 
         let expressionStatement = program?.statements.first as? ExpressionStatement
