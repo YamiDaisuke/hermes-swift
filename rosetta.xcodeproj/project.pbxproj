@@ -17,7 +17,7 @@
 		F8685BDC259BA27100677A8B /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */; };
 		F8685D2E259D3D1100677A8B /* MonkeyLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */; };
 		F8685D31259D3D3200677A8B /* MonkeyLexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */; };
-		F8685D36259D42DF00677A8B /* Repl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D35259D42DF00677A8B /* Repl.swift */; };
+		F8685D36259D42DF00677A8B /* MonkeyRepl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D35259D42DF00677A8B /* MonkeyRepl.swift */; };
 		F8685D52259E355600677A8B /* MonkeyLexerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8685D51259E355600677A8B /* MonkeyLexerTests.swift */; };
 		F86BC19E259FEC370039337E /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86BC19D259FEC370039337E /* ParseError.swift */; };
 		F86BC1A3259FED590039337E /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86BC19D259FEC370039337E /* ParseError.swift */; };
@@ -91,7 +91,7 @@
 		F8625BE525A546C7001F555D /* CallExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallExpression.swift; sourceTree = "<group>"; };
 		F8685BDB259BA27100677A8B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyLexer.swift; sourceTree = "<group>"; };
-		F8685D35259D42DF00677A8B /* Repl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repl.swift; sourceTree = "<group>"; };
+		F8685D35259D42DF00677A8B /* MonkeyRepl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyRepl.swift; sourceTree = "<group>"; };
 		F8685D51259E355600677A8B /* MonkeyLexerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyLexerTests.swift; sourceTree = "<group>"; };
 		F86BC19D259FEC370039337E /* ParseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseError.swift; sourceTree = "<group>"; };
 		F86BC1A625A1158A0039337E /* ReturnStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnStatement.swift; sourceTree = "<group>"; };
@@ -141,7 +141,7 @@
 		F8685D34259D42CE00677A8B /* repl */ = {
 			isa = PBXGroup;
 			children = (
-				F8685D35259D42DF00677A8B /* Repl.swift */,
+				F8685D35259D42DF00677A8B /* MonkeyRepl.swift */,
 			);
 			path = repl;
 			sourceTree = "<group>";
@@ -367,7 +367,7 @@
 				F882F945259FA9B40069DCD6 /* Parser.swift in Sources */,
 				F8B49BFB25993EA6005D91E7 /* Token.swift in Sources */,
 				F8625BDF25A5348C001F555D /* FunctionLiteral.swift in Sources */,
-				F8685D36259D42DF00677A8B /* Repl.swift in Sources */,
+				F8685D36259D42DF00677A8B /* MonkeyRepl.swift in Sources */,
 				F882F931259E8F760069DCD6 /* Node.swift in Sources */,
 				F86BC1CC25A211770039337E /* InfixExpression.swift in Sources */,
 				F815D2E625A67278001AE969 /* ExpressionParser.swift in Sources */,
