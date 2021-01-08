@@ -21,10 +21,10 @@ class MonkeyParserStatementsTests: XCTestCase {
         } catch let error as AllParserError {
             XCTAssertEqual(error.errors.count, 2)
             XCTAssert(error.errors[0] is MissingExpected)
-            XCTAssertEqual(error.errors[0].message, "Expected token identifier")
+            XCTAssertEqual(error.errors[0].message, "Expected token \"identifier\"")
 
             XCTAssert(error.errors[1] is MissingExpected)
-            XCTAssertEqual(error.errors[1].message, "Expected token =")
+            XCTAssertEqual(error.errors[1].message, "Expected token \"=\"")
         }
     }
 

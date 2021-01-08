@@ -60,6 +60,13 @@
 		F8B49DE8259A9291005D91E7 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49D8F259A64AD005D91E7 /* Tokens.swift */; };
 		F8B49DEC259AA79C005D91E7 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49DEB259AA79C005D91E7 /* StringExtensions.swift */; };
 		F8B49DEF259AB9A4005D91E7 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49DEB259AA79C005D91E7 /* StringExtensions.swift */; };
+		F8F7697B25A7C681004FB5CE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F7697A25A7C681004FB5CE /* Types.swift */; };
+		F8F7698425A7C896004FB5CE /* Evaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F7698325A7C896004FB5CE /* Evaluator.swift */; };
+		F8F7698525A7C896004FB5CE /* Evaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F7698325A7C896004FB5CE /* Evaluator.swift */; };
+		F8F7698B25A7C93D004FB5CE /* MonkeyEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F7698A25A7C93D004FB5CE /* MonkeyEvaluator.swift */; };
+		F8F7698C25A7C93D004FB5CE /* MonkeyEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F7698A25A7C93D004FB5CE /* MonkeyEvaluator.swift */; };
+		F8F7699025A7C9B4004FB5CE /* MonkeyEvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F7698F25A7C9B4004FB5CE /* MonkeyEvaluatorTests.swift */; };
+		F8F7699325A7CA2E004FB5CE /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F7697A25A7C681004FB5CE /* Types.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +125,10 @@
 		F8B49DC2259A8A21005D91E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8B49DE4259A926C005D91E7 /* LexerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LexerTests.swift; sourceTree = "<group>"; };
 		F8B49DEB259AA79C005D91E7 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		F8F7697A25A7C681004FB5CE /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		F8F7698325A7C896004FB5CE /* Evaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Evaluator.swift; sourceTree = "<group>"; };
+		F8F7698A25A7C93D004FB5CE /* MonkeyEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyEvaluator.swift; sourceTree = "<group>"; };
+		F8F7698F25A7C9B4004FB5CE /* MonkeyEvaluatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyEvaluatorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +210,7 @@
 		F8B49BEF25993C2C005D91E7 /* rosetta */ = {
 			isa = PBXGroup;
 			children = (
+				F8F7698225A7C886004FB5CE /* evaluator */,
 				F882F92F259E8EDE0069DCD6 /* parser */,
 				F8685D34259D42CE00677A8B /* repl */,
 				F8B49D8D259A648B005D91E7 /* languages */,
@@ -229,9 +241,11 @@
 		F8B49D8E259A6498005D91E7 /* monkey */ = {
 			isa = PBXGroup;
 			children = (
+				F8F7697925A7C678004FB5CE /* lang */,
 				F882F93C259FA8950069DCD6 /* ast */,
 				F8B49D8F259A64AD005D91E7 /* Tokens.swift */,
 				F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */,
+				F8F7698A25A7C93D004FB5CE /* MonkeyEvaluator.swift */,
 			);
 			path = monkey;
 			sourceTree = "<group>";
@@ -245,8 +259,25 @@
 				F8685D51259E355600677A8B /* MonkeyLexerTests.swift */,
 				F882F94E259FAB690069DCD6 /* MonkeyParserExpressionTests.swift */,
 				F8625BD825A533B0001F555D /* MonkeyParserStatementsTests.swift */,
+				F8F7698F25A7C9B4004FB5CE /* MonkeyEvaluatorTests.swift */,
 			);
 			path = rosettaTest;
+			sourceTree = "<group>";
+		};
+		F8F7697925A7C678004FB5CE /* lang */ = {
+			isa = PBXGroup;
+			children = (
+				F8F7697A25A7C681004FB5CE /* Types.swift */,
+			);
+			path = lang;
+			sourceTree = "<group>";
+		};
+		F8F7698225A7C886004FB5CE /* evaluator */ = {
+			isa = PBXGroup;
+			children = (
+				F8F7698325A7C896004FB5CE /* Evaluator.swift */,
+			);
+			path = evaluator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -368,14 +399,17 @@
 				F8B49BFB25993EA6005D91E7 /* Token.swift in Sources */,
 				F8625BDF25A5348C001F555D /* FunctionLiteral.swift in Sources */,
 				F8685D36259D42DF00677A8B /* MonkeyRepl.swift in Sources */,
+				F8F7698425A7C896004FB5CE /* Evaluator.swift in Sources */,
 				F882F931259E8F760069DCD6 /* Node.swift in Sources */,
 				F86BC1CC25A211770039337E /* InfixExpression.swift in Sources */,
+				F8F7697B25A7C681004FB5CE /* Types.swift in Sources */,
 				F815D2E625A67278001AE969 /* ExpressionParser.swift in Sources */,
 				F882F94A259FA9C30069DCD6 /* MonkeyParser.swift in Sources */,
 				F8B49DEC259AA79C005D91E7 /* StringExtensions.swift in Sources */,
 				F86BC1A725A1158A0039337E /* ReturnStatement.swift in Sources */,
 				F86BC1BE25A12F370039337E /* IntegerLiteral.swift in Sources */,
 				F86BC19E259FEC370039337E /* ParseError.swift in Sources */,
+				F8F7698B25A7C93D004FB5CE /* MonkeyEvaluator.swift in Sources */,
 				F882F93E259FA8DE0069DCD6 /* LetStatement.swift in Sources */,
 				F882F938259FA81E0069DCD6 /* Program.swift in Sources */,
 				F86BC22C25A3D5520039337E /* IfExpression.swift in Sources */,
@@ -394,10 +428,12 @@
 			files = (
 				F86BC22D25A3D5520039337E /* IfExpression.swift in Sources */,
 				F86BC1D625A23C590039337E /* BooleanLiteral.swift in Sources */,
+				F8F7699025A7C9B4004FB5CE /* MonkeyEvaluatorTests.swift in Sources */,
 				F882F939259FA81E0069DCD6 /* Program.swift in Sources */,
 				F8625BD925A533B0001F555D /* MonkeyParserStatementsTests.swift in Sources */,
 				F882F94F259FAB690069DCD6 /* MonkeyParserExpressionTests.swift in Sources */,
 				F86BC1C125A12FAF0039337E /* IntegerLiteral.swift in Sources */,
+				F8F7698C25A7C93D004FB5CE /* MonkeyEvaluator.swift in Sources */,
 				F8B49DEF259AB9A4005D91E7 /* StringExtensions.swift in Sources */,
 				F86BC1B825A11A9E0039337E /* ExpressionStatement.swift in Sources */,
 				F8685D31259D3D3200677A8B /* MonkeyLexer.swift in Sources */,
@@ -409,6 +445,7 @@
 				F8B49DE5259A926C005D91E7 /* LexerTests.swift in Sources */,
 				F8B49DE8259A9291005D91E7 /* Tokens.swift in Sources */,
 				F8625BEC25A5485D001F555D /* CallExpression.swift in Sources */,
+				F8F7698525A7C896004FB5CE /* Evaluator.swift in Sources */,
 				F86BC23225A3E0AD0039337E /* BlockStatement.swift in Sources */,
 				F882F946259FA9B40069DCD6 /* Parser.swift in Sources */,
 				F86BC1CF25A232350039337E /* InfixExpression.swift in Sources */,
@@ -416,6 +453,7 @@
 				F882F93F259FA8DE0069DCD6 /* LetStatement.swift in Sources */,
 				F86BC1B525A11A9B0039337E /* Identifier.swift in Sources */,
 				F8685D52259E355600677A8B /* MonkeyLexerTests.swift in Sources */,
+				F8F7699325A7CA2E004FB5CE /* Types.swift in Sources */,
 				F86BC1A3259FED590039337E /* ParseError.swift in Sources */,
 				F86BC1C825A134BA0039337E /* PrefixExpression.swift in Sources */,
 				F815D2E725A67278001AE969 /* ExpressionParser.swift in Sources */,

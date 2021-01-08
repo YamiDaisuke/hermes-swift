@@ -7,6 +7,8 @@
 
 import Foundation
 
+extension String: Error { }
+
 struct MonkeyRepl {
 
     static let monkeyFace: String = #"""
@@ -41,8 +43,12 @@ struct MonkeyRepl {
             let lexer = MonkeyLexer(withString: input)
             var parser = MonkeyParser(lexer: lexer)
             do {
-                let program = try parser.parseProgram()
-                print(program?.description ?? "")
+                if let program = try parser.parseProgram() {
+                    let result = MonkeyEvaluator.eval(program: program)
+                    print(result?.description ?? "")
+                } else {
+                    throw "Program not parsed"
+                }
             } catch let error as AllParserError {
                 printError(error)
             } catch {
