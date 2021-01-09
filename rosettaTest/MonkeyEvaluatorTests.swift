@@ -76,9 +76,31 @@ class MonkeyEvaluatorTests: XCTestCase {
             ("!!5", true)
         ]
 
-        for test in tests.prefix(1) {
+        for test in tests {
             let evaluated = try testEval(input: test.0)
             assertBoolean(object: evaluated, expected: test.1)
+        }
+    }
+
+    func testIfElseExpression() throws {
+        let tests = [
+            ("if (true) { 10 }", 10),
+            ("if (false) { 10 }", nil),
+            ("if (1) { 10 }", 10),
+            ("if (1 < 2) { 10 }", 10),
+            ("if (1 > 2) { 10 }", nil),
+            ("if (1 > 2) { 10 } else { 20 }", 20),
+            ("if (1 < 2) { 10 } else { 20 }", 10)
+        ]
+
+        for test in tests {
+            let evaluated = try testEval(input: test.0)
+            if let expected = test.1 {
+                assertInteger(object: evaluated, expected: expected)
+            } else {
+                let isNull = Null.null == evaluated
+                XCTAssert(isNull.value)
+            }
         }
     }
 

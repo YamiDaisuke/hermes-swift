@@ -21,6 +21,10 @@ struct MonkeyEvaluator: Evaluator {
             let lhs = eval(node: infix.lhs)
             let rhs = eval(node: infix.rhs)
             return evalInfix(lhs: lhs, operatorSymbol: infix.operatorSymbol, rhs: rhs)
+        case let ifExpression as IfExpression:
+            return evalIfExpression(ifExpression)
+        case let block as BlockStatement:
+            return evalBlockStatement(block)
         case let statement as IntegerLiteral:
             return Integer(value: statement.value)
         case let statement as BooleanLiteral:
@@ -28,6 +32,27 @@ struct MonkeyEvaluator: Evaluator {
         default:
             return nil
         }
+    }
+
+    static func evalIfExpression(_ expression: IfExpression) -> Object? {
+        let condition = eval(node: expression.condition)
+
+        if (condition == Boolean.true).value {
+            return eval(node: expression.consequence)
+        } else if let alternative = expression.alternative {
+            return eval(node: alternative)
+        }
+
+        return Null.null
+    }
+
+    static func evalBlockStatement(_ statement: BlockStatement) -> Object? {
+        var result: Object? = Null.null
+        for statement in statement.statements {
+            result = eval(node: statement)
+        }
+
+        return result
     }
 
     // MARK: - Prefix Operators
@@ -102,7 +127,7 @@ struct MonkeyEvaluator: Evaluator {
         }
     }
 
-    static func applyIntegerInfix(lhs: Object?, rhs: Object?, operation: (Integer,Integer) -> Object) -> Object? {
+    static func applyIntegerInfix(lhs: Object?, rhs: Object?, operation: (Integer, Integer) -> Object) -> Object? {
         guard let lhs = lhs as? Integer else {
             // TODO: Throw an error
             return Null.null
