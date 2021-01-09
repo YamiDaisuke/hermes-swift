@@ -127,6 +127,13 @@ struct MonkeyEvaluator: Evaluator {
         }
     }
 
+    /// Applies the corresponding infix operation to two `Integer` operands
+    /// - Parameters:
+    ///   - lhs: Any `Object` value
+    ///   - rhs: Any `Object` value
+    ///   - operation: A function to apply the operation
+    /// - Returns: The result of applying the `operation` if both `lhs` and `rhs` are
+    ///            `Integer`. If not returns `Null`
     static func applyIntegerInfix(lhs: Object?, rhs: Object?, operation: (Integer, Integer) -> Object) -> Object? {
         guard let lhs = lhs as? Integer else {
             // TODO: Throw an error
@@ -141,6 +148,12 @@ struct MonkeyEvaluator: Evaluator {
         return operation(lhs, rhs)
     }
 
+    /// Test two objects for equality
+    /// - Parameters:
+    ///   - lhs: Any `Object` value
+    ///   - rhs: Any `Object` value
+    /// - Returns: `true` if both objects are the same, `Integer` and `Boolean` are
+    ///            compared by value. Otherwise `false`
     static func applyEqualInfix(lhs: Object?, rhs: Object?) -> Boolean? {
         if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
             return lhs == rhs
@@ -157,6 +170,12 @@ struct MonkeyEvaluator: Evaluator {
         return .false
     }
 
+    /// Test two objects for inequality
+    /// - Parameters:
+    ///   - lhs: Any `Object` value
+    ///   - rhs: Any `Object` value
+    /// - Returns: `false` if both objects are the same, `Integer` and `Boolean` are
+    ///            compared by value. Otherwise `true`
     static func applyInequalityInfix(lhs: Object?, rhs: Object?) -> Boolean? {
         if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
             return lhs != rhs

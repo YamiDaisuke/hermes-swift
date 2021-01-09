@@ -97,34 +97,74 @@ struct Integer: Object {
         return Integer(value: -rhs.value)
     }
 
+    /// Adds two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
+    /// - Returns: A new `Integer` containing the sum of `lhs` and `rhs`
     static func + (lhs: Integer, rhs: Integer) -> Integer {
         return Integer(value: lhs.value + rhs.value)
     }
 
+    /// Substract two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
+    /// - Returns: A new `Integer` containing the substraction of `rhs` from `lhs`
     static func - (lhs: Integer, rhs: Integer) -> Integer {
         return Integer(value: lhs.value - rhs.value)
     }
 
+    /// Multiply two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
+    /// - Returns: A new `Integer` containing the product of `lhs` times `rhs`
     static func * (lhs: Integer, rhs: Integer) -> Integer {
         return Integer(value: lhs.value * rhs.value)
     }
 
+    /// Adds two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
+    /// - Returns: A new `Integer` containing the division of `lhs` divided by `rhs`
     static func / (lhs: Integer, rhs: Integer) -> Integer {
         return Integer(value: lhs.value / rhs.value)
     }
 
+    /// Compares two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
+    /// - Returns: `true` if `lhs` is greater than `rhs` otherwise `false`
     static func > (lhs: Integer, rhs: Integer) -> Boolean {
         return Boolean(lhs.value > rhs.value)
     }
 
+    /// Compares two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
+    /// - Returns: `true` if `lhs` is lower than `rhs` otherwise `false`
     static func < (lhs: Integer, rhs: Integer) -> Boolean {
         return Boolean(lhs.value < rhs.value)
     }
 
+    /// Compares two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
+    /// - Returns: `true` if `lhs` is equal to `rhs` otherwise `false`
     static func == (lhs: Integer, rhs: Integer) -> Boolean {
         return Boolean(lhs.value == rhs.value)
     }
 
+    /// Compares two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
+    /// - Returns: `true` if `lhs` is not equal to `rhs` otherwise `false`
     static func != (lhs: Integer, rhs: Integer) -> Boolean {
         return Boolean(lhs.value != rhs.value)
     }
@@ -139,14 +179,21 @@ struct Boolean: Object {
     var type: ObjectType { "Boolean" }
     var value: Bool
 
+    /// Private init so we only have two instances of `Boolean`
+    /// at all times
     private init(value: Bool) {
         self.value = value
     }
 
+    /// Convinience cast a swift `Bool` to one of the
+    /// `Bolean` constants
     init(_ bool: Bool) {
         self = bool ? .true : .false
     }
 
+    /// Convinience cast an `Integer` to one of the
+    /// `Bolean` constants. `0` matches to `false`
+    /// any other `Integer` maps to `true`
     init(_ integer: Integer) {
         self = integer.value != 0 ? .true : .false
     }
