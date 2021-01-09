@@ -96,6 +96,38 @@ struct Integer: Object {
     static prefix func - (rhs: Integer) -> Integer {
         return Integer(value: -rhs.value)
     }
+
+    static func + (lhs: Integer, rhs: Integer) -> Integer {
+        return Integer(value: lhs.value + rhs.value)
+    }
+
+    static func - (lhs: Integer, rhs: Integer) -> Integer {
+        return Integer(value: lhs.value - rhs.value)
+    }
+
+    static func * (lhs: Integer, rhs: Integer) -> Integer {
+        return Integer(value: lhs.value * rhs.value)
+    }
+
+    static func / (lhs: Integer, rhs: Integer) -> Integer {
+        return Integer(value: lhs.value / rhs.value)
+    }
+
+    static func > (lhs: Integer, rhs: Integer) -> Boolean {
+        return Boolean(lhs.value > rhs.value)
+    }
+
+    static func < (lhs: Integer, rhs: Integer) -> Boolean {
+        return Boolean(lhs.value < rhs.value)
+    }
+
+    static func == (lhs: Integer, rhs: Integer) -> Boolean {
+        return Boolean(lhs.value == rhs.value)
+    }
+
+    static func != (lhs: Integer, rhs: Integer) -> Boolean {
+        return Boolean(lhs.value != rhs.value)
+    }
 }
 
 struct Boolean: Object {
@@ -106,6 +138,18 @@ struct Boolean: Object {
 
     var type: ObjectType { "Boolean" }
     var value: Bool
+
+    private init(value: Bool) {
+        self.value = value
+    }
+
+    init(_ bool: Bool) {
+        self = bool ? .true : .false
+    }
+
+    init(_ integer: Integer) {
+        self = integer.value != 0 ? .true : .false
+    }
 
     var description: String {
         value.description
@@ -122,7 +166,9 @@ struct Boolean: Object {
         case let bool as Boolean:
             return bool.value == rhs.value ? .true : .false
         case let int as Integer:
-            return int.value != 0 ? .true : .false
+            return Boolean(int).value == rhs.value ? .true : .false
+        case _ as Null:
+            return rhs.value == false ? .true : .false
         default:
             return .false
         }
@@ -135,14 +181,24 @@ struct Boolean: Object {
     ///   - rhs: A `Boolean` value
     /// - Returns: `false` if `lhs` produces the same `Boolean` value as `rhs` otherwise `true`
     private static func notEquals(lhs: Object?, rhs: Boolean) -> Boolean {
-        !Boolean.equals(lhs: lhs, rhs: rhs)
+        return !Boolean.equals(lhs: lhs, rhs: rhs)
     }
 
     /// Negates the value of a `Boolean` value
     /// - Parameter rhs: A `Boolean` value to negate
     /// - Returns: `false` if `rhs` is `true` and `true` otherwise
     static prefix func ! (rhs: Boolean) -> Boolean {
-        rhs.value ? .false : .true
+        return rhs.value ? .false : .true
+    }
+
+    /// Compares two `Boolean` values
+    ///
+    /// - Parameters:
+    ///   - lhs: A `Boolean` value
+    ///   - rhs: A `Boolean` value
+    /// - Returns: `true` if `lhs` is equals to `rhs` otherwise `false`
+    static func == (lhs: Boolean, rhs: Boolean) -> Boolean {
+        return Boolean(lhs.value == rhs.value)
     }
 
     /// Compares any `Object` agaist a `Boolean` value
@@ -152,7 +208,7 @@ struct Boolean: Object {
     ///   - rhs: A `Boolean` value
     /// - Returns: `true` if `rhs` produces the same `Boolean` value as `rhs` otherwise `false`
     static func == (lhs: Object?, rhs: Boolean) -> Boolean {
-        Boolean.equals(lhs: lhs, rhs: rhs)
+        return Boolean.equals(lhs: lhs, rhs: rhs)
     }
 
     /// Compares any `Object` agaist a `Boolean` value
@@ -162,7 +218,17 @@ struct Boolean: Object {
     ///   - rhs: Any instance of `Object`
     /// - Returns: `true` if `lhs` produces the same `Boolean` value as `rhs` otherwise `false`
     static func == (lhs: Boolean, rhs: Object?) -> Boolean {
-        Boolean.equals(lhs: rhs, rhs: lhs)
+        return Boolean.equals(lhs: rhs, rhs: lhs)
+    }
+
+    /// Compares two `Boolean` values
+    ///
+    /// - Parameters:
+    ///   - lhs: A `Boolean` value
+    ///   - rhs: A `Boolean` value
+    /// - Returns: `false` if `lhs` is equals to `rhs` otherwise `true`
+    static func != (lhs: Boolean, rhs: Boolean) -> Boolean {
+        return Boolean(lhs.value != rhs.value)
     }
 
     /// Compares any `Object` agaist a `Boolean` value
@@ -172,7 +238,7 @@ struct Boolean: Object {
     ///   - rhs: A `Boolean` value
     /// - Returns: `false` if `lhs` produces the same `Boolean` value as `rhs` otherwise `true`
     static func != (lhs: Object?, rhs: Boolean) -> Boolean {
-        Boolean.notEquals(lhs: lhs, rhs: rhs)
+        return Boolean.notEquals(lhs: lhs, rhs: rhs)
     }
 
     /// Compares any `Object` agaist a `Boolean` value
@@ -182,6 +248,6 @@ struct Boolean: Object {
     ///   - rhs: Any instance of `Object`
     /// - Returns: `false` if `rhs` produces the same `Boolean` value as `lhs` otherwise `true`
     static func != (lhs: Boolean, rhs: Object?) -> Boolean {
-        Boolean.notEquals(lhs: rhs, rhs: lhs)
+        return Boolean.notEquals(lhs: rhs, rhs: lhs)
     }
 }
