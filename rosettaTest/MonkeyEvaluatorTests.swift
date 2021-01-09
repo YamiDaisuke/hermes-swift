@@ -11,7 +11,9 @@ class MonkeyEvaluatorTests: XCTestCase {
     func testEvalInteger() throws {
         let tests = [
             ("5", 5),
-            ("10", 10)
+            ("10", 10),
+            ("-5", -5),
+            ("-10", -10)
         ]
 
         for test in tests {
@@ -27,6 +29,22 @@ class MonkeyEvaluatorTests: XCTestCase {
         ]
 
         for test in tests {
+            let evaluated = try testEval(input: test.0)
+            assertBoolean(object: evaluated, expected: test.1)
+        }
+    }
+
+    func testBangOperator() throws {
+        let tests = [
+            ("!true", false),
+            ("!false", true),
+            ("!5", false),
+            ("!!true", true),
+            ("!!false", false),
+            ("!!5", true)
+        ]
+
+        for test in tests.prefix(1) {
             let evaluated = try testEval(input: test.0)
             assertBoolean(object: evaluated, expected: test.1)
         }
