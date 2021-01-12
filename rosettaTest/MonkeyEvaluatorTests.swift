@@ -104,6 +104,21 @@ class MonkeyEvaluatorTests: XCTestCase {
         }
     }
 
+    func testReturnStatement() throws {
+        let tests = [
+            ("return 10;", 10),
+            ("return 10; 9;", 10),
+            ("return 2 * 5; 9;", 10),
+            ("9; return 2 * 5; 9;", 10),
+            ("if (1 < 10) { if (1 < 10) { return 10; } return 1; }", 10)
+        ]
+
+        for test in tests {
+            let evaluated = try testEval(input: test.0)
+            assertInteger(object: evaluated, expected: test.1)
+        }
+    }
+
     // MARK: Utils
     func testEval(input: String) throws -> Object? {
         let lexer = MonkeyLexer(withString: input)

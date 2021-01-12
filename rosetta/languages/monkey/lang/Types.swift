@@ -9,10 +9,15 @@ import Foundation
 
 typealias ObjectType = String
 
+
+/// Base Type for all variables inside Monkey Language
+/// think of this like the `Any` type of swift or `object`
+/// type in C#
 protocol Object: CustomStringConvertible {
     var type: ObjectType { get }
 }
 
+/// Represents an empty value
 struct Null: Object {
     /// Convinience constant, there is no need to have a null instance
     /// for each expression that results with null
@@ -79,6 +84,17 @@ struct Null: Object {
     /// - Returns: `false` if `rhs` is `Null`, `true` otherwise
     static func != (lhs: Null, rhs: Object?) -> Boolean {
         notEquals(lhs: rhs, rhs: lhs)
+    }
+}
+
+/// Wrapper tto represent `return`, control transfer statement
+struct Return: Object {
+    var type: ObjectType { "return" }
+    /// The returned value
+    var value: Object?
+
+    var description: String {
+        "return \(value?.description ?? "null")"
     }
 }
 

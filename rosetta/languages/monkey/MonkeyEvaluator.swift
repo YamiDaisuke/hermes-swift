@@ -9,6 +9,7 @@ import Foundation
 
 struct MonkeyEvaluator: Evaluator {
     typealias BaseType = Object
+    typealias ControlTransfer = Return
 
     static func eval(node: Node) -> Object? {
         switch node {
@@ -25,6 +26,8 @@ struct MonkeyEvaluator: Evaluator {
             return evalIfExpression(ifExpression)
         case let block as BlockStatement:
             return evalBlockStatement(block)
+        case let returnStmt as ReturnStatement:
+            return evalReturnStatement(returnStmt)
         case let statement as IntegerLiteral:
             return Integer(value: statement.value)
         case let statement as BooleanLiteral:
@@ -33,6 +36,34 @@ struct MonkeyEvaluator: Evaluator {
             return nil
         }
     }
+
+    static func handleControlTransfer(_ statement: ControlTransfer) -> Object? {
+        // Since we only have one type of transfer control
+        // we know this statement is a return wrapper
+        return statement.value
+    }
+
+    // MARK: Statements
+
+    static func evalBlockStatement(_ statement: BlockStatement) -> Object? {
+        var result: Object? = Null.null
+        for statement in statement.statements {
+            result = eval(node: statement)
+
+            if result?.type == "return" {
+                return result
+            }
+        }
+
+        return result
+    }
+
+    static func evalReturnStatement(_ statement: ReturnStatement) -> Object? {
+        let value = eval(node: statement.value)
+        return Return(value: value)
+    }
+
+    // MARK: Expressions
 
     static func evalIfExpression(_ expression: IfExpression) -> Object? {
         let condition = eval(node: expression.condition)
@@ -44,15 +75,6 @@ struct MonkeyEvaluator: Evaluator {
         }
 
         return Null.null
-    }
-
-    static func evalBlockStatement(_ statement: BlockStatement) -> Object? {
-        var result: Object? = Null.null
-        for statement in statement.statements {
-            result = eval(node: statement)
-        }
-
-        return result
     }
 
     // MARK: - Prefix Operators
