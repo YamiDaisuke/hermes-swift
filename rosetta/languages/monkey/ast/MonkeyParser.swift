@@ -151,20 +151,4 @@ struct MonkeyParser: Parser {
 
         return leftExpression
     }
-
-    /// Temporal struct just to use a placeholder while we
-    /// implement expression parsing
-    struct Dummy: Expression {
-        var literal: String
-        var token: Token
-
-        init() {
-            self.literal = ""
-            self.token = Token(type: .eof, literal: "")
-        }
-
-        var description: String {
-            "<Expression Placeholder>"
-        }
-    }
 }

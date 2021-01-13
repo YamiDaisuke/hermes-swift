@@ -9,7 +9,6 @@ import Foundation
 
 typealias ObjectType = String
 
-
 /// Base Type for all variables inside Monkey Language
 /// think of this like the `Any` type of swift or `object`
 /// type in C#

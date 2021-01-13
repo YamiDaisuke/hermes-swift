@@ -11,33 +11,45 @@ struct MonkeyEvaluator: Evaluator {
     typealias BaseType = Object
     typealias ControlTransfer = Return
 
-    static func eval(node: Node) -> Object? {
-        switch node {
-        case let expression as ExpressionStatement:
-            return eval(node: expression.expression)
-        case let prefix as PrefixExpression:
-            let rhs = eval(node: prefix.rhs)
-            return evalPrefix(operator: prefix.operatorSymbol, rhs: rhs)
-        case let infix as InfixExpression:
-            let lhs = eval(node: infix.lhs)
-            let rhs = eval(node: infix.rhs)
-            return evalInfix(lhs: lhs, operatorSymbol: infix.operatorSymbol, rhs: rhs)
-        case let ifExpression as IfExpression:
-            return evalIfExpression(ifExpression)
-        case let block as BlockStatement:
-            return evalBlockStatement(block)
-        case let returnStmt as ReturnStatement:
-            return evalReturnStatement(returnStmt)
-        case let statement as IntegerLiteral:
-            return Integer(value: statement.value)
-        case let statement as BooleanLiteral:
-            return statement.value ? Boolean.true : Boolean.false
-        default:
-            return nil
+    static func eval(node: Node) throws -> Object? {
+        do {
+            switch node {
+            case let expression as ExpressionStatement:
+                return try eval(node: expression.expression)
+            case let prefix as PrefixExpression:
+                let rhs = try eval(node: prefix.rhs)
+                return try evalPrefix(operator: prefix.operatorSymbol, rhs: rhs)
+            case let infix as InfixExpression:
+                let lhs = try eval(node: infix.lhs)
+                let rhs = try eval(node: infix.rhs)
+                return try evalInfix(lhs: lhs, operatorSymbol: infix.operatorSymbol, rhs: rhs)
+            case let ifExpression as IfExpression:
+                return try evalIfExpression(ifExpression)
+            case let block as BlockStatement:
+                return try evalBlockStatement(block)
+            case let returnStmt as ReturnStatement:
+                return try evalReturnStatement(returnStmt)
+            case let statement as IntegerLiteral:
+                return Integer(value: statement.value)
+            case let statement as BooleanLiteral:
+                return statement.value ? Boolean.true : Boolean.false
+            default:
+                throw UnknownSyntaxToken(node)
+            }
+        } catch var error as EvaluatorError {
+            if error.line == nil {
+                error.line = node.token.line
+            }
+            if error.column == nil {
+                error.column = node.token.column
+            }
+            throw error
+        } catch {
+            throw error
         }
     }
 
-    static func handleControlTransfer(_ statement: ControlTransfer) -> Object? {
+    static func handleControlTransfer(_ statement: ControlTransfer) throws -> Object? {
         // Since we only have one type of transfer control
         // we know this statement is a return wrapper
         return statement.value
@@ -45,10 +57,10 @@ struct MonkeyEvaluator: Evaluator {
 
     // MARK: Statements
 
-    static func evalBlockStatement(_ statement: BlockStatement) -> Object? {
+    static func evalBlockStatement(_ statement: BlockStatement) throws -> Object? {
         var result: Object? = Null.null
         for statement in statement.statements {
-            result = eval(node: statement)
+            result = try eval(node: statement)
 
             if result?.type == "return" {
                 return result
@@ -58,20 +70,20 @@ struct MonkeyEvaluator: Evaluator {
         return result
     }
 
-    static func evalReturnStatement(_ statement: ReturnStatement) -> Object? {
-        let value = eval(node: statement.value)
+    static func evalReturnStatement(_ statement: ReturnStatement) throws -> Object? {
+        let value = try eval(node: statement.value)
         return Return(value: value)
     }
 
     // MARK: Expressions
 
-    static func evalIfExpression(_ expression: IfExpression) -> Object? {
-        let condition = eval(node: expression.condition)
+    static func evalIfExpression(_ expression: IfExpression) throws -> Object? {
+        let condition = try eval(node: expression.condition)
 
         if (condition == Boolean.true).value {
-            return eval(node: expression.consequence)
+            return try eval(node: expression.consequence)
         } else if let alternative = expression.alternative {
-            return eval(node: alternative)
+            return try eval(node: alternative)
         }
 
         return Null.null
@@ -89,15 +101,14 @@ struct MonkeyEvaluator: Evaluator {
     ///   - rhs: The `Object` to apply  the operator
     /// - Returns: The resulting value after applying the operator or `Null` if the operator
     ///            does not support the type of `rhs`
-    static func evalPrefix(operator operatorSymbol: String, rhs: Object?) -> Object? {
+    static func evalPrefix(operator operatorSymbol: String, rhs: Object?) throws -> Object? {
         switch operatorSymbol {
         case "!":
             return evalBangOperator(rhs: rhs)
         case "-":
-            return evalMinusPrefix(rhs: rhs)
+            return try evalMinusPrefix(rhs: rhs)
         default:
-            // TODO: Throw an error
-            return Null.null
+            throw UnknownOperator(operatorSymbol)
         }
     }
 
@@ -105,10 +116,9 @@ struct MonkeyEvaluator: Evaluator {
     /// - Parameter rhs: An `Object` value
     /// - Returns: The resul of multiplying a `Integer` value by -1.
     ///            If the `Object` can't be cast to `Integer` returns `Null`
-    static func evalMinusPrefix(rhs: Object?) -> Object? {
+    static func evalMinusPrefix(rhs: Object?) throws-> Object? {
         guard let int = rhs as? Integer else {
-            // TODO: Throw an error
-            return Null.null
+            throw InvalidPrefixExpression("-", rhs: rhs)
         }
 
         return -int
@@ -126,26 +136,26 @@ struct MonkeyEvaluator: Evaluator {
 
     // MARK: Infix Operators
 
-    static func evalInfix(lhs: Object?, operatorSymbol: String, rhs: Object?) -> Object? {
+    static func evalInfix(lhs: Object?, operatorSymbol: String, rhs: Object?) throws -> Object? {
         switch operatorSymbol {
         case "+":
-            return applyIntegerInfix(lhs: lhs, rhs: rhs, operation: +)
+            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: +)
         case "-":
-            return applyIntegerInfix(lhs: lhs, rhs: rhs, operation: -)
+            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: -)
         case "*":
-            return applyIntegerInfix(lhs: lhs, rhs: rhs, operation: *)
+            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: *)
         case "/":
-            return applyIntegerInfix(lhs: lhs, rhs: rhs, operation: /)
+            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: /)
         case ">":
-            return applyIntegerInfix(lhs: lhs, rhs: rhs, operation: >)
+            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: >)
         case "<":
-            return applyIntegerInfix(lhs: lhs, rhs: rhs, operation: <)
+            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: <)
         case "==":
-            return applyEqualInfix(lhs: lhs, rhs: rhs)
+            return try applyEqualInfix(lhs: lhs, rhs: rhs)
         case "!=":
-            return applyInequalityInfix(lhs: lhs, rhs: rhs)
+            return try applyInequalityInfix(lhs: lhs, rhs: rhs)
         default:
-            return Null.null
+            throw UnknownOperator(operatorSymbol)
         }
     }
 
@@ -156,18 +166,19 @@ struct MonkeyEvaluator: Evaluator {
     ///   - operation: A function to apply the operation
     /// - Returns: The result of applying the `operation` if both `lhs` and `rhs` are
     ///            `Integer`. If not returns `Null`
-    static func applyIntegerInfix(lhs: Object?, rhs: Object?, operation: (Integer, Integer) -> Object) -> Object? {
-        guard let lhs = lhs as? Integer else {
-            // TODO: Throw an error
-            return Null.null
+    static func applyIntegerInfix(lhs: Object?,
+                                  rhs: Object?,
+                                  symbol: String,
+                                  operation: (Integer, Integer) -> Object) throws -> Object? {
+        guard let intLhs = lhs as? Integer else {
+            throw InvalidInfixExpression(symbol, lhs: lhs, rhs: rhs)
         }
 
-        guard let rhs = rhs as? Integer else {
-            // TODO: Throw an error
-            return Null.null
+        guard let intRhs = rhs as? Integer else {
+            throw InvalidInfixExpression(symbol, lhs: lhs, rhs: rhs)
         }
 
-        return operation(lhs, rhs)
+        return operation(intLhs, intRhs)
     }
 
     /// Test two objects for equality
@@ -176,7 +187,7 @@ struct MonkeyEvaluator: Evaluator {
     ///   - rhs: Any `Object` value
     /// - Returns: `true` if both objects are the same, `Integer` and `Boolean` are
     ///            compared by value. Otherwise `false`
-    static func applyEqualInfix(lhs: Object?, rhs: Object?) -> Boolean? {
+    static func applyEqualInfix(lhs: Object?, rhs: Object?) throws -> Boolean? {
         if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
             return lhs == rhs
         }
@@ -198,7 +209,7 @@ struct MonkeyEvaluator: Evaluator {
     ///   - rhs: Any `Object` value
     /// - Returns: `false` if both objects are the same, `Integer` and `Boolean` are
     ///            compared by value. Otherwise `true`
-    static func applyInequalityInfix(lhs: Object?, rhs: Object?) -> Boolean? {
+    static func applyInequalityInfix(lhs: Object?, rhs: Object?) throws -> Boolean? {
         if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
             return lhs != rhs
         }

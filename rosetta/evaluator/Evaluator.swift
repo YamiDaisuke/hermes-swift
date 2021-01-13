@@ -7,6 +7,23 @@
 
 import Foundation
 
+/// All Evaluation errors should implement this protocol
+protocol EvaluatorError: Error, CustomStringConvertible {
+    var message: String { get }
+    var line: Int? { get set }
+    var column: Int? { get set }
+}
+
+extension EvaluatorError {
+    var description: String {
+        var output = self.message
+        if let line = line, let col = column {
+            output += " at Line: \(line), Column: \(col)"
+        }
+        return output
+    }
+}
+
 protocol Evaluator {
     /// This is the language base type for all types
     /// for example in swift this will be `Any` for
@@ -18,24 +35,23 @@ protocol Evaluator {
     /// statements
     associatedtype ControlTransfer
 
-    static func eval(program: Program) -> BaseType?
-    static func eval(node: Node) -> BaseType?
-
+    static func eval(program: Program) throws -> BaseType?
+    static func eval(node: Node) throws -> BaseType?
 
     /// Evaluates `ControlTransfer` wrapper and generates the corresponding output
     /// - Parameter statement: Some `ControlTransfer` statement wrapper like `return` or
     ///                        `break` statements
-    static func handleControlTransfer(_ statement: ControlTransfer) -> BaseType?
+    static func handleControlTransfer(_ statement: ControlTransfer) throws -> BaseType?
 }
 
 extension Evaluator {
-    static func eval(program: Program) -> BaseType? {
+    static func eval(program: Program) throws -> BaseType? {
         var result: BaseType?
         for statement in program.statements {
-            result = Self.eval(node: statement)
+            result = try Self.eval(node: statement)
 
             if let result = result as? ControlTransfer {
-                return handleControlTransfer(result)
+                return try handleControlTransfer(result)
             }
         }
 

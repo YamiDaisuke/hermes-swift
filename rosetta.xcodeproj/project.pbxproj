@@ -50,6 +50,8 @@
 		F882F94A259FA9C30069DCD6 /* MonkeyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F949259FA9C30069DCD6 /* MonkeyParser.swift */; };
 		F882F94B259FA9C30069DCD6 /* MonkeyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F949259FA9C30069DCD6 /* MonkeyParser.swift */; };
 		F882F94F259FAB690069DCD6 /* MonkeyParserExpressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F882F94E259FAB690069DCD6 /* MonkeyParserExpressionTests.swift */; };
+		F88E2D7325AF3E5A0086D0A8 /* MonkeyEvaluatorErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88E2D7225AF3E5A0086D0A8 /* MonkeyEvaluatorErrors.swift */; };
+		F88E2D7425AF3E5A0086D0A8 /* MonkeyEvaluatorErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88E2D7225AF3E5A0086D0A8 /* MonkeyEvaluatorErrors.swift */; };
 		F8B49BF125993C2C005D91E7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49BF025993C2C005D91E7 /* main.swift */; };
 		F8B49BFB25993EA6005D91E7 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49BFA25993EA6005D91E7 /* Token.swift */; };
 		F8B49D90259A64AD005D91E7 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B49D8F259A64AD005D91E7 /* Tokens.swift */; };
@@ -116,6 +118,7 @@
 		F882F944259FA9B40069DCD6 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		F882F949259FA9C30069DCD6 /* MonkeyParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParser.swift; sourceTree = "<group>"; };
 		F882F94E259FAB690069DCD6 /* MonkeyParserExpressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParserExpressionTests.swift; sourceTree = "<group>"; };
+		F88E2D7225AF3E5A0086D0A8 /* MonkeyEvaluatorErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyEvaluatorErrors.swift; sourceTree = "<group>"; };
 		F8B49BED25993C2C005D91E7 /* rosetta */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = rosetta; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8B49BF025993C2C005D91E7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		F8B49BFA25993EA6005D91E7 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
@@ -246,6 +249,7 @@
 				F8B49D8F259A64AD005D91E7 /* Tokens.swift */,
 				F8685D2D259D3D1100677A8B /* MonkeyLexer.swift */,
 				F8F7698A25A7C93D004FB5CE /* MonkeyEvaluator.swift */,
+				F88E2D7225AF3E5A0086D0A8 /* MonkeyEvaluatorErrors.swift */,
 			);
 			path = monkey;
 			sourceTree = "<group>";
@@ -398,6 +402,7 @@
 				F882F945259FA9B40069DCD6 /* Parser.swift in Sources */,
 				F8B49BFB25993EA6005D91E7 /* Token.swift in Sources */,
 				F8625BDF25A5348C001F555D /* FunctionLiteral.swift in Sources */,
+				F88E2D7325AF3E5A0086D0A8 /* MonkeyEvaluatorErrors.swift in Sources */,
 				F8685D36259D42DF00677A8B /* MonkeyRepl.swift in Sources */,
 				F8F7698425A7C896004FB5CE /* Evaluator.swift in Sources */,
 				F882F931259E8F760069DCD6 /* Node.swift in Sources */,
@@ -445,6 +450,7 @@
 				F8B49DE5259A926C005D91E7 /* LexerTests.swift in Sources */,
 				F8B49DE8259A9291005D91E7 /* Tokens.swift in Sources */,
 				F8625BEC25A5485D001F555D /* CallExpression.swift in Sources */,
+				F88E2D7425AF3E5A0086D0A8 /* MonkeyEvaluatorErrors.swift in Sources */,
 				F8F7698525A7C896004FB5CE /* Evaluator.swift in Sources */,
 				F86BC23225A3E0AD0039337E /* BlockStatement.swift in Sources */,
 				F882F946259FA9B40069DCD6 /* Parser.swift in Sources */,

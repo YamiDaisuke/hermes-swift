@@ -119,6 +119,28 @@ class MonkeyEvaluatorTests: XCTestCase {
         }
     }
 
+    func testEvaluatorErrors() throws {
+        let tests = [
+            ("5 + true;", "Can't apply operator \"+\" to Integer and Boolean at Line: 1, Column: 2"),
+            ("5; 5 + true; 5;", "Can't apply operator \"+\" to Integer and Boolean at Line: 1, Column: 5"),
+            ("-true;", "Can't apply operator \"-\" to Boolean at Line: 1, Column: 0"),
+            ("true + false;", "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 5"),
+            ("5; true + true; 5", "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 8"),
+            ("if (10 > 1) { true + false; }",
+             "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 19"),
+            ("if (10 > 1) { if (10 > 1) { return true + false; } return 1; }",
+             "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 40")
+        ]
+
+        for test in tests {
+            do {
+                _ = try testEval(input: test.0)
+            } catch let error as EvaluatorError {
+                XCTAssertEqual(error.description, test.1)
+            }
+        }
+    }
+
     // MARK: Utils
     func testEval(input: String) throws -> Object? {
         let lexer = MonkeyLexer(withString: input)
@@ -127,7 +149,7 @@ class MonkeyEvaluatorTests: XCTestCase {
         guard let program = try parser.parseProgram() else {
             return nil
         }
-        return MonkeyEvaluator.eval(program: program)
+        return try MonkeyEvaluator.eval(program: program)
     }
 
     func assertInteger(object: Object?, expected: Int) {

@@ -38,9 +38,9 @@ struct MonkeyLexer: Lexer, StringLexer, FileLexer {
         self.readChar()
     }
 
-    // swiftlint:disable cyclomatic_complexity function_body_length
+    // swiftlint:disable function_body_length
     mutating func nextToken() -> Token {
-        // TODO: Reduce body size and cyclomatic complexity
+        // TODO: Reduce body size
         guard !self.input.isEmpty else {
             return Token(type: .eof, literal: "", line: self.currentLineNumber, column: self.currentColumn)
         }

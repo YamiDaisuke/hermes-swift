@@ -44,7 +44,7 @@ struct MonkeyRepl {
             var parser = MonkeyParser(lexer: lexer)
             do {
                 if let program = try parser.parseProgram() {
-                    let result = MonkeyEvaluator.eval(program: program)
+                    let result = try MonkeyEvaluator.eval(program: program)
                     print(result?.description ?? "")
                 } else {
                     throw "Program not parsed"
