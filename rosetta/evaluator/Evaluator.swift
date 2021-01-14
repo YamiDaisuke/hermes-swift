@@ -35,26 +35,55 @@ protocol Evaluator {
     /// statements
     associatedtype ControlTransfer
 
-    static func eval(program: Program) throws -> BaseType?
-    static func eval(node: Node) throws -> BaseType?
+    static func eval(program: Program, environment: Environment<BaseType>) throws -> BaseType?
+    static func eval(node: Node, environment: Environment<BaseType>) throws -> BaseType?
 
     /// Evaluates `ControlTransfer` wrapper and generates the corresponding output
     /// - Parameter statement: Some `ControlTransfer` statement wrapper like `return` or
     ///                        `break` statements
-    static func handleControlTransfer(_ statement: ControlTransfer) throws -> BaseType?
+    static func handleControlTransfer(_ statement: ControlTransfer,
+                                      environment: Environment<BaseType>) throws -> BaseType?
 }
 
 extension Evaluator {
-    static func eval(program: Program) throws -> BaseType? {
+    static func eval(program: Program, environment: Environment<BaseType>) throws -> BaseType? {
         var result: BaseType?
         for statement in program.statements {
-            result = try Self.eval(node: statement)
+            result = try Self.eval(node: statement, environment: environment)
 
             if let result = result as? ControlTransfer {
-                return try handleControlTransfer(result)
+                return try handleControlTransfer(result, environment: environment)
             }
         }
 
         return result
+    }
+}
+
+class Environment<BaseType> {
+    var store: [String: BaseType] = [:]
+    var outer: Environment<BaseType>?
+
+    init(outer: Environment? = nil) {
+        self.outer = outer
+    }
+
+    subscript(key: String) -> BaseType? {
+        get {
+            return self.store[key] ?? outer?[key]
+        }
+        set(newValue) {
+            if self.store[key] != nil {
+                self.store[key] = newValue
+                return
+            }
+
+            if self.outer?[key] != nil {
+                self.outer?[key] = newValue
+                return
+            }
+
+            self.store[key] = newValue
+        }
     }
 }

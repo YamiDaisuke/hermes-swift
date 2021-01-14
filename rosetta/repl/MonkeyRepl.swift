@@ -37,6 +37,7 @@ struct MonkeyRepl {
 
     func run() {
         print(welcomeMessage)
+        let environment = Environment<Object>()
         while true {
             print(prompt, terminator: " ")
             let input = readLine() ?? ""
@@ -44,7 +45,7 @@ struct MonkeyRepl {
             var parser = MonkeyParser(lexer: lexer)
             do {
                 if let program = try parser.parseProgram() {
-                    let result = try MonkeyEvaluator.eval(program: program)
+                    let result = try MonkeyEvaluator.eval(program: program, environment: environment)
                     print(result?.description ?? "")
                 } else {
                     throw "Program not parsed"

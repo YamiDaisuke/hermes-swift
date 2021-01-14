@@ -8,6 +8,12 @@
 import XCTest
 
 class MonkeyEvaluatorTests: XCTestCase {
+    var environment: Environment<Object>!
+
+    override func setUp() {
+        self.environment = Environment()
+    }
+
     func testEvalInteger() throws {
         let tests = [
             ("5", 5),
@@ -129,7 +135,8 @@ class MonkeyEvaluatorTests: XCTestCase {
             ("if (10 > 1) { true + false; }",
              "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 19"),
             ("if (10 > 1) { if (10 > 1) { return true + false; } return 1; }",
-             "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 40")
+             "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 40"),
+            ("foobar", "\"foobar\" is not defined at Line: 1, Column: 0")
         ]
 
         for test in tests {
@@ -141,6 +148,20 @@ class MonkeyEvaluatorTests: XCTestCase {
         }
     }
 
+    func testLetStatement() throws {
+        let tests = [
+            ("let a = 5; a;", 5),
+            ("let a = 5 * 5; a;", 25),
+            ("let a = 5; let b = a; b;", 5),
+            ("let a = 5; let b = a; let c = a + b + 5; c;", 15)
+        ]
+
+        for test in tests {
+            let evaluated = try testEval(input: test.0)
+            assertInteger(object: evaluated, expected: test.1)
+        }
+    }
+
     // MARK: Utils
     func testEval(input: String) throws -> Object? {
         let lexer = MonkeyLexer(withString: input)
@@ -149,7 +170,7 @@ class MonkeyEvaluatorTests: XCTestCase {
         guard let program = try parser.parseProgram() else {
             return nil
         }
-        return try MonkeyEvaluator.eval(program: program)
+        return try MonkeyEvaluator.eval(program: program, environment: self.environment)
     }
 
     func assertInteger(object: Object?, expected: Int) {

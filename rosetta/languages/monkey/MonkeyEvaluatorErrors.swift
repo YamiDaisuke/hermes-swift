@@ -54,3 +54,15 @@ struct InvalidInfixExpression: EvaluatorError {
         self.column = column
     }
 }
+
+struct ReferenceError: EvaluatorError {
+    var message: String
+    var line: Int?
+    var column: Int?
+
+    init(_ identifier: String, line: Int? = nil, column: Int? = nil) {
+        self.message = "\"\(identifier)\" is not defined"
+        self.line = line
+        self.column = column
+    }
+}
