@@ -66,3 +66,15 @@ struct ReferenceError: EvaluatorError {
         self.column = column
     }
 }
+
+struct WrongArgumentCount: EvaluatorError {
+    var message: String
+    var line: Int?
+    var column: Int?
+
+    init(_ expected: Int, got: Int, line: Int? = nil, column: Int? = nil) {
+        self.message = "Incorrect number of arguments in function call expected: \(expected) but got: \(got)"
+        self.line = line
+        self.column = column
+    }
+}

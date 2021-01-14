@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FuctionLiteral: Expression {
+struct FunctionLiteral: Expression {
     var token: Token
     var params: [Identifier] = []
     var body: BlockStatement

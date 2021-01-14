@@ -313,3 +313,19 @@ struct Boolean: Object {
         return Boolean.notEquals(lhs: rhs, rhs: lhs)
     }
 }
+
+/// Represents any function from the MonkeyLanguage
+/// `Function` instances can be called and executed
+/// at any point by having an identifier pointing to it.
+/// Or by explicity calling it at the moment of declaration
+struct Function: Object {
+    var type: ObjectType { "function" }
+    var parameters: [String]
+    var body: BlockStatement
+    /// This will be a reference to the function outer environment
+    var environment: Environment<Object>
+
+    var description: String {
+        "fn(\(parameters.joined(separator: ", "))) \(body)"
+    }
+}

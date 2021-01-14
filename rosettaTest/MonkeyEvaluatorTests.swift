@@ -162,6 +162,44 @@ class MonkeyEvaluatorTests: XCTestCase {
         }
     }
 
+    func testFunctionObject() throws {
+        let input = "fn(x) { x + 2; };"
+        let evaluated = try testEval(input: input)
+        let function = evaluated as? Function
+        XCTAssertNotNil(function)
+        XCTAssertEqual(function?.parameters.count, 1)
+        XCTAssertEqual(function?.parameters.first, "x")
+        XCTAssertEqual(function?.body.description, "{\n\t(x + 2);\n}\n")
+    }
+
+    func testFunctionCall() throws {
+        let tests = [
+            ("let identity = fn(x) { x; }; identity(5);", 5),
+            ("let identity = fn(x) { return x; }; identity(5);", 5),
+            ("let double = fn(x) { x * 2; }; double(5);", 10),
+            ("let add = fn(x, y) { x + y; }; add(5, 5);", 10),
+            ("let add = fn(x, y) { x + y; }; add(5 + 5, add(5, 5));", 20),
+            ("fn(x) { x; }(5)", 5)
+        ]
+
+        for test in tests {
+            let evaluated = try testEval(input: test.0)
+            assertInteger(object: evaluated, expected: test.1)
+        }
+    }
+
+    func testClousure() throws {
+        let input = """
+        let newAdder = fn(x) {
+            fn(y) { x + y };
+        };
+        let addTwo = newAdder(2);
+        addTwo(2);
+        """
+        let evaluated = try testEval(input: input)
+        assertInteger(object: evaluated, expected: 4)
+    }
+
     // MARK: Utils
     func testEval(input: String) throws -> Object? {
         let lexer = MonkeyLexer(withString: input)

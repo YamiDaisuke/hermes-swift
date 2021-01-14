@@ -232,7 +232,7 @@ class MonkeyParserExpressionTests: XCTestCase {
         let program = try parser.parseProgram()
         XCTAssertEqual(program?.statements.count, 1)
         let expressionStatement = program?.statements.first as? ExpressionStatement
-        let function = expressionStatement?.expression as? FuctionLiteral
+        let function = expressionStatement?.expression as? FunctionLiteral
         XCTAssertEqual(function?.params.count, 2)
         XCTAssertEqual(function?.params[0].value, "x")
         XCTAssertEqual(function?.params[1].value, "y")

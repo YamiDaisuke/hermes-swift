@@ -121,7 +121,7 @@ extension ExpressionParser: PrefixParser {
             return nil
         }
 
-        return FuctionLiteral(token: token, params: params, body: body)
+        return FunctionLiteral(token: token, params: params, body: body)
     }
 
     func parseFunctionParams<P>(parser: inout P) throws -> [Identifier] where P: Parser {

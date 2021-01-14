@@ -17,7 +17,9 @@ struct BlockStatement: Statement {
     var description: String {
         var output = "{\n"
         for stmt in statements {
+            output += "\t"
             output += stmt.description
+            output += ";\n"
         }
         output += "}\n"
         return output
