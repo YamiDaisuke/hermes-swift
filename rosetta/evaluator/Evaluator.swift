@@ -60,18 +60,34 @@ extension Evaluator {
     }
 }
 
+/// Holds the program variables states
+/// this implementation is prepared to keep
+/// track of outer environments like clousures
 class Environment<BaseType> {
+    /// Current scope variables
     var store: [String: BaseType] = [:]
+    /// Outer score variables
     var outer: Environment<BaseType>?
 
+    /// Can init this `Environment` with an outer
+    /// wrapping `Environment`
+    /// - Parameter outer: The outer `Environment`
     init(outer: Environment? = nil) {
         self.outer = outer
     }
 
+    /// Gets or set a variable value
     subscript(key: String) -> BaseType? {
+        /// Returns the associated value of a variable
+        /// giving priority to the current scope
         get {
             return self.store[key] ?? outer?[key]
         }
+        /// Sets a new variable value, if the variable exists
+        /// within the current scope that  varaible is assigned
+        /// if the variable does not exists in the current scope
+        /// but exists in the outer one that variable is assiged.
+        /// If none exists the variable is created in the current scope
         set(newValue) {
             if self.store[key] != nil {
                 self.store[key] = newValue
