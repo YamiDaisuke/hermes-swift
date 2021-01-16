@@ -7,7 +7,7 @@
 
 import XCTest
 @testable import Rosetta
-@testable import MonkeyLib
+@testable import MonkeyLang
 
 class MonkeyEvaluatorTests: XCTestCase {
     var environment: Environment<Object>!

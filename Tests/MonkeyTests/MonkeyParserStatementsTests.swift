@@ -7,7 +7,7 @@
 
 import XCTest
 @testable import Rosetta
-@testable import MonkeyLib
+@testable import MonkeyLang
 
 class MonkeyParserStatementsTests: XCTestCase {
     func testParseLetStatementErrors() throws {

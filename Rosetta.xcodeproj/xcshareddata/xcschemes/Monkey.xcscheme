@@ -14,24 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Monkey::MonkeyLib"
-               BuildableName = "MonkeyLib.framework"
-               BlueprintName = "MonkeyLib"
-               ReferencedContainer = "container:Monkey.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Monkey::MonkeyRepl"
-               BuildableName = "MonkeyRepl"
-               BlueprintName = "MonkeyRepl"
-               ReferencedContainer = "container:Monkey.xcodeproj">
+               BlueprintIdentifier = "Rosetta::Monkey"
+               BuildableName = "Monkey"
+               BlueprintName = "Monkey"
+               ReferencedContainer = "container:Rosetta.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,10 +32,20 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Monkey::MonkeyTests"
+               BlueprintIdentifier = "Rosetta::MonkeyTests"
                BuildableName = "MonkeyTests.xctest"
                BlueprintName = "MonkeyTests"
-               ReferencedContainer = "container:Monkey.xcodeproj">
+               ReferencedContainer = "container:Rosetta.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "Rosetta::RosettaTests"
+               BuildableName = "RosettaTests.xctest"
+               BlueprintName = "RosettaTests"
+               ReferencedContainer = "container:Rosetta.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -64,6 +60,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "Rosetta::Monkey"
+            BuildableName = "Monkey"
+            BlueprintName = "Monkey"
+            ReferencedContainer = "container:Rosetta.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

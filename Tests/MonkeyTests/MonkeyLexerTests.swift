@@ -7,7 +7,7 @@
 
 import XCTest
 @testable import Rosetta
-@testable import MonkeyLib
+@testable import MonkeyLang
 
 // swiftlint:disable function_body_length
 class MonkeyLexerTests: XCTestCase {

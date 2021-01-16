@@ -7,7 +7,7 @@
 
 import Foundation
 import Rosetta
-import MonkeyLib
+import MonkeyLang
 
 extension String: Error {
 

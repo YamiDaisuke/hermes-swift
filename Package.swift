@@ -4,39 +4,45 @@
 import PackageDescription
 
 let package = Package(
-    name: "Monkey",
+    name: "Rosetta",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .executable(
-            name: "MonkeyRepl",
-            targets: ["MonkeyRepl"]),
-        .library(
             name: "Monkey",
-            targets: ["MonkeyLib"])
+            targets: ["Monkey"]),
+        .library(
+            name: "MonkeyLang",
+            targets: ["MonkeyLang"]),
+        .library(
+            name: "Rosetta",
+            targets: ["Rosetta"])
     ],
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-        .package(path: "../../Rosetta")
-    ],
+    dependencies: [ ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "MonkeyRepl",
+            name: "Monkey",
             dependencies: [
                 "Rosetta",
-                "MonkeyLib"
+                "MonkeyLang"
             ],
-            path: "./Sources/Repl/"),
+            path: "./Sources/Languages/Monkey/Repl/"),
         .target(
-            name: "MonkeyLib",
+            name: "MonkeyLang",
             dependencies: [
                 "Rosetta"
             ],
-            path: "./Sources/Lib/"),
+            path: "./Sources/Languages/Monkey/Lib/"),
+        .target(
+            name: "Rosetta",
+            dependencies: [],
+            path: "./Sources/Rosetta/"),
         .testTarget(
             name: "MonkeyTests",
-            dependencies: ["MonkeyLib", "Rosetta"])
+            dependencies: ["MonkeyLang", "Rosetta"]),
+        .testTarget(
+            name: "RosettaTests",
+            dependencies: ["Rosetta"])
     ]
 )
