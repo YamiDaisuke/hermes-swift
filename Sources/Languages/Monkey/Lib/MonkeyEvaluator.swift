@@ -34,6 +34,8 @@ public struct MonkeyEvaluator: Evaluator {
                 return Integer(value: statement.value)
             case let statement as BooleanLiteral:
                 return statement.value ? Boolean.true : Boolean.false
+            case let statement as StringLiteral:
+                return MString(value: statement.value)
             case let letStmt as LetStatement:
                 let value = try eval(node: letStmt.value, environment: environment)
                 environment[letStmt.name.value] = value
@@ -240,6 +242,9 @@ public struct MonkeyEvaluator: Evaluator {
     ///
     /// Supported operators:
     /// - `<Integer> + <Integer>`
+    /// - `<String> + <String>`
+    /// - `<String> + <Object>`
+    /// - `<Object> + <String>`
     /// - `<Integer> - <Integer>`
     /// - `<Integer> * <Integer>`
     /// - `<Integer> / <Integer>`
@@ -259,7 +264,7 @@ public struct MonkeyEvaluator: Evaluator {
     static func evalInfix(lhs: Object?, operatorSymbol: String, rhs: Object?) throws -> Object? {
         switch operatorSymbol {
         case "+":
-            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: +)
+            return try applyAddition(lhs: lhs, rhs: rhs)
         case "-":
             return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: -)
         case "*":
@@ -277,6 +282,22 @@ public struct MonkeyEvaluator: Evaluator {
         default:
             throw UnknownOperator(operatorSymbol)
         }
+    }
+
+    static func applyAddition(lhs: Object?, rhs: Object?) throws -> Object? {
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs + rhs
+        }
+
+        if let string = lhs as? MString {
+            return string + rhs
+        }
+
+        if let string = rhs as? MString {
+            return lhs + string
+        }
+
+        throw InvalidInfixExpression("+", lhs: lhs, rhs: rhs)
     }
 
     /// Applies the corresponding infix operation to two `Integer` operands
@@ -309,6 +330,10 @@ public struct MonkeyEvaluator: Evaluator {
             return lhs == rhs
         }
 
+        if let lhs = lhs as? MString, let rhs = rhs as? MString {
+            return lhs == rhs
+        }
+
         if let rhs = rhs as? Boolean {
             return lhs == rhs
         }
@@ -328,6 +353,18 @@ public struct MonkeyEvaluator: Evaluator {
     ///            compared by value. Otherwise `true`
     static func applyInequalityInfix(lhs: Object?, rhs: Object?) -> Boolean? {
         if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs != rhs
+        }
+
+        if let lhs = lhs as? MString, let rhs = rhs as? MString {
+            return lhs != rhs
+        }
+
+        if let rhs = rhs as? MString {
+            return lhs != rhs
+        }
+
+        if let lhs = lhs as? MString {
             return lhs != rhs
         }
 

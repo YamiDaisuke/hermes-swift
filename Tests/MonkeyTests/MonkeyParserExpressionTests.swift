@@ -65,6 +65,25 @@ class MonkeyParserExpressionTests: XCTestCase {
         }
     }
 
+    func testStringLiteralExpression() throws {
+        let input = """
+        "Hello World";
+        """
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertEqual(program?.statements.count, 1)
+
+        let expressionStmt = program?.statements[0] as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        let string = expressionStmt?.expression as? StringLiteral
+        XCTAssertNotNil(string)
+        XCTAssertEqual(string?.value, "Hello World")
+        XCTAssertEqual(string?.literal, "Hello World")
+    }
+
     func testPrefixExpressions() throws {
         let tests: [(input: String, operator: String, value: Any)] = [
             (input: "!5;", operator: "!", value: 5),

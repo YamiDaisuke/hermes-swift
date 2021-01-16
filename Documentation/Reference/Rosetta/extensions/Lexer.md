@@ -49,7 +49,8 @@ current columm and line pointer accordingly to the number of character read
 
 - Parameters:
   - input: The input to take the sub-string from
-  - predicate: An expression that indicates wich characters to take
+  - predicate: A predicate function to check if the next character should be taken
+               it will recieve the current read `Character`
 - Returns: A sub-string that mets the condition from the `while` predicate
 
 #### Parameters
@@ -57,4 +58,4 @@ current columm and line pointer accordingly to the number of character read
 | Name | Description |
 | ---- | ----------- |
 | input | The input to take the sub-string from |
-| predicate | An expression that indicates wich characters to take |
+| predicate | A predicate function to check if the next character should be taken it will recieve the current read `Character` |

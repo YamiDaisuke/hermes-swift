@@ -9,10 +9,6 @@ import Foundation
 import Rosetta
 import MonkeyLang
 
-extension String: Error {
-
-}
-
 struct MonkeyRepl {
 
     static let monkeyFace: String = #"""

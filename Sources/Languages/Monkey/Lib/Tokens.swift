@@ -12,6 +12,7 @@ import Rosetta
 extension Token.Kind {
     static let identifier = Token.Kind("identifier")
     static let int = Token.Kind("int")
+    static let string = Token.Kind("string")
 }
 
 // Operators
