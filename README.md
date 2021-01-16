@@ -27,10 +27,10 @@ implementation but nothing else.
 
 Outside the scope of the book my current stretch goals (so far) and aditional taks are:
 
-- [ ] Create each component as a swift package not tied to the Monkey language, the idea is that you can
+- [X] Create each component as a swift package not tied to the Monkey language, the idea is that you can
 implement a series of `protocols` and `classes` and provide your very own language that should work
 with this library
 - [X] Modify Lexer to include line and column information for each token
 - [ ] Modify Lexer to read from files and parse tokens line by line
 - [ ] Implement CI steps
-- [ ] Create an standalone build and test script to work without XCode
+- [X] Create an standalone build and test script to work without XCode
