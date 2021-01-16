@@ -8,7 +8,19 @@
 import Foundation
 import Rosetta
 
+/// Convinience so we can throw `String` as Errors
+extension String: Error { }
+/// Convinience so we can throw `Character` as Errors
+extension Character: Error { }
+
 public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
+    public static let scapeCharacters: [Character: Character] = [
+        "n": "\n",
+        "t": "\t",
+        "\"": "\"",
+        "\\": "\\"
+    ]
+
     public var readingChars: (current: Character?, next: Character?)?
 
     public let filePath: URL?
@@ -111,8 +123,16 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
             token = Token(type: .rbrace, literal: String(char))
         case "\"":
             self.readChar()
-            let literal = readString()
-            token = Token(type: .string, literal: literal)
+            do {
+                let literal = try readString()
+                token = Token(type: .string, literal: literal)
+            } catch let error as Character {
+                token = Token(type: .ilegal, literal: String(error))
+            } catch let error as String {
+                token = Token(type: .ilegal, literal: error)
+            } catch {
+                token = Token(type: .ilegal, literal: String(char))
+            }
         default:
             if char.isIdentifierLetter {
                 let literal = self.readIdentifier()
@@ -144,14 +164,7 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
         return self.read { $0.isNumber }
     }
 
-    mutating func readString() -> String {
-        let scapeCharacters: [Character: Character] = [
-            "n": "\n",
-            "t": "\t",
-            "\"": "\"",
-            "\\": "\\"
-        ]
-
+    mutating func readString() throws -> String {
         guard let first = self.readingChars?.current, first != "\"" else {
             return ""
         }
@@ -162,18 +175,22 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
                 break
             }
 
+            guard current != "\n" && self.readingChars?.next != "\n" else {
+                throw "\n"
+            }
+
             if current == "\\" {
-                guard let next = self.readingChars?.next else {
-                    break
+                guard let next = self.readingChars?.next else { break }
+
+                guard let scaped = MonkeyLexer.scapeCharacters[next] else {
+                    throw next
                 }
 
-                if let scaped = scapeCharacters[next] {
-                    output += String(scaped)
-                } else {
-                    break
-                }
-
+                output += String(scaped)
                 self.readChar()
+                guard self.readingChars?.next != "\n" else {
+                    throw "\n"
+                }
                 self.readChar()
                 continue
             }

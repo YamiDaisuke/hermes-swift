@@ -6,6 +6,8 @@
 public struct Boolean: Object
 ```
 
+A Boolean value in Monkey
+
 ## Properties
 ### `type`
 
@@ -44,6 +46,16 @@ public init(_ integer: Integer)
 Convinience cast an `Integer` to one of the
 `Bolean` constants. `0` matches to `false`
 any other `Integer` maps to `true`
+
+### `init(_:)`
+
+```swift
+public init(_ string: MString)
+```
+
+Convinience cast an `MString` to one of the
+`Bolean` constants. `""` matches to `false`
+any other `MString` maps to `true`
 
 ### `!(_:)`
 

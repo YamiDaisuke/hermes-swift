@@ -83,6 +83,43 @@ class MonkeyEvaluatorTests: XCTestCase {
         XCTAssertEqual(string?.description, "Hello World!")
     }
 
+    func testEvalStringConcatention() throws {
+        let tests = [
+            (#""Hello" + " " + "World!""#, "Hello World!"),
+            (#""Hello " + 10"#, "Hello 10"),
+            (#""Hello " + true"#, "Hello true"),
+            (#"10 + " Hello""#, "10 Hello"),
+            (#"true + " Hello""#, "true Hello")
+        ]
+
+        for test in tests {
+            let evaluated = try testEval(input: test.0)
+            let string = evaluated as? MString
+            XCTAssertNotNil(string)
+            XCTAssertEqual(string?.value, test.1)
+        }
+    }
+
+    func testEvalStringCompare() throws {
+        let tests = [
+            (#""Hello" == "World!""#, false),
+            (#""Hello" == "Hello""#, true),
+            (#""Hello" != "World!""#, true),
+            (#""Hello" != "Hello""#, false),
+            (#""Hello" == 10"#, false),
+            (#""Hello" != 10"#, true),
+            (#""10" == 10"#, false),
+            (#""10" != 10"#, true),
+            (#""Hello" == true"#, true),
+            ("\"\" == false", true)
+        ]
+
+        for test in tests {
+            let evaluated = try testEval(input: test.0)
+            assertBoolean(object: evaluated, expected: test.1)
+        }
+    }
+
     func testBangOperator() throws {
         let tests = [
             ("!true", false),
@@ -147,7 +184,8 @@ class MonkeyEvaluatorTests: XCTestCase {
              "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 19"),
             ("if (10 > 1) { if (10 > 1) { return true + false; } return 1; }",
              "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 40"),
-            ("foobar", "\"foobar\" is not defined at Line: 1, Column: 0")
+            ("foobar", "\"foobar\" is not defined at Line: 1, Column: 0"),
+            (#""Hello" - "World";"#, "Can't apply operator \"-\" to String and String at Line: 1, Column: 8")
         ]
 
         for test in tests {

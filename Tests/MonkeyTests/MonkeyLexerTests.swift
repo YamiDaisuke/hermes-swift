@@ -202,6 +202,20 @@ class MonkeyLexerTests: XCTestCase {
         }
     }
 
+    func testInvalidStrings() throws {
+        let tests = [
+            ("\"foo\nbar", Token(type: .ilegal, literal: "\n")),
+            ("\"foo\\\"\nbar", Token(type: .ilegal, literal: "\n")),
+            ("\"\\hfoo\"\nbar", Token(type: .ilegal, literal: "h"))
+        ]
+
+        for test in tests {
+            var lexer = MonkeyLexer(withString: test.0)
+            let next = lexer.nextToken()
+            XCTAssertEqual(next, test.1)
+        }
+    }
+
     func testNextTokenWithLineNumber() throws {
         let input = """
         let five = 5;

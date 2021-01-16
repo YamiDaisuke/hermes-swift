@@ -6,6 +6,8 @@
 public struct Integer: Object
 ```
 
+An Integer value in Monkey
+
 ## Properties
 ### `type`
 
