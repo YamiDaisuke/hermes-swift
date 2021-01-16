@@ -16,3 +16,7 @@ if [ $? -ne 0 ]; then
     echo "Tests must pass before commit!"
     exit 1
 fi
+
+echo "Generating documentation"
+sourcedocs generate --all-modules
+git add Documentation/
