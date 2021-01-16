@@ -109,6 +109,10 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
             token = Token(type: .lbrace, literal: String(char))
         case "}":
             token = Token(type: .rbrace, literal: String(char))
+        case "\"":
+            self.readChar()
+            let literal = readString()
+            token = Token(type: .string, literal: literal)
         default:
             if char.isIdentifierLetter {
                 let literal = self.readIdentifier()
@@ -138,5 +142,48 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
     mutating func readNumber() -> String {
         // TODO: Support floating points
         return self.read { $0.isNumber }
+    }
+
+    mutating func readString() -> String {
+        let scapeCharacters: [Character: Character] = [
+            "n": "\n",
+            "t": "\t",
+            "\"": "\"",
+            "\\": "\\"
+        ]
+
+
+        guard let first = self.readingChars?.current, first != "\"" else {
+            return ""
+        }
+
+        var output = ""
+        var keepGoing = false
+        repeat {
+            guard let current = self.readingChars?.current else {
+                break
+            }
+
+            if current == "\\" {
+                guard let next = self.readingChars?.next else {
+                    break
+                }
+
+                if let scaped = scapeCharacters[next] {
+                    output += String(scaped)
+                } else {
+                    break
+                }
+
+                self.readChar()
+                self.readChar()
+                continue
+            }
+
+            output += String(current)
+            self.readChar()
+        } while self.readingChars?.current != nil && self.readingChars?.current != "\""
+
+        return output
     }
 }

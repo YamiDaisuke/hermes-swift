@@ -80,6 +80,9 @@ class MonkeyLexerTests: XCTestCase {
 
         10 == 10; 10 != 9;
         10 >= 10; 10 <= 9;
+
+        "foobar"
+        "foo bar"
         """
         let tokens: [Token] = [
             Token(type: .let, literal: "let"),
@@ -163,11 +166,37 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .lte, literal: "<="),
             Token(type: .int, literal: "9"),
             Token(type: .semicolon, literal: ";"),
+            Token(type: .string, literal: "foobar"),
+            Token(type: .string, literal: "foo bar"),
             Token(type: .eof, literal: "")
         ]
 
         var lexer = MonkeyLexer(withString: input)
         for token in tokens {
+            let next = lexer.nextToken()
+            XCTAssertEqual(next, token)
+        }
+    }
+
+    func testStrings() throws {
+        let input = #"""
+        "foobar"
+        "foo bar"
+        "foo \"bar\""
+        "foo\n\"bar\""
+        "foo\\\n\"bar\""
+        "\tfoo\\\n\"bar\""
+        """#
+        let expect = [
+            Token(type: .string, literal: "foobar"),
+            Token(type: .string, literal: "foo bar"),
+            Token(type: .string, literal: "foo \"bar\""),
+            Token(type: .string, literal: "foo\n\"bar\""),
+            Token(type: .string, literal: "foo\\\n\"bar\""),
+            Token(type: .string, literal: "\tfoo\\\n\"bar\"")
+        ]
+        var lexer = MonkeyLexer(withString: input)
+        for token in expect {
             let next = lexer.nextToken()
             XCTAssertEqual(next, token)
         }
