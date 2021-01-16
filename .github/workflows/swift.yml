@@ -1,0 +1,17 @@
+name: Swift
+on:
+  push:
+    branches: [ ref/implement-spm ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v --enable-code-coverage
+    - name: Code Coverage
+      run: bash <(curl -s https://codecov.io/bash)
