@@ -1,7 +1,7 @@
 name: BuildAndTest
 on:
   push:
-    branches: [ ref/implement-spm ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 jobs:
