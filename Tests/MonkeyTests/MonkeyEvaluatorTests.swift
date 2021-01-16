@@ -74,6 +74,15 @@ class MonkeyEvaluatorTests: XCTestCase {
         }
     }
 
+    func testEvalStrings() throws {
+        let input = "\"Hello World!\""
+        let evaluated = try testEval(input: input)
+        let string = evaluated as? MString
+        XCTAssertNotNil(string)
+        XCTAssertEqual(string?.value, "Hello World!")
+        XCTAssertEqual(string?.description, "Hello World!")
+    }
+
     func testBangOperator() throws {
         let tests = [
             ("!true", false),

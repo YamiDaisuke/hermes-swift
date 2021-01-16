@@ -34,6 +34,8 @@ public struct MonkeyEvaluator: Evaluator {
                 return Integer(value: statement.value)
             case let statement as BooleanLiteral:
                 return statement.value ? Boolean.true : Boolean.false
+            case let statement as StringLiteral:
+                return MString(value: statement.value)
             case let letStmt as LetStatement:
                 let value = try eval(node: letStmt.value, environment: environment)
                 environment[letStmt.name.value] = value

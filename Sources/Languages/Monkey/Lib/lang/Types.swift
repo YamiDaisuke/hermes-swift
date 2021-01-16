@@ -330,3 +330,15 @@ public struct Function: Object {
         "fn(\(parameters.joined(separator: ", "))) \(body)"
     }
 }
+
+/// Monkey Language `String` object, we have
+/// to callit `MString` to avoid colissions with swift
+/// `String`
+public struct MString: Object {
+    public var type: ObjectType { "String" }
+    public var value: String
+
+    public var description: String {
+        "\(value.description)"
+    }
+}
