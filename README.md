@@ -1,5 +1,7 @@
 # Rosetta Swift
 
+[![YourActionName Actions Status](https://github.com/YamiDaisuke/rosetta-swift/workflows/BuildAndTest/badge.svg)](https://github.com/YamiDaisuke/rosetta-swift/actions)
+[![codecov](https://codecov.io/gh/YamiDaisuke/rosetta-swift/branch/main/graph/badge.svg?token=14CTPDWLQW)](https://codecov.io/gh/YamiDaisuke/rosetta-swift)
 ## Introduction
 
 With this project I want to get a better understanding on how compilers and interpreters works, while

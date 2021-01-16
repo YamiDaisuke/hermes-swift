@@ -1,4 +1,4 @@
-name: Swift
+name: BuildAndTest
 on:
   push:
     branches: [ ref/implement-spm ]
