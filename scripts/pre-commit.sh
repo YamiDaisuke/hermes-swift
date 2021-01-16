@@ -11,17 +11,7 @@ else
   exit 1
 fi
 
-cd Rosetta/
-swift test
-cd ../
-if [ $? -ne 0 ]; then
-    echo "Tests must pass before commit!"
-    exit 1
-fi
-
-cd languages/Monkey
-swift test
-cd ../../
+swift test --enable-code-coverage
 if [ $? -ne 0 ]; then
     echo "Tests must pass before commit!"
     exit 1
