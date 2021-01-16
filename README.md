@@ -1,5 +1,7 @@
 # Rosetta Swift
 
+[![YourActionName Actions Status](https://github.com/YamiDaisuke/rosetta-swift/workflows/BuildAndTest/badge.svg)](https://github.com/YamiDaisuke/rosetta-swift/actions)
+[![codecov](https://codecov.io/gh/YamiDaisuke/rosetta-swift/branch/main/graph/badge.svg?token=14CTPDWLQW)](https://codecov.io/gh/YamiDaisuke/rosetta-swift)
 ## Introduction
 
 With this project I want to get a better understanding on how compilers and interpreters works, while
@@ -25,12 +27,20 @@ standalone compilation and maybe include support for linux. As in the book this 
 use third party libs only standard swift libraries. Maybe I'll include a lib to simplify the CLI
 implementation but nothing else.
 
+## Before you begin
+
+After cloning this repo run `./scripts/install-hooks.sh` to configure git hooks. This will ensure documentation
+is update on each commit and will prevent broken tests and lint errors to be pushed in the repo.
+
+## TODO
+
 Outside the scope of the book my current stretch goals (so far) and aditional taks are:
 
-- [ ] Create each component as a swift package not tied to the Monkey language, the idea is that you can
+- [X] Create each component as a swift package not tied to the Monkey language, the idea is that you can
 implement a series of `protocols` and `classes` and provide your very own language that should work
 with this library
 - [X] Modify Lexer to include line and column information for each token
 - [ ] Modify Lexer to read from files and parse tokens line by line
-- [ ] Implement CI steps
-- [ ] Create an standalone build and test script to work without XCode
+- [X] Implement CI steps
+- [X] Create an standalone build and test script to work without XCode
+- [ ] CI steps to build release artifacts
