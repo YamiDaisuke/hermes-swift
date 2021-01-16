@@ -152,13 +152,11 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
             "\\": "\\"
         ]
 
-
         guard let first = self.readingChars?.current, first != "\"" else {
             return ""
         }
 
         var output = ""
-        var keepGoing = false
         repeat {
             guard let current = self.readingChars?.current else {
                 break

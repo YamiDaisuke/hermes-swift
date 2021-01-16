@@ -21,6 +21,8 @@ extension ExpressionParser: PrefixParser {
             return try parseIdentifier(&parser)
         case Token.Kind.int:
             return try parseInteger(&parser)
+        case Token.Kind.string:
+            return try parseString(&parser)
         case Token.Kind.bang, Token.Kind.minus:
             return try parsePrefix(&parser)
         case Token.Kind.true, Token.Kind.false:
@@ -50,6 +52,14 @@ extension ExpressionParser: PrefixParser {
         }
 
         return try IntegerLiteral(token: token)
+    }
+
+    func parseString<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .string else {
+            return nil
+        }
+
+        return StringLiteral(token: token)
     }
 
     func parseBoolean<P>(_ parser: inout P) throws -> Expression? where P: Parser {
