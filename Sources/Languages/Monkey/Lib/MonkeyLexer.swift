@@ -121,6 +121,10 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
             token = Token(type: .lbrace, literal: String(char))
         case "}":
             token = Token(type: .rbrace, literal: String(char))
+        case "[":
+            token = Token(type: .lbracket, literal: String(char))
+        case "]":
+            token = Token(type: .rbracket, literal: String(char))
         case "\"":
             self.readChar()
             do {

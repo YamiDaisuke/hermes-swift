@@ -42,6 +42,8 @@ extension Token.Kind {
     static let rparen = Token.Kind(")")
     static let lbrace = Token.Kind("{")
     static let rbrace = Token.Kind("}")
+    static let lbracket = Token.Kind("[")
+    static let rbracket = Token.Kind("]")
 }
 
 // Keywords
