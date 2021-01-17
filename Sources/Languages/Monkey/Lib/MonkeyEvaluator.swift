@@ -75,6 +75,11 @@ public struct MonkeyEvaluator: Evaluator {
                 }
 
                 throw InvalidCallExpression(function?.type ?? "Unknown")
+            case let array as ArrayLiteral:
+                let elements = try evalExpressions(array.elements, environment: environment)
+                return MArray(elements: elements)
+            case let indexExpr as IndexExpression:
+                return try evalIndexExpression(indexExpr, environment: environment)
             default:
                 throw UnknownSyntaxToken(node)
             }
@@ -96,6 +101,21 @@ public struct MonkeyEvaluator: Evaluator {
         // Since we only have one type of transfer control
         // we know this statement is a return wrapper
         return statement.value
+    }
+
+    static func evalIndexExpression(_ expression: IndexExpression, environment: Environment<Object>) throws -> Object? {
+        let lhs = try eval(node: expression.lhs, environment: environment)
+        let index = try eval(node: expression.index, environment: environment)
+
+        guard let array = lhs as? MArray else {
+            throw InvalidInfixExpression("[]", lhs: lhs, rhs: index)
+        }
+
+        guard let intIndex = index as? Integer else {
+            throw InvalidInfixExpression("[]", lhs: lhs, rhs: index)
+        }
+
+        return array[intIndex]
     }
 
     /// Evals a list of expression used as function arguments

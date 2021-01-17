@@ -275,6 +275,41 @@ class MonkeyEvaluatorTests: XCTestCase {
         }
     }
 
+    func testArrayLiteral() throws {
+        let input = "[1, 2 * 2, 3 + 3]"
+        let evaluated = try testEval(input: input)
+        let array = evaluated as? MArray
+        XCTAssertNotNil(array)
+        XCTAssertEqual(array?.elements.count, 3)
+        assertInteger(object: array?.elements[0], expected: 1)
+        assertInteger(object: array?.elements[1], expected: 4)
+        assertInteger(object: array?.elements[2], expected: 6)
+    }
+
+    func testArrayIndexExpression() throws {
+        let tests = [
+            ("[1, 2, 3][0]", 1),
+            ("[1, 2, 3][1]", 2),
+            ("[1, 2, 3][2]", 3),
+            ("let i = 0; [1][i];", 1),
+            ("[1, 2, 3][1 + 1]", 3),
+            ("let myArray = [1, 2, 3]; myArray[2];", 3),
+            ("let myArray = [1, 2, 3]; myArray[0] + myArray[1] + myArray[2];", 6),
+            ("let myArray = [1, 2, 3]; let i = myArray[0]; myArray[i]", 2),
+            ("[1, 2, 3][3]", nil),
+            ("[1, 2, 3][-1]", nil)
+        ]
+
+        for test in tests {
+            let evaluated = try testEval(input: test.0)
+            if let expected = test.1 {
+                assertInteger(object: evaluated, expected: expected)
+            } else {
+                XCTAssert((evaluated == Null.null).value)
+            }
+        }
+    }
+
     // MARK: Utils
 
     func testEval(input: String) throws -> Object? {
