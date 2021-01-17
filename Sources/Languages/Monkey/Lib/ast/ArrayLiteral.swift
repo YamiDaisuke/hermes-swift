@@ -8,8 +8,11 @@
 import Foundation
 import Rosetta
 
+/// Holds a reference for an array literal, expressed in the form:
+/// `[<expression>, <epxression>,...,<expression>]`
 struct ArrayLiteral: Expression {
     var token: Token // The '[' token
+    /// The expressions stored in this array
     var elements: [Expression]
 
     var description: String {
