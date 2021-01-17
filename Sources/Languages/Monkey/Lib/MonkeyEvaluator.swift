@@ -12,6 +12,23 @@ public struct MonkeyEvaluator: Evaluator {
     public typealias BaseType = Object
     public typealias ControlTransfer = Return
 
+    /// Here we register builtin functions with their respective indentifier
+    static let builtins: [String: BuiltinFunction] = [
+        /// `len` function expects a single `MString` parameter and
+        /// will return the number of characters in that `MString` as `Integer`
+        "len": BuiltinFunction { (args) throws -> Object? in
+            guard args.count == 1 else {
+                throw WrongArgumentCount(1, got: args.count)
+            }
+
+            guard let string = args.first as? MString else {
+                throw InvalidArgumentType("String", got: args.first!.type)
+            }
+
+            return Integer(value: string.value.count)
+        }
+    ]
+
     public static func eval(node: Node, environment: Environment<Object>) throws -> Object? {
         do {
             switch node {
@@ -41,20 +58,23 @@ public struct MonkeyEvaluator: Evaluator {
                 environment[letStmt.name.value] = value
                 return Null.null
             case let identifier as Identifier:
-                guard let value = environment[identifier.value] else {
-                    throw ReferenceError(identifier.value, line: identifier.token.line, column: identifier.token.column)
-                }
-                return value
+                return try evalIdentifier(identifier, environment: environment)
             case let function as FunctionLiteral:
                 let params = function.params.map({$0.value})
                 return Function(parameters: params, body: function.body, environment: environment)
             case let call as CallExpression:
-                guard let function = try eval(node: call.function, environment: environment) as? Function else {
-                    return nil
-                }
+                let function = try eval(node: call.function, environment: environment)
                 let args = try evalExpressions(call.args, environment: environment)
 
-                return try applyFunction(function, args: args)
+                if let function = function as? Function {
+                    return try applyFunction(function, args: args)
+                }
+
+                if let function = function as? BuiltinFunction {
+                    return try applyBuiltinFunction(function, args: args)
+                }
+
+                throw InvalidCallExpression(function?.type ?? "Unknown")
             default:
                 throw UnknownSyntaxToken(node)
             }
@@ -98,6 +118,25 @@ public struct MonkeyEvaluator: Evaluator {
         return result
     }
 
+    /// Evals an `Indentifer` node and returns the stored value from the current `Enviroment`
+    ///
+    /// - Parameters:
+    ///   - identifier: The requested value `Identifier`
+    ///   - environment: The current `Environment`
+    /// - Throws: `ReferenceError` if the `Identifier` does not exists in `environment` or is a builtin function
+    /// - Returns: The value asociated with `identifier`
+    static func evalIdentifier(_ identifier: Identifier, environment: Environment<Object>) throws -> Object? {
+        if let value = environment[identifier.value] {
+            return value
+        }
+
+        if let value = builtins[identifier.value] {
+            return value
+        }
+
+        throw ReferenceError(identifier.value, line: identifier.token.line, column: identifier.token.column)
+    }
+
     /// Applies a `Function` that's being called
     /// - Parameters:
     ///   - function: The `Function` to call
@@ -107,6 +146,20 @@ public struct MonkeyEvaluator: Evaluator {
     static func applyFunction(_ function: Function, args: [Object]) throws -> Object? {
         let env = try clousureEnv(function, args: args)
         let evaluated = try eval(node: function.body, environment: env)
+        if let evaluated = evaluated as? Return {
+            return evaluated.value
+        }
+        return evaluated
+    }
+
+    /// Applies a `BuiltinFunction` that's being called
+    /// - Parameters:
+    ///   - function: The `BuiltinFunction` to call
+    ///   - args: The args of the `Function`
+    /// - Throws: `EvaluatorError` if any expression or statement fails to be evaluated
+    /// - Returns: The returning value of the `BuiltinFunction`
+    static func applyBuiltinFunction(_ function: BuiltinFunction, args: [Object]) throws -> Object? {
+        let evaluated = try function.function(args)
         if let evaluated = evaluated as? Return {
             return evaluated.value
         }

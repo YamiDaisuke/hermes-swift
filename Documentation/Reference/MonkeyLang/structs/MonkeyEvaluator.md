@@ -13,6 +13,9 @@ public struct MonkeyEvaluator: Evaluator
 public static func eval(node: Node, environment: Environment<Object>) throws -> Object?
 ```
 
+`len` function expects a single `MString` parameter and
+will return the number of characters in that `MString` as `Integer`
+
 ### `handleControlTransfer(_:environment:)`
 
 ```swift

@@ -30,6 +30,7 @@
 		F883BE4E25B395F500E9CA9F /* Return.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE4D25B395F500E9CA9F /* Return.swift */; };
 		F883BE5725B3960700E9CA9F /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE5625B3960700E9CA9F /* Function.swift */; };
 		F883BE6025B3961700E9CA9F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE5F25B3961700E9CA9F /* String.swift */; };
+		F8B8093825B49A240042EDCC /* BuiltinFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8093725B49A240042EDCC /* BuiltinFunction.swift */; };
 		OBJ_100 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* Types.swift */; };
 		OBJ_102 /* Rosetta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rosetta::Rosetta::Product" /* Rosetta.framework */; };
 		OBJ_109 /* MonkeyEvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_47 /* MonkeyEvaluatorTests.swift */; };
@@ -144,6 +145,7 @@
 		F883BE4D25B395F500E9CA9F /* Return.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Return.swift; sourceTree = "<group>"; };
 		F883BE5625B3960700E9CA9F /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
 		F883BE5F25B3961700E9CA9F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		F8B8093725B49A240042EDCC /* BuiltinFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltinFunction.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_12 /* MonkeyEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyEvaluator.swift; sourceTree = "<group>"; };
 		OBJ_13 /* MonkeyEvaluatorErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyEvaluatorErrors.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				F883BE4D25B395F500E9CA9F /* Return.swift */,
 				F883BE5625B3960700E9CA9F /* Function.swift */,
 				F883BE5F25B3961700E9CA9F /* String.swift */,
+				F8B8093725B49A240042EDCC /* BuiltinFunction.swift */,
 			);
 			path = lang;
 			sourceTree = "<group>";
@@ -349,7 +352,7 @@
 			path = Tests/MonkeyTests;
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -359,7 +362,6 @@
 				OBJ_62 /* scripts */,
 				OBJ_63 /* README.md */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_52 /* RosettaTests */ = {
@@ -525,7 +527,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_56 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -642,6 +644,7 @@
 				OBJ_94 /* InfixExpression.swift in Sources */,
 				F883BE4525B3959800E9CA9F /* Boolean.swift in Sources */,
 				OBJ_95 /* IntegerLiteral.swift in Sources */,
+				F8B8093825B49A240042EDCC /* BuiltinFunction.swift in Sources */,
 				F883BE1725B385DC00E9CA9F /* StringLiteral.swift in Sources */,
 				OBJ_96 /* LetStatement.swift in Sources */,
 				OBJ_97 /* MonkeyParser.swift in Sources */,

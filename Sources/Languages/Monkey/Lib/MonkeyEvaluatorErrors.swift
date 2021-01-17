@@ -68,6 +68,18 @@ struct ReferenceError: EvaluatorError {
     }
 }
 
+struct InvalidCallExpression: EvaluatorError {
+    var message: String
+    var line: Int?
+    var column: Int?
+
+    init(_ type: ObjectType, line: Int? = nil, column: Int? = nil) {
+        self.message = "Can't call expression of type: \(type)"
+        self.line = line
+        self.column = column
+    }
+}
+
 struct WrongArgumentCount: EvaluatorError {
     var message: String
     var line: Int?
@@ -79,3 +91,16 @@ struct WrongArgumentCount: EvaluatorError {
         self.column = column
     }
 }
+
+struct InvalidArgumentType: EvaluatorError {
+    var message: String
+    var line: Int?
+    var column: Int?
+
+    init(_ expected: ObjectType, got: ObjectType, line: Int? = nil, column: Int? = nil) {
+        self.message = "Incorrect argment type expected: \(expected) got: \(got)"
+        self.line = line
+        self.column = column
+    }
+}
+

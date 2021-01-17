@@ -249,7 +249,34 @@ class MonkeyEvaluatorTests: XCTestCase {
         assertInteger(object: evaluated, expected: 4)
     }
 
+    func testBuiltinFunctions() throws {
+        let tests: [(String, Any)] = [
+            ("len(\"\")", 0),
+            ("len(\"four\")", 4),
+            ("len(\"Hello World\")", 11),
+            ("len(1)", "Incorrect argment type expected: String got: Integer at Line: 1, Column: 3"),
+            (
+                "len(\"one\", \"two\")",
+                "Incorrect number of arguments in function call expected: 1 but got: 2 at Line: 1, Column: 3"
+            )
+        ]
+
+        for test in tests {
+            do {
+                let evaluated = try testEval(input: test.0)
+                assertInteger(object: evaluated, expected: test.1 as? Int ?? -1)
+            } catch let error as WrongArgumentCount {
+                XCTAssertEqual(error.description, test.1 as? String ?? "")
+            } catch let error as InvalidArgumentType {
+                XCTAssertEqual(error.description, test.1 as? String ?? "")
+            } catch {
+                XCTFail("Unexpected error: \(error)")
+            }
+        }
+    }
+
     // MARK: Utils
+
     func testEval(input: String) throws -> Object? {
         let lexer = MonkeyLexer(withString: input)
         var parser = MonkeyParser(lexer: lexer)
