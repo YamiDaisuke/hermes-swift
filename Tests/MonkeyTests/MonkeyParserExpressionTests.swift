@@ -188,7 +188,9 @@ class MonkeyParserExpressionTests: XCTestCase {
             ("!(true == true)", "(!(true == true))\n"),
             ("a + add(b * c) + d", "((a + add((b * c))) + d)\n"),
             ("add(a, b, 1, 2 * 3, 4 + 5, add(6, 7 * 8))", "add(a, b, 1, (2 * 3), (4 + 5), add(6, (7 * 8)))\n"),
-            ("add(a + b + c * d / f + g)", "add((((a + b) + ((c * d) / f)) + g))\n")
+            ("add(a + b + c * d / f + g)", "add((((a + b) + ((c * d) / f)) + g))\n"),
+            ("a * [1, 2, 3, 4][b * c] * d", "((a * ([1, 2, 3, 4][(b * c)])) * d)\n"),
+            ("add(a * b[2], b[1], 2 * [1, 2][1])", "add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))\n")
         ]
 
         for test in tests {
@@ -308,6 +310,22 @@ class MonkeyParserExpressionTests: XCTestCase {
         array = expressionStatement?.expression as? ArrayLiteral
         XCTAssertNotNil(array)
         XCTAssertEqual(array?.elements.count, 0)
+    }
+
+    func testParsingIndexExpressions() throws {
+        let input = "array[1 + 1]"
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertEqual(program?.statements.count, 1)
+
+        let expressionStatement = program?.statements.first as? ExpressionStatement
+        let indexExp = expressionStatement?.expression as? IndexExpression
+        XCTAssertNotNil(indexExp)
+        assertIdentifier(expression: indexExp?.lhs, expected: "array")
+        assertInfixExpression(expression: indexExp?.index, lhs: "1", operatorSymbol: "+", rhs: "1")
     }
 
     // MARK: Utils

@@ -244,6 +244,8 @@ extension ExpressionParser: InfixParser {
         switch token.type {
         case Token.Kind.lparen:
             return try parseCallExpression(&parser, lhs: lhs)
+        case Token.Kind.lbracket:
+            return try parseIndexExpression(&parser, lhs: lhs)
         default:
             return try parseInfix(&parser, lhs: lhs)
         }
@@ -271,5 +273,19 @@ extension ExpressionParser: InfixParser {
 
         let args = try self.parseExpressionList(withEndDelimiter: .rparen, parser: &parser)
         return CallExpression(token: token, function: lhs, args: args)
+    }
+
+    func parseIndexExpression<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .lbracket else {
+            return nil
+        }
+
+        parser.readToken()
+        guard let index = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
+            return nil
+        }
+
+        try parser.expectNext(toBe: .rbracket)
+        return IndexExpression(token: token, lhs: lhs, index: index)
     }
 }
