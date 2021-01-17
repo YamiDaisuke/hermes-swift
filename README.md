@@ -44,3 +44,32 @@ with this library
 - [X] Implement CI steps
 - [X] Create an standalone build and test script to work without XCode
 - [ ] CI steps to build release artifacts
+- [ ] Support Linux
+
+## Language Extra Features
+
+Besides the language features include in the books, I have added the following by my own:
+
+### String scape sequences
+
+Support of scape characters inside string literals, currently supported values are:
+```
+\n = line break
+\t = tabulation
+\" = Double quote character inside a string
+\\ = Back slash character
+```
+Any other value will produce an error
+
+### String compare
+
+Comparison of String values with any other value.
+
+- Two strings will be compared based on their characters
+- A string will be equal to boolean `true` if it is not empty
+- A string will be equal to boolean `false` if it is empty
+- A string will never be equal to any other value
+
+## Documentation
+
+Documentation can be found [here](Documentation/Reference/README.md)
