@@ -14,18 +14,77 @@ public struct MonkeyEvaluator: Evaluator {
 
     /// Here we register builtin functions with their respective indentifier
     static let builtins: [String: BuiltinFunction] = [
-        /// `len` function expects a single `MString` parameter and
+        /// `len` function expects a single `MString`or an `MArray` parameter and
         /// will return the number of characters in that `MString` as `Integer`
+        /// or the number of elements in the `MArray` as `Integer`
         "len": BuiltinFunction { (args) throws -> Object? in
             guard args.count == 1 else {
                 throw WrongArgumentCount(1, got: args.count)
             }
 
-            guard let string = args.first as? MString else {
-                throw InvalidArgumentType("String", got: args.first!.type)
+            if let string = args.first as? MString {
+                return Integer(value: string.value.count)
             }
 
-            return Integer(value: string.value.count)
+            if let array = args.first as? MArray {
+                return Integer(value: array.elements.count)
+            }
+
+            throw InvalidArgumentType("String or Array", got: args.first!.type)
+        },
+        "first": BuiltinFunction { (args) throws -> Object? in
+            guard args.count == 1 else {
+                throw WrongArgumentCount(1, got: args.count)
+            }
+
+            guard let array = args.first as? MArray else {
+                throw InvalidArgumentType("Array", got: args.first!.type)
+            }
+
+            return array[Integer(value: 0)]
+        },
+        "last": BuiltinFunction { (args) throws -> Object? in
+            guard args.count == 1 else {
+                throw WrongArgumentCount(1, got: args.count)
+            }
+
+            guard let array = args.first as? MArray else {
+                throw InvalidArgumentType("Array", got: args.first!.type)
+            }
+
+            return array[Integer(value: array.elements.count - 1)]
+        },
+        "rest": BuiltinFunction { (args) throws -> Object? in
+            guard args.count == 1 else {
+                throw WrongArgumentCount(1, got: args.count)
+            }
+
+            guard let array = args.first as? MArray else {
+                throw InvalidArgumentType("Array", got: args.first!.type)
+            }
+
+            guard array.elements.count > 0 else {
+                return Null.null
+            }
+
+            guard array.elements.count > 1 else {
+                return MArray(elements: [])
+            }
+            let newArray = Array(array.elements[1...])
+            return MArray(elements: newArray)
+        },
+        "push": BuiltinFunction { (args) throws -> Object? in
+            guard args.count == 2 else {
+                throw WrongArgumentCount(2, got: args.count)
+            }
+
+            guard let array = args.first as? MArray else {
+                throw InvalidArgumentType("Array", got: args.first!.type)
+            }
+
+            var newElements = array.elements
+            newElements.append(args[1])
+            return MArray(elements: newElements)
         }
     ]
 
