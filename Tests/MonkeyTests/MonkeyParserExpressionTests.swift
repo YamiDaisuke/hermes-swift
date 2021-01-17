@@ -280,6 +280,36 @@ class MonkeyParserExpressionTests: XCTestCase {
         assertInfixExpression(expression: call?.args[2], lhs: "4", operatorSymbol: "+", rhs: "5")
     }
 
+    func testArrayLiteral() throws {
+        var input = "[1, 2 * 2, 3 + 3]"
+        var lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        var program = try parser.parseProgram()
+        XCTAssertEqual(program?.statements.count, 1)
+
+        var expressionStatement = program?.statements.first as? ExpressionStatement
+        var array = expressionStatement?.expression as? ArrayLiteral
+        XCTAssertNotNil(array)
+        XCTAssertEqual(array?.elements.count, 3)
+
+        assertIntegerLiteral(expression: array?.elements[0], expected: 1)
+        assertInfixExpression(expression: array?.elements[1], lhs: "2", operatorSymbol: "*", rhs: "2")
+        assertInfixExpression(expression: array?.elements[2], lhs: "3", operatorSymbol: "+", rhs: "3")
+
+        input = "[]"
+        lexer = MonkeyLexer(withString: input)
+        parser = MonkeyParser(lexer: lexer)
+
+        program = try parser.parseProgram()
+        XCTAssertEqual(program?.statements.count, 1)
+
+        expressionStatement = program?.statements.first as? ExpressionStatement
+        array = expressionStatement?.expression as? ArrayLiteral
+        XCTAssertNotNil(array)
+        XCTAssertEqual(array?.elements.count, 0)
+    }
+
     // MARK: Utils
     func assertInfixExpression(expression: Expression?, lhs: String, operatorSymbol: String, rhs: String) {
         let infix = expression as? InfixExpression

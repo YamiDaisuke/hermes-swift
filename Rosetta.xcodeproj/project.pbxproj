@@ -31,6 +31,7 @@
 		F883BE5725B3960700E9CA9F /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE5625B3960700E9CA9F /* Function.swift */; };
 		F883BE6025B3961700E9CA9F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE5F25B3961700E9CA9F /* String.swift */; };
 		F8B8093825B49A240042EDCC /* BuiltinFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8093725B49A240042EDCC /* BuiltinFunction.swift */; };
+		F8B8094125B4A6510042EDCC /* ArrayLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8094025B4A6510042EDCC /* ArrayLiteral.swift */; };
 		OBJ_100 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* Types.swift */; };
 		OBJ_102 /* Rosetta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rosetta::Rosetta::Product" /* Rosetta.framework */; };
 		OBJ_109 /* MonkeyEvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_47 /* MonkeyEvaluatorTests.swift */; };
@@ -146,6 +147,7 @@
 		F883BE5625B3960700E9CA9F /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
 		F883BE5F25B3961700E9CA9F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		F8B8093725B49A240042EDCC /* BuiltinFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltinFunction.swift; sourceTree = "<group>"; };
+		F8B8094025B4A6510042EDCC /* ArrayLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayLiteral.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_12 /* MonkeyEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyEvaluator.swift; sourceTree = "<group>"; };
 		OBJ_13 /* MonkeyEvaluatorErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyEvaluatorErrors.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				OBJ_29 /* PrefixExpression.swift */,
 				OBJ_30 /* ReturnStatement.swift */,
 				F883BE1625B385DC00E9CA9F /* StringLiteral.swift */,
+				F8B8094025B4A6510042EDCC /* ArrayLiteral.swift */,
 			);
 			path = ast;
 			sourceTree = "<group>";
@@ -645,6 +648,7 @@
 				F883BE4525B3959800E9CA9F /* Boolean.swift in Sources */,
 				OBJ_95 /* IntegerLiteral.swift in Sources */,
 				F8B8093825B49A240042EDCC /* BuiltinFunction.swift in Sources */,
+				F8B8094125B4A6510042EDCC /* ArrayLiteral.swift in Sources */,
 				F883BE1725B385DC00E9CA9F /* StringLiteral.swift in Sources */,
 				OBJ_96 /* LetStatement.swift in Sources */,
 				OBJ_97 /* MonkeyParser.swift in Sources */,
