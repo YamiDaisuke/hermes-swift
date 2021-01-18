@@ -18,6 +18,8 @@ public struct MArray: Object {
         "[\(elements.map({$0.description}).joined(separator: ", "))]"
     }
 
+
+    /// Returns the element at postion `index` or `null` if the array is empty
     subscript(index: Integer) -> Object {
         get {
             guard index.value >= 0 && index.value < self.elements.count else {

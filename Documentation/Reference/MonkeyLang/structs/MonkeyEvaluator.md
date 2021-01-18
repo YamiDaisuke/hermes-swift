@@ -13,9 +13,9 @@ public struct MonkeyEvaluator: Evaluator
 public static func eval(node: Node, environment: Environment<Object>) throws -> Object?
 ```
 
-`len` function expects a single `MString`or an `MArray` parameter and
-will return the number of characters in that `MString` as `Integer`
-or the number of elements in the `MArray` as `Integer`
+`push` function expects an `MArray` parameter and one `Object` parameter
+it will return a new `MArray` instance with the same elements as the first parameter
+and the second paramter added at the end of the array
 
 ### `handleControlTransfer(_:environment:)`
 

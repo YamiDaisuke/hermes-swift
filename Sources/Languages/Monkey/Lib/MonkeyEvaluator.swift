@@ -32,6 +32,8 @@ public struct MonkeyEvaluator: Evaluator {
 
             throw InvalidArgumentType("String or Array", got: args.first!.type)
         },
+        /// `first` function expects a single `MArray` parameter and will return
+        /// the element at index 0 of the given array or `null` if the array is empty
         "first": BuiltinFunction { (args) throws -> Object? in
             guard args.count == 1 else {
                 throw WrongArgumentCount(1, got: args.count)
@@ -43,6 +45,9 @@ public struct MonkeyEvaluator: Evaluator {
 
             return array[Integer(value: 0)]
         },
+        /// `last` function expects a single `MArray` parameter and will return
+        /// the element at index = `len(array) - 1`  of the given array or `null`
+        /// if the array is empty
         "last": BuiltinFunction { (args) throws -> Object? in
             guard args.count == 1 else {
                 throw WrongArgumentCount(1, got: args.count)
@@ -54,6 +59,10 @@ public struct MonkeyEvaluator: Evaluator {
 
             return array[Integer(value: array.elements.count - 1)]
         },
+        /// `rest` function expects a single `MArray` parameter and will return
+        ///  a new `MArray` with the elements from the original array starting from
+        ///  index 1. If the array has only one element it will return an empty array.
+        ///  If the array is empty it will return `null`
         "rest": BuiltinFunction { (args) throws -> Object? in
             guard args.count == 1 else {
                 throw WrongArgumentCount(1, got: args.count)
@@ -73,6 +82,9 @@ public struct MonkeyEvaluator: Evaluator {
             let newArray = Array(array.elements[1...])
             return MArray(elements: newArray)
         },
+        /// `push` function expects an `MArray` parameter and one `Object` parameter
+        /// it will return a new `MArray` instance with the same elements as the first parameter
+        /// and the second paramter added at the end of the array
         "push": BuiltinFunction { (args) throws -> Object? in
             guard args.count == 2 else {
                 throw WrongArgumentCount(2, got: args.count)
