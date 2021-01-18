@@ -1,2 +1,5 @@
+excluded:
+  - "Tests/**/XCTestManifests.swift"
+  - "Tests/**/LinuxMain.swift"
 cyclomatic_complexity:
   ignores_case_statements: true

@@ -1,12 +1,13 @@
-name: BuildAndTest
+name: Linux Test
 on:
   push:
-    branches: [ main ]
+    branches: [ ref/improveQuality ]
   pull_request:
     branches: [ main ]
 jobs:
-  build:
-    runs-on: macos-latest
+  test:
+    runs-on: ubuntu-latest
+    container: swift:latest
     steps:
     - uses: actions/checkout@v2
     - name: Build

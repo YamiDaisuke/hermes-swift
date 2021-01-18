@@ -1,6 +1,7 @@
 # Rosetta Swift
 
-[![YourActionName Actions Status](https://github.com/YamiDaisuke/rosetta-swift/workflows/BuildAndTest/badge.svg)](https://github.com/YamiDaisuke/rosetta-swift/actions)
+[![macOS Test](https://github.com/YamiDaisuke/rosetta-swift/workflows/macOS Test/badge.svg)](https://github.com/YamiDaisuke/rosetta-swift/actions)
+[![Linux Test](https://github.com/YamiDaisuke/rosetta-swift/workflows/Linux Test/badge.svg)](https://github.com/YamiDaisuke/rosetta-swift/actions)
 [![codecov](https://codecov.io/gh/YamiDaisuke/rosetta-swift/branch/main/graph/badge.svg?token=14CTPDWLQW)](https://codecov.io/gh/YamiDaisuke/rosetta-swift)
 ## Introduction
 
