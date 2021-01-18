@@ -16,6 +16,7 @@ enum MonkeyPrecedence: Int {
     case product // *
     case prefix // -X, !X
     case call // function(...)
+    case index // array[index]
 }
 
 public struct MonkeyParser: Parser {
@@ -28,7 +29,8 @@ public struct MonkeyParser: Parser {
         .minus: .sum,
         .slash: .product,
         .asterisk: .product,
-        .lparen: .call
+        .lparen: .call,
+        .lbracket: .index
     ]
 
     public var lexer: Lexer

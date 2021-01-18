@@ -83,6 +83,7 @@ class MonkeyLexerTests: XCTestCase {
 
         "foobar"
         "foo bar"
+        [1, 2];
         """
         let tokens: [Token] = [
             Token(type: .let, literal: "let"),
@@ -168,6 +169,12 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .semicolon, literal: ";"),
             Token(type: .string, literal: "foobar"),
             Token(type: .string, literal: "foo bar"),
+            Token(type: .lbracket, literal: "["),
+            Token(type: .int, literal: "1"),
+            Token(type: .comma, literal: ","),
+            Token(type: .int, literal: "2"),
+            Token(type: .rbracket, literal: "]"),
+            Token(type: .semicolon, literal: ";"),
             Token(type: .eof, literal: "")
         ]
 

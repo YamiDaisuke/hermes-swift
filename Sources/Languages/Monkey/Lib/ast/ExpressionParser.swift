@@ -29,6 +29,8 @@ extension ExpressionParser: PrefixParser {
             return try parseBoolean(&parser)
         case Token.Kind.lparen:
             return try parseGroupedExpression(&parser)
+        case Token.Kind.lbracket:
+            return try parseArrayLiteral(&parser)
         case Token.Kind.if:
             return try parseIfExpression(&parser)
         case Token.Kind.function:
@@ -80,6 +82,15 @@ extension ExpressionParser: PrefixParser {
 
         try parser.expectNext(toBe: .rparen)
         return expression
+    }
+
+    func parseArrayLiteral<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .lbracket else {
+            return nil
+        }
+
+        let elements = try self.parseExpressionList(withEndDelimiter: .rbracket, parser: &parser)
+        return ArrayLiteral(token: token, elements: elements)
     }
 
     func parseIfExpression<P>(_ parser: inout P) throws -> Expression? where P: Parser {
@@ -162,33 +173,6 @@ extension ExpressionParser: PrefixParser {
         return identifiers
     }
 
-    func parseCallArgs<P>(parser: inout P) throws -> [Expression] where P: Parser {
-        var args: [Expression] = []
-
-        guard parser.nextToken?.type != .rparen else {
-            parser.readToken()
-            return args
-        }
-
-        parser.readToken()
-
-        if let expression = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) {
-            args.append(expression)
-        }
-
-        while parser.nextToken?.type == .comma {
-            parser.readToken()
-            parser.readToken()
-            if let expression = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) {
-                args.append(expression)
-            }
-        }
-
-        try parser.expectNext(toBe: .rparen)
-
-        return args
-    }
-
     func parseBlockStatement<P>(parser: inout P) throws -> BlockStatement? where P: Parser {
         guard let token = parser.currentToken, token.type == .lbrace else {
             return nil
@@ -220,6 +204,35 @@ extension ExpressionParser: PrefixParser {
 
         return PrefixExpression(token: token, operatorSymbol: token.literal, rhs: rhs)
     }
+
+    func parseExpressionList<P>(withEndDelimiter end: Token.Kind,
+                                parser: inout P) throws -> [Expression] where P: Parser {
+        var args: [Expression] = []
+
+        guard parser.nextToken?.type != end else {
+            parser.readToken()
+            return args
+        }
+
+        parser.readToken()
+
+        if let expression = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) {
+            args.append(expression)
+        }
+
+        while parser.nextToken?.type == .comma {
+            parser.readToken()
+            parser.readToken()
+            if let expression = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) {
+                args.append(expression)
+            }
+        }
+
+        try parser.expectNext(toBe: end)
+
+        return args
+    }
+
 }
 
 extension ExpressionParser: InfixParser {
@@ -231,6 +244,8 @@ extension ExpressionParser: InfixParser {
         switch token.type {
         case Token.Kind.lparen:
             return try parseCallExpression(&parser, lhs: lhs)
+        case Token.Kind.lbracket:
+            return try parseIndexExpression(&parser, lhs: lhs)
         default:
             return try parseInfix(&parser, lhs: lhs)
         }
@@ -256,7 +271,21 @@ extension ExpressionParser: InfixParser {
             return nil
         }
 
-        let args = try self.parseCallArgs(parser: &parser)
+        let args = try self.parseExpressionList(withEndDelimiter: .rparen, parser: &parser)
         return CallExpression(token: token, function: lhs, args: args)
+    }
+
+    func parseIndexExpression<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .lbracket else {
+            return nil
+        }
+
+        parser.readToken()
+        guard let index = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
+            return nil
+        }
+
+        try parser.expectNext(toBe: .rbracket)
+        return IndexExpression(token: token, lhs: lhs, index: index)
     }
 }

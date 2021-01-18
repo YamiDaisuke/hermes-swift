@@ -14,18 +14,89 @@ public struct MonkeyEvaluator: Evaluator {
 
     /// Here we register builtin functions with their respective indentifier
     static let builtins: [String: BuiltinFunction] = [
-        /// `len` function expects a single `MString` parameter and
+        /// `len` function expects a single `MString`or an `MArray` parameter and
         /// will return the number of characters in that `MString` as `Integer`
+        /// or the number of elements in the `MArray` as `Integer`
         "len": BuiltinFunction { (args) throws -> Object? in
             guard args.count == 1 else {
                 throw WrongArgumentCount(1, got: args.count)
             }
 
-            guard let string = args.first as? MString else {
-                throw InvalidArgumentType("String", got: args.first!.type)
+            if let string = args.first as? MString {
+                return Integer(value: string.value.count)
             }
 
-            return Integer(value: string.value.count)
+            if let array = args.first as? MArray {
+                return Integer(value: array.elements.count)
+            }
+
+            throw InvalidArgumentType("String or Array", got: args.first!.type)
+        },
+        /// `first` function expects a single `MArray` parameter and will return
+        /// the element at index 0 of the given array or `null` if the array is empty
+        "first": BuiltinFunction { (args) throws -> Object? in
+            guard args.count == 1 else {
+                throw WrongArgumentCount(1, got: args.count)
+            }
+
+            guard let array = args.first as? MArray else {
+                throw InvalidArgumentType("Array", got: args.first!.type)
+            }
+
+            return array[Integer(value: 0)]
+        },
+        /// `last` function expects a single `MArray` parameter and will return
+        /// the element at index = `len(array) - 1`  of the given array or `null`
+        /// if the array is empty
+        "last": BuiltinFunction { (args) throws -> Object? in
+            guard args.count == 1 else {
+                throw WrongArgumentCount(1, got: args.count)
+            }
+
+            guard let array = args.first as? MArray else {
+                throw InvalidArgumentType("Array", got: args.first!.type)
+            }
+
+            return array[Integer(value: array.elements.count - 1)]
+        },
+        /// `rest` function expects a single `MArray` parameter and will return
+        ///  a new `MArray` with the elements from the original array starting from
+        ///  index 1. If the array has only one element it will return an empty array.
+        ///  If the array is empty it will return `null`
+        "rest": BuiltinFunction { (args) throws -> Object? in
+            guard args.count == 1 else {
+                throw WrongArgumentCount(1, got: args.count)
+            }
+
+            guard let array = args.first as? MArray else {
+                throw InvalidArgumentType("Array", got: args.first!.type)
+            }
+
+            guard array.elements.count > 0 else {
+                return Null.null
+            }
+
+            guard array.elements.count > 1 else {
+                return MArray(elements: [])
+            }
+            let newArray = Array(array.elements[1...])
+            return MArray(elements: newArray)
+        },
+        /// `push` function expects an `MArray` parameter and one `Object` parameter
+        /// it will return a new `MArray` instance with the same elements as the first parameter
+        /// and the second paramter added at the end of the array
+        "push": BuiltinFunction { (args) throws -> Object? in
+            guard args.count == 2 else {
+                throw WrongArgumentCount(2, got: args.count)
+            }
+
+            guard let array = args.first as? MArray else {
+                throw InvalidArgumentType("Array", got: args.first!.type)
+            }
+
+            var newElements = array.elements
+            newElements.append(args[1])
+            return MArray(elements: newElements)
         }
     ]
 
@@ -75,6 +146,11 @@ public struct MonkeyEvaluator: Evaluator {
                 }
 
                 throw InvalidCallExpression(function?.type ?? "Unknown")
+            case let array as ArrayLiteral:
+                let elements = try evalExpressions(array.elements, environment: environment)
+                return MArray(elements: elements)
+            case let indexExpr as IndexExpression:
+                return try evalIndexExpression(indexExpr, environment: environment)
             default:
                 throw UnknownSyntaxToken(node)
             }
@@ -96,6 +172,21 @@ public struct MonkeyEvaluator: Evaluator {
         // Since we only have one type of transfer control
         // we know this statement is a return wrapper
         return statement.value
+    }
+
+    static func evalIndexExpression(_ expression: IndexExpression, environment: Environment<Object>) throws -> Object? {
+        let lhs = try eval(node: expression.lhs, environment: environment)
+        let index = try eval(node: expression.index, environment: environment)
+
+        guard let array = lhs as? MArray else {
+            throw InvalidInfixExpression("[]", lhs: lhs, rhs: index)
+        }
+
+        guard let intIndex = index as? Integer else {
+            throw InvalidInfixExpression("[]", lhs: lhs, rhs: index)
+        }
+
+        return array[intIndex]
     }
 
     /// Evals a list of expression used as function arguments
