@@ -1,7 +1,7 @@
 name: Linux Test
 on:
   push:
-    branches: [ ref/improveQuality ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 jobs:

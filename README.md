@@ -45,7 +45,7 @@ with this library
 - [X] Implement CI steps
 - [X] Create an standalone build and test script to work without XCode
 - [ ] CI steps to build release artifacts
-- [ ] Support Linux
+- [X] Support Linux
 
 ## Language Extra Features
 
