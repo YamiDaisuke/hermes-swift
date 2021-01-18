@@ -13,10 +13,6 @@ public struct MonkeyEvaluator: Evaluator
 public static func eval(node: Node, environment: Environment<Object>) throws -> Object?
 ```
 
-`push` function expects an `MArray` parameter and one `Object` parameter
-it will return a new `MArray` instance with the same elements as the first parameter
-and the second paramter added at the end of the array
-
 ### `handleControlTransfer(_:environment:)`
 
 ```swift

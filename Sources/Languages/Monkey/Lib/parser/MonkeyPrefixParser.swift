@@ -8,9 +8,7 @@
 import Foundation
 import Rosetta
 
-struct ExpressionParser { }
-
-extension ExpressionParser: PrefixParser {
+struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
     func parse<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken else {
             return nil
@@ -203,89 +201,5 @@ extension ExpressionParser: PrefixParser {
         }
 
         return PrefixExpression(token: token, operatorSymbol: token.literal, rhs: rhs)
-    }
-
-    func parseExpressionList<P>(withEndDelimiter end: Token.Kind,
-                                parser: inout P) throws -> [Expression] where P: Parser {
-        var args: [Expression] = []
-
-        guard parser.nextToken?.type != end else {
-            parser.readToken()
-            return args
-        }
-
-        parser.readToken()
-
-        if let expression = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) {
-            args.append(expression)
-        }
-
-        while parser.nextToken?.type == .comma {
-            parser.readToken()
-            parser.readToken()
-            if let expression = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) {
-                args.append(expression)
-            }
-        }
-
-        try parser.expectNext(toBe: end)
-
-        return args
-    }
-
-}
-
-extension ExpressionParser: InfixParser {
-    func parse<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
-        guard let token = parser.currentToken else {
-            return nil
-        }
-
-        switch token.type {
-        case Token.Kind.lparen:
-            return try parseCallExpression(&parser, lhs: lhs)
-        case Token.Kind.lbracket:
-            return try parseIndexExpression(&parser, lhs: lhs)
-        default:
-            return try parseInfix(&parser, lhs: lhs)
-        }
-    }
-
-    func parseInfix<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
-        guard let token = parser.currentToken else {
-            return nil
-        }
-
-        let precedence = parser.currentPrecendece
-        parser.readToken()
-        guard let rhs = try parser.parseExpression(withPrecedence: precedence) else {
-            // TODO: Throw the right error
-            return nil
-        }
-
-        return InfixExpression(token: token, lhs: lhs, operatorSymbol: token.literal, rhs: rhs)
-    }
-
-    func parseCallExpression<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
-        guard let token = parser.currentToken, token.type == .lparen else {
-            return nil
-        }
-
-        let args = try self.parseExpressionList(withEndDelimiter: .rparen, parser: &parser)
-        return CallExpression(token: token, function: lhs, args: args)
-    }
-
-    func parseIndexExpression<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
-        guard let token = parser.currentToken, token.type == .lbracket else {
-            return nil
-        }
-
-        parser.readToken()
-        guard let index = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
-            return nil
-        }
-
-        try parser.expectNext(toBe: .rbracket)
-        return IndexExpression(token: token, lhs: lhs, index: index)
     }
 }

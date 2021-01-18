@@ -22,6 +22,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		F86EF15B25B63B2000852143 /* MonkeyInfixParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86EF15A25B63B2000852143 /* MonkeyInfixParser.swift */; };
+		F86EF18725B63D3A00852143 /* MonkeyExpressionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86EF18625B63D3A00852143 /* MonkeyExpressionParser.swift */; };
 		F883BE1725B385DC00E9CA9F /* StringLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE1625B385DC00E9CA9F /* StringLiteral.swift */; };
 		F883BE2A25B3957D00E9CA9F /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE2925B3957D00E9CA9F /* Object.swift */; };
 		F883BE3325B3958600E9CA9F /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE3225B3958600E9CA9F /* Null.swift */; };
@@ -67,7 +69,7 @@
 		OBJ_86 /* BlockStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* BlockStatement.swift */; };
 		OBJ_87 /* BooleanLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* BooleanLiteral.swift */; };
 		OBJ_88 /* CallExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* CallExpression.swift */; };
-		OBJ_89 /* ExpressionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* ExpressionParser.swift */; };
+		OBJ_89 /* MonkeyPrefixParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* MonkeyPrefixParser.swift */; };
 		OBJ_90 /* ExpressionStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* ExpressionStatement.swift */; };
 		OBJ_91 /* FunctionLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* FunctionLiteral.swift */; };
 		OBJ_92 /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* Identifier.swift */; };
@@ -140,6 +142,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F86EF15A25B63B2000852143 /* MonkeyInfixParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyInfixParser.swift; sourceTree = "<group>"; };
+		F86EF18625B63D3A00852143 /* MonkeyExpressionParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyExpressionParser.swift; sourceTree = "<group>"; };
 		F883BE1625B385DC00E9CA9F /* StringLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringLiteral.swift; sourceTree = "<group>"; };
 		F883BE2925B3957D00E9CA9F /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 		F883BE3225B3958600E9CA9F /* Null.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Null.swift; sourceTree = "<group>"; };
@@ -160,7 +164,7 @@
 		OBJ_17 /* BlockStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockStatement.swift; sourceTree = "<group>"; };
 		OBJ_18 /* BooleanLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanLiteral.swift; sourceTree = "<group>"; };
 		OBJ_19 /* CallExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallExpression.swift; sourceTree = "<group>"; };
-		OBJ_20 /* ExpressionParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionParser.swift; sourceTree = "<group>"; };
+		OBJ_20 /* MonkeyPrefixParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyPrefixParser.swift; sourceTree = "<group>"; };
 		OBJ_21 /* ExpressionStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionStatement.swift; sourceTree = "<group>"; };
 		OBJ_22 /* FunctionLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionLiteral.swift; sourceTree = "<group>"; };
 		OBJ_23 /* Identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifier.swift; sourceTree = "<group>"; };
@@ -244,14 +248,42 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		OBJ_11 /* MonkeyLang */ = {
+		F86EF14A25B63A7500852143 /* evaluator */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_12 /* MonkeyEvaluator.swift */,
 				OBJ_13 /* MonkeyEvaluatorErrors.swift */,
+			);
+			path = evaluator;
+			sourceTree = "<group>";
+		};
+		F86EF15225B63ACE00852143 /* parser */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_28 /* MonkeyParser.swift */,
+				OBJ_20 /* MonkeyPrefixParser.swift */,
+				F86EF15A25B63B2000852143 /* MonkeyInfixParser.swift */,
+				OBJ_16 /* ast */,
+				F86EF18625B63D3A00852143 /* MonkeyExpressionParser.swift */,
+			);
+			path = parser;
+			sourceTree = "<group>";
+		};
+		F86EF18F25B641C100852143 /* lexer */ = {
+			isa = PBXGroup;
+			children = (
 				OBJ_14 /* MonkeyLexer.swift */,
 				OBJ_15 /* Tokens.swift */,
-				OBJ_16 /* ast */,
+			);
+			path = lexer;
+			sourceTree = "<group>";
+		};
+		OBJ_11 /* MonkeyLang */ = {
+			isa = PBXGroup;
+			children = (
+				F86EF18F25B641C100852143 /* lexer */,
+				F86EF15225B63ACE00852143 /* parser */,
+				F86EF14A25B63A7500852143 /* evaluator */,
 				OBJ_31 /* lang */,
 			);
 			name = MonkeyLang;
@@ -264,7 +296,6 @@
 				OBJ_17 /* BlockStatement.swift */,
 				OBJ_18 /* BooleanLiteral.swift */,
 				OBJ_19 /* CallExpression.swift */,
-				OBJ_20 /* ExpressionParser.swift */,
 				OBJ_21 /* ExpressionStatement.swift */,
 				OBJ_22 /* FunctionLiteral.swift */,
 				OBJ_23 /* Identifier.swift */,
@@ -272,7 +303,6 @@
 				OBJ_25 /* InfixExpression.swift */,
 				OBJ_26 /* IntegerLiteral.swift */,
 				OBJ_27 /* LetStatement.swift */,
-				OBJ_28 /* MonkeyParser.swift */,
 				OBJ_29 /* PrefixExpression.swift */,
 				OBJ_30 /* ReturnStatement.swift */,
 				F883BE1625B385DC00E9CA9F /* StringLiteral.swift */,
@@ -632,6 +662,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				F86EF18725B63D3A00852143 /* MonkeyExpressionParser.swift in Sources */,
 				OBJ_82 /* MonkeyEvaluator.swift in Sources */,
 				OBJ_83 /* MonkeyEvaluatorErrors.swift in Sources */,
 				OBJ_84 /* MonkeyLexer.swift in Sources */,
@@ -644,10 +675,11 @@
 				OBJ_87 /* BooleanLiteral.swift in Sources */,
 				F883BE3325B3958600E9CA9F /* Null.swift in Sources */,
 				OBJ_88 /* CallExpression.swift in Sources */,
-				OBJ_89 /* ExpressionParser.swift in Sources */,
+				OBJ_89 /* MonkeyPrefixParser.swift in Sources */,
 				OBJ_90 /* ExpressionStatement.swift in Sources */,
 				OBJ_91 /* FunctionLiteral.swift in Sources */,
 				F883BE2A25B3957D00E9CA9F /* Object.swift in Sources */,
+				F86EF15B25B63B2000852143 /* MonkeyInfixParser.swift in Sources */,
 				OBJ_92 /* Identifier.swift in Sources */,
 				F883BE5725B3960700E9CA9F /* Function.swift in Sources */,
 				OBJ_93 /* IfExpression.swift in Sources */,

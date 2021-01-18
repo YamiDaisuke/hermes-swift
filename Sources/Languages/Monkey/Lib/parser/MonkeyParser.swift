@@ -49,9 +49,8 @@ public struct MonkeyParser: Parser {
 
     public init(lexer: Lexer) {
         self.lexer = lexer
-        let expressionParser = ExpressionParser()
-        self.prefixParser = expressionParser
-        self.infixParser = expressionParser
+        self.prefixParser = MonkeyPrefixParser()
+        self.infixParser = MonkeyInfixParser()
     }
 
     public mutating func parseProgram() throws -> Program? {
