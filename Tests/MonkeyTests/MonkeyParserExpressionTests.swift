@@ -23,65 +23,7 @@ class MonkeyParserExpressionTests: XCTestCase {
 
         let expressionStmt = program?.statements.first as? ExpressionStatement
         XCTAssertNotNil(expressionStmt)
-        assertIdentifier(expression: expressionStmt?.expression, expected: "foobar")
-    }
-
-    func testIntLiteralExpression() throws {
-        let input = """
-        5;
-        100;
-        """
-
-        let lexer = MonkeyLexer(withString: input)
-        var parser = MonkeyParser(lexer: lexer)
-
-        let program = try parser.parseProgram()
-        XCTAssertEqual(program?.statements.count, 2)
-
-        var expressionStmt = program?.statements[0] as? ExpressionStatement
-        XCTAssertNotNil(expressionStmt)
-        assertIntegerLiteral(expression: expressionStmt?.expression, expected: 5)
-
-        expressionStmt = program?.statements[1] as? ExpressionStatement
-        XCTAssertNotNil(expressionStmt)
-        assertIntegerLiteral(expression: expressionStmt?.expression, expected: 100)
-    }
-
-    func testBooleanExpression() throws {
-        let tests = [
-            ("true;", true),
-            ("false;", false)
-        ]
-
-        for test in tests {
-            let lexer = MonkeyLexer(withString: test.0)
-            var parser = MonkeyParser(lexer: lexer)
-
-            let program = try parser.parseProgram()
-            XCTAssertEqual(program?.statements.count, 1)
-            let expressionStmt = program?.statements[0] as? ExpressionStatement
-            XCTAssertNotNil(expressionStmt)
-            assertBoolLiteral(expression: expressionStmt?.expression, expected: test.1)
-        }
-    }
-
-    func testStringLiteralExpression() throws {
-        let input = """
-        "Hello World";
-        """
-
-        let lexer = MonkeyLexer(withString: input)
-        var parser = MonkeyParser(lexer: lexer)
-
-        let program = try parser.parseProgram()
-        XCTAssertEqual(program?.statements.count, 1)
-
-        let expressionStmt = program?.statements[0] as? ExpressionStatement
-        XCTAssertNotNil(expressionStmt)
-        let string = expressionStmt?.expression as? StringLiteral
-        XCTAssertNotNil(string)
-        XCTAssertEqual(string?.value, "Hello World")
-        XCTAssertEqual(string?.literal, "Hello World")
+        MKAssertIdentifier(expression: expressionStmt?.expression, expected: "foobar")
     }
 
     func testPrefixExpressions() throws {
@@ -107,11 +49,11 @@ class MonkeyParserExpressionTests: XCTestCase {
             XCTAssertEqual(prefix?.operatorSymbol, test.operator)
 
             if let intValue = test.value as? Int {
-                assertIntegerLiteral(expression: prefix?.rhs, expected: intValue)
+                MKAssertIntegerLiteral(expression: prefix?.rhs, expected: intValue)
             }
 
             if let boolValue = test.value as? Bool {
-                assertBoolLiteral(expression: prefix?.rhs, expected: boolValue)
+                MKAssertBoolLiteral(expression: prefix?.rhs, expected: boolValue)
             }
 
         }
@@ -147,19 +89,19 @@ class MonkeyParserExpressionTests: XCTestCase {
             XCTAssertEqual(infix?.operatorSymbol, test.operator)
 
             if let intValue = test.lhs as? Int {
-                assertIntegerLiteral(expression: infix?.lhs, expected: intValue)
+                MKAssertIntegerLiteral(expression: infix?.lhs, expected: intValue)
             }
 
             if let intValue = test.rhs as? Int {
-                assertIntegerLiteral(expression: infix?.rhs, expected: intValue)
+                MKAssertIntegerLiteral(expression: infix?.rhs, expected: intValue)
             }
 
             if let boolValue = test.lhs as? Bool {
-                assertBoolLiteral(expression: infix?.lhs, expected: boolValue)
+                MKAssertBoolLiteral(expression: infix?.lhs, expected: boolValue)
             }
 
             if let boolValue = test.rhs as? Bool {
-                assertBoolLiteral(expression: infix?.rhs, expected: boolValue)
+                MKAssertBoolLiteral(expression: infix?.rhs, expected: boolValue)
             }
         }
     }
@@ -213,12 +155,12 @@ class MonkeyParserExpressionTests: XCTestCase {
         let expressionStatement = program?.statements.first as? ExpressionStatement
         let ifExpression = expressionStatement?.expression as? IfExpression
         XCTAssertNotNil(ifExpression)
-        assertInfixExpression(expression: ifExpression?.condition, lhs: "x", operatorSymbol: "<", rhs: "y")
+        MKAssertInfixExpression(expression: ifExpression?.condition, lhs: "x", operatorSymbol: "<", rhs: "y")
 
         XCTAssertEqual(ifExpression?.consequence.statements.count, 1)
         XCTAssertNotNil(ifExpression?.consequence.statements.first)
         let consequence = ifExpression?.consequence.statements.first as? ExpressionStatement
-        assertIdentifier(expression: consequence?.expression, expected: "x")
+        MKAssertIdentifier(expression: consequence?.expression, expected: "x")
 
         XCTAssertNil(ifExpression?.alternative)
     }
@@ -234,34 +176,16 @@ class MonkeyParserExpressionTests: XCTestCase {
         let expressionStatement = program?.statements.first as? ExpressionStatement
         let ifExpression = expressionStatement?.expression as? IfExpression
         XCTAssertNotNil(ifExpression)
-        assertInfixExpression(expression: ifExpression?.condition, lhs: "x", operatorSymbol: "<", rhs: "y")
+        MKAssertInfixExpression(expression: ifExpression?.condition, lhs: "x", operatorSymbol: "<", rhs: "y")
 
         XCTAssertEqual(ifExpression?.consequence.statements.count, 1)
         XCTAssertNotNil(ifExpression?.consequence.statements.first)
         let consequence = ifExpression?.consequence.statements.first as? ExpressionStatement
-        assertIdentifier(expression: consequence?.expression, expected: "x")
+        MKAssertIdentifier(expression: consequence?.expression, expected: "x")
 
         XCTAssertNotNil(ifExpression?.alternative)
         let alternative = ifExpression?.alternative?.statements.first as? ExpressionStatement
-        assertIdentifier(expression: alternative?.expression, expected: "y")
-    }
-
-    func testFunctionLiteral() throws {
-        let input = "fn(x, y) { x + y; }"
-
-        let lexer = MonkeyLexer(withString: input)
-        var parser = MonkeyParser(lexer: lexer)
-
-        let program = try parser.parseProgram()
-        XCTAssertEqual(program?.statements.count, 1)
-        let expressionStatement = program?.statements.first as? ExpressionStatement
-        let function = expressionStatement?.expression as? FunctionLiteral
-        XCTAssertEqual(function?.params.count, 2)
-        XCTAssertEqual(function?.params[0].value, "x")
-        XCTAssertEqual(function?.params[1].value, "y")
-        XCTAssertEqual(function?.body.statements.count, 1)
-        let bodyExpression = function?.body.statements.first as? ExpressionStatement
-        assertInfixExpression(expression: bodyExpression?.expression, lhs: "x", operatorSymbol: "+", rhs: "y")
+        MKAssertIdentifier(expression: alternative?.expression, expected: "y")
     }
 
     func testCallExpression() throws {
@@ -276,40 +200,10 @@ class MonkeyParserExpressionTests: XCTestCase {
         let expressionStatement = program?.statements.first as? ExpressionStatement
         let call = expressionStatement?.expression as? CallExpression
 
-        assertIdentifier(expression: call?.function, expected: "add")
-        assertIntegerLiteral(expression: call?.args[0], expected: 1)
-        assertInfixExpression(expression: call?.args[1], lhs: "2", operatorSymbol: "*", rhs: "3")
-        assertInfixExpression(expression: call?.args[2], lhs: "4", operatorSymbol: "+", rhs: "5")
-    }
-
-    func testArrayLiteral() throws {
-        var input = "[1, 2 * 2, 3 + 3]"
-        var lexer = MonkeyLexer(withString: input)
-        var parser = MonkeyParser(lexer: lexer)
-
-        var program = try parser.parseProgram()
-        XCTAssertEqual(program?.statements.count, 1)
-
-        var expressionStatement = program?.statements.first as? ExpressionStatement
-        var array = expressionStatement?.expression as? ArrayLiteral
-        XCTAssertNotNil(array)
-        XCTAssertEqual(array?.elements.count, 3)
-
-        assertIntegerLiteral(expression: array?.elements[0], expected: 1)
-        assertInfixExpression(expression: array?.elements[1], lhs: "2", operatorSymbol: "*", rhs: "2")
-        assertInfixExpression(expression: array?.elements[2], lhs: "3", operatorSymbol: "+", rhs: "3")
-
-        input = "[]"
-        lexer = MonkeyLexer(withString: input)
-        parser = MonkeyParser(lexer: lexer)
-
-        program = try parser.parseProgram()
-        XCTAssertEqual(program?.statements.count, 1)
-
-        expressionStatement = program?.statements.first as? ExpressionStatement
-        array = expressionStatement?.expression as? ArrayLiteral
-        XCTAssertNotNil(array)
-        XCTAssertEqual(array?.elements.count, 0)
+        MKAssertIdentifier(expression: call?.function, expected: "add")
+        MKAssertIntegerLiteral(expression: call?.args[0], expected: 1)
+        MKAssertInfixExpression(expression: call?.args[1], lhs: "2", operatorSymbol: "*", rhs: "3")
+        MKAssertInfixExpression(expression: call?.args[2], lhs: "4", operatorSymbol: "+", rhs: "5")
     }
 
     func testParsingIndexExpressions() throws {
@@ -324,37 +218,7 @@ class MonkeyParserExpressionTests: XCTestCase {
         let expressionStatement = program?.statements.first as? ExpressionStatement
         let indexExp = expressionStatement?.expression as? IndexExpression
         XCTAssertNotNil(indexExp)
-        assertIdentifier(expression: indexExp?.lhs, expected: "array")
-        assertInfixExpression(expression: indexExp?.index, lhs: "1", operatorSymbol: "+", rhs: "1")
-    }
-
-    // MARK: Utils
-    func assertInfixExpression(expression: Expression?, lhs: String, operatorSymbol: String, rhs: String) {
-        let infix = expression as? InfixExpression
-        XCTAssertNotNil(infix)
-        XCTAssertEqual(infix?.lhs.literal, lhs)
-        XCTAssertEqual(infix?.operatorSymbol, operatorSymbol)
-        XCTAssertEqual(infix?.rhs.literal, rhs)
-    }
-
-    func assertIntegerLiteral(expression: Expression?, expected: Int) {
-        let integer = expression as? IntegerLiteral
-        XCTAssertNotNil(integer)
-        XCTAssertEqual(integer?.value, expected)
-        XCTAssertEqual(integer?.literal, expected.description)
-    }
-
-    func assertBoolLiteral(expression: Expression?, expected: Bool) {
-        let boolean = expression as? BooleanLiteral
-        XCTAssertNotNil(boolean)
-        XCTAssertEqual(boolean?.value, expected)
-        XCTAssertEqual(boolean?.literal, expected.description)
-    }
-
-    func assertIdentifier(expression: Expression?, expected: String) {
-        let identifier = expression as? Identifier
-        XCTAssertNotNil(identifier)
-        XCTAssertEqual(identifier?.value, expected)
-        XCTAssertEqual(identifier?.literal, expected)
+        MKAssertIdentifier(expression: indexExp?.lhs, expected: "array")
+        MKAssertInfixExpression(expression: indexExp?.index, lhs: "1", operatorSymbol: "+", rhs: "1")
     }
 }
