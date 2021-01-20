@@ -30,6 +30,12 @@ struct UnknownSyntaxToken: EvaluatorError {
         self.line = line
         self.column = column
     }
+
+    init(_ node: Token = Token(type: .ilegal, literal: "UNKNOWN"), line: Int? = nil, column: Int? = nil) {
+        self.message = "Unknown token \"\(node)\""
+        self.line = line
+        self.column = column
+    }
 }
 
 struct InvalidPrefixExpression: EvaluatorError {

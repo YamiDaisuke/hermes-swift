@@ -64,3 +64,15 @@ public struct MissingExpected: ParseError {
         self.column = column
     }
 }
+
+public struct InvalidToken: ParseError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+
+    public init(_ token: Token?, line: Int? = nil, column: Int? = nil) {
+        self.message = "Invalid token \"\(token?.literal ?? "")\""
+        self.line = line ?? token?.line
+        self.column = column ?? token?.column
+    }
+}

@@ -11,7 +11,7 @@ import Rosetta
 struct MonkeyInfixParser: InfixParser, MonkeyExpressionParser {
     func parse<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         switch token.type {
@@ -26,14 +26,13 @@ struct MonkeyInfixParser: InfixParser, MonkeyExpressionParser {
 
     func parseInfix<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         let precedence = parser.currentPrecendece
         parser.readToken()
         guard let rhs = try parser.parseExpression(withPrecedence: precedence) else {
-            // TODO: Throw the right error
-            return nil
+            throw InvalidExpression(parser.currentToken)
         }
 
         return InfixExpression(token: token, lhs: lhs, operatorSymbol: token.literal, rhs: rhs)
@@ -41,7 +40,7 @@ struct MonkeyInfixParser: InfixParser, MonkeyExpressionParser {
 
     func parseCallExpression<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .lparen else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         let args = try self.parseExpressionList(withEndDelimiter: .rparen, parser: &parser)
@@ -50,12 +49,12 @@ struct MonkeyInfixParser: InfixParser, MonkeyExpressionParser {
 
     func parseIndexExpression<P>(_ parser: inout P, lhs: Expression) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .lbracket else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         parser.readToken()
         guard let index = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
-            return nil
+            throw InvalidExpression(parser.currentToken)
         }
 
         try parser.expectNext(toBe: .rbracket)

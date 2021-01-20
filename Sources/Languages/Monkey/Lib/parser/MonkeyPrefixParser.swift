@@ -11,7 +11,7 @@ import Rosetta
 struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
     func parse<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         switch token.type {
@@ -40,7 +40,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parseIdentifier<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .identifier else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         return Identifier(token: token, value: token.literal)
@@ -48,7 +48,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parseInteger<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .int else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         return try IntegerLiteral(token: token)
@@ -56,7 +56,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parseString<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .string else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         return StringLiteral(token: token)
@@ -64,7 +64,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parseBoolean<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .true || token.type == .false else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         return try BooleanLiteral(token: token)
@@ -72,7 +72,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parseGroupedExpression<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .lparen else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         parser.readToken()
@@ -84,7 +84,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parseArrayLiteral<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .lbracket else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         let elements = try self.parseExpressionList(withEndDelimiter: .rbracket, parser: &parser)
@@ -93,7 +93,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parseIfExpression<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .if else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         try parser.expectNext(toBe: .lparen)
@@ -101,7 +101,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
         parser.readToken()
 
         guard let condition = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
-            return nil
+            throw InvalidExpression(parser.currentToken)
         }
 
         try parser.expectNext(toBe: .rparen)
@@ -129,7 +129,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parseFunctionLiteral<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .function else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         try parser.expectNext(toBe: .lparen)
@@ -173,7 +173,7 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parseBlockStatement<P>(parser: inout P) throws -> BlockStatement? where P: Parser {
         guard let token = parser.currentToken, token.type == .lbrace else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         var statements: [Statement] = []
@@ -190,14 +190,13 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
     func parsePrefix<P>(_ parser: inout P) throws -> Expression? where P: Parser {
         guard let token = parser.currentToken, token.type == .bang || token.type == .minus else {
-            return nil
+            throw InvalidToken(parser.currentToken)
         }
 
         parser.readToken()
 
         guard let rhs = try parser.parseExpression(withPrecedence: MonkeyPrecedence.prefix.rawValue) else {
-            // TODO: Throw the right error
-            return nil
+            throw InvalidExpression(parser.currentToken)
         }
 
         return PrefixExpression(token: token, operatorSymbol: token.literal, rhs: rhs)

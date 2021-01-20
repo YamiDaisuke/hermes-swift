@@ -19,6 +19,18 @@ enum MonkeyPrecedence: Int {
     case index // array[index]
 }
 
+public struct InvalidExpression: ParseError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+
+    public init(_ token: Token?, line: Int? = nil, column: Int? = nil) {
+        self.message = "Can't parse expression starting at: \(token?.literal ?? "")"
+        self.line = line ?? token?.line
+        self.column = column ?? token?.column
+    }
+}
+
 public struct MonkeyParser: Parser {
     static let precedences: [Token.Kind: MonkeyPrecedence] = [
         .equals: .equals,
@@ -92,7 +104,7 @@ public struct MonkeyParser: Parser {
 
     mutating func parseLetStatement() throws -> LetStatement? {
         guard let token = self.currentToken, token.type == .let else {
-            return nil
+            throw InvalidToken(self.currentToken)
         }
 
         try expectNext(toBe: .identifier)
@@ -106,7 +118,7 @@ public struct MonkeyParser: Parser {
 
         self.readToken()
         guard let expression = try parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
-            return nil
+            throw InvalidExpression(self.currentToken)
         }
         try expectNext(toBe: .semicolon)
 
@@ -115,12 +127,12 @@ public struct MonkeyParser: Parser {
 
     mutating func parseReturnStatement() throws -> ReturnStatement? {
         guard let token = self.currentToken, token.type == .return else {
-            return nil
+            throw InvalidToken(self.currentToken)
         }
 
         self.readToken()
         guard let expression = try parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
-            return nil
+            throw InvalidExpression(self.currentToken)
         }
         try expectNext(toBe: .semicolon)
 
@@ -129,7 +141,7 @@ public struct MonkeyParser: Parser {
 
     mutating func parseExpressionStatement() throws -> ExpressionStatement? {
         guard let token = self.currentToken else {
-            return nil
+            throw InvalidToken(self.currentToken)
         }
 
         guard let expression = try parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
@@ -146,13 +158,13 @@ public struct MonkeyParser: Parser {
     public mutating func parseExpression(withPrecedence precedence: Int) throws -> Expression? {
         var leftExpression = try self.prefixParser.parse(&self)
         guard leftExpression != nil else {
-            return nil
+            throw InvalidExpression(self.currentToken)
         }
 
         while self.nextToken?.type != .semicolon && precedence < self.nextPrecendece {
             self.readToken()
             guard let currentLhs = leftExpression else {
-                return nil
+                throw InvalidExpression(self.currentToken)
             }
 
             leftExpression = try self.infixParser.parse(&self, lhs: currentLhs)
