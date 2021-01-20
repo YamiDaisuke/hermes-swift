@@ -69,6 +69,8 @@ public struct MonkeyParser: Parser {
         var errors: [ParseError] = []
         var program = Program(statements: [])
 
+        self.currentToken = self.lexer.nextToken()
+        self.nextToken = self.lexer.nextToken()
         while self.currentToken?.type != .eof {
             do {
                 if let statement = try self.parseStatement() {
@@ -89,7 +91,7 @@ public struct MonkeyParser: Parser {
 
     public mutating func parseStatement() throws -> Statement? {
         guard let token = self.currentToken else {
-            return nil
+            throw InvalidToken(self.currentToken)
         }
 
         switch token.type {
