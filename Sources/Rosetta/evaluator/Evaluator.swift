@@ -41,8 +41,10 @@ public protocol Evaluator {
     /// Evaluates `ControlTransfer` wrapper and generates the corresponding output
     /// - Parameter statement: Some `ControlTransfer` statement wrapper like `return` or
     ///                        `break` statements
-    static func handleControlTransfer(_ statement: ControlTransfer,
-                                      environment: Environment<BaseType>) throws -> BaseType?
+    static func handleControlTransfer(
+        _ statement: ControlTransfer,
+        environment: Environment<BaseType>
+    ) throws -> BaseType?
 }
 
 public extension Evaluator {

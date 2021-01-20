@@ -12,6 +12,7 @@ import XCTest
 // swiftlint:disable function_body_length
 class MonkeyLexerTests: XCTestCase {
     func testNextToken() throws {
+        // swiftlint:disable indentation_width
         let input = """
         let five = 5;
         let ten = 10;
@@ -36,6 +37,7 @@ class MonkeyLexerTests: XCTestCase {
         "foo bar"
         [1, 2];
         """
+        // swiftlint:enable indentation_width
         let tokens: [Token] = [
             Token(type: .let, literal: "let"),
             Token(type: .identifier, literal: "five"),
@@ -137,6 +139,7 @@ class MonkeyLexerTests: XCTestCase {
     }
 
     func testNextTokenWithLineNumber() throws {
+        // swiftlint:disable indentation_width
         let input = """
         let five = 5;
         let ten = 10;
@@ -146,6 +149,7 @@ class MonkeyLexerTests: XCTestCase {
         };
 
         """
+        // swiftlint:enable indentation_width
         let tokens: [Token] = [
             Token(type: .let, literal: "let", line: 1, column: 0),
             Token(type: .identifier, literal: "five", line: 1, column: 4),

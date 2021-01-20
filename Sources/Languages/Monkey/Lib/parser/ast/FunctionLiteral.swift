@@ -14,6 +14,6 @@ struct FunctionLiteral: Expression {
     var body: BlockStatement
 
     var description: String {
-        "fn(\(params.map({$0.description}).joined(separator: ", "))\n\(self.body)"
+        "fn(\(params.map { $0.description }.joined(separator: ", "))\n\(self.body)"
     }
 }

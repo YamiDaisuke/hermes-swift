@@ -21,12 +21,14 @@ func MKAssertBoolean(object: Object?, expected: Bool, file: StaticString = #file
     XCTAssertEqual(bool?.value, expected, file: file, line: line)
 }
 
-func MKAssertInfixExpression(expression: Expression?,
-                             lhs: String,
-                             operatorSymbol: String,
-                             rhs: String,
-                             file: StaticString = #file,
-                             line: UInt = #line) {
+func MKAssertInfixExpression(
+    expression: Expression?,
+    lhs: String,
+    operatorSymbol: String,
+    rhs: String,
+    file: StaticString = #file,
+    line: UInt = #line
+) {
     let infix = expression as? InfixExpression
     XCTAssertNotNil(infix, file: file, line: line)
     XCTAssertEqual(infix?.lhs.literal, lhs, file: file, line: line)

@@ -15,7 +15,7 @@ public struct MArray: Object {
     public var elements: [Object]
 
     public var description: String {
-        "[\(elements.map({$0.description}).joined(separator: ", "))]"
+        "[\(elements.map { $0.description }.joined(separator: ", "))]"
     }
 
     /// Returns the element at postion `index` or `null` if the array is empty

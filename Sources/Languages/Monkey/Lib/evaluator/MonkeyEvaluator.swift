@@ -43,7 +43,7 @@ public struct MonkeyEvaluator: Evaluator {
             case let identifier as Identifier:
                 return try evalIdentifier(identifier, environment: environment)
             case let function as FunctionLiteral:
-                let params = function.params.map({$0.value})
+                let params = function.params.map({ $0.value })
                 return Function(parameters: params, body: function.body, environment: environment)
             case let call as CallExpression:
                 let function = try eval(node: call.function, environment: environment)
@@ -79,8 +79,10 @@ public struct MonkeyEvaluator: Evaluator {
         }
     }
 
-    public static func handleControlTransfer(_ statement: ControlTransfer,
-                                             environment: Environment<Object>) throws -> Object? {
+    public static func handleControlTransfer(
+        _ statement: ControlTransfer,
+        environment: Environment<Object>
+    ) throws -> Object? {
         // Since we only have one type of transfer control
         // we know this statement is a return wrapper
         return statement.value
@@ -361,10 +363,12 @@ public struct MonkeyEvaluator: Evaluator {
     /// - Throws: `InvalidInfixExpression` if the operand expressions are not `Integer`
     /// - Returns: The result of applying the `operation` if both `lhs` and `rhs` are
     ///            `Integer`. If not returns `Null`
-    static func applyIntegerInfix(lhs: Object?,
-                                  rhs: Object?,
-                                  symbol: String,
-                                  operation: (Integer, Integer) -> Object) throws -> Object? {
+    static func applyIntegerInfix(
+        lhs: Object?,
+        rhs: Object?,
+        symbol: String,
+        operation: (Integer, Integer) -> Object
+    ) throws -> Object? {
         guard let intLhs = lhs as? Integer, let intRhs = rhs as? Integer else {
             throw InvalidInfixExpression(symbol, lhs: lhs, rhs: rhs)
         }

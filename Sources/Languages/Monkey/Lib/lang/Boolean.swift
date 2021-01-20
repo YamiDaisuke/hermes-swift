@@ -40,7 +40,7 @@ public struct Boolean: Object {
     /// `Bolean` constants. `""` matches to `false`
     /// any other `MString` maps to `true`
     public init(_ string: MString) {
-        self = string.value != "" ? .true : .false
+        self = !string.value.isEmpty ? .true : .false
     }
 
     public var description: String {

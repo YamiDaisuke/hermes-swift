@@ -9,7 +9,7 @@ import Foundation
 @testable import Rosetta
 @testable import MonkeyLang
 
-struct Utils {
+enum Utils {
     static func testEval(input: String, environment: Environment<Object>) throws -> Object? {
         let lexer = MonkeyLexer(withString: input)
         var parser = MonkeyParser(lexer: lexer)

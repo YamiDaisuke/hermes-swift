@@ -10,9 +10,10 @@ import XCTest
 @testable import MonkeyLang
 
 class MonkeyEvaluatorTests: XCTestCase {
-    var environment: Environment<Object>!
+    var environment: Environment<Object> = Environment()
 
     override func setUp() {
+        super.setUp()
         self.environment = Environment()
     }
 
@@ -70,9 +71,9 @@ class MonkeyEvaluatorTests: XCTestCase {
             ("true + false;", "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 5"),
             ("5; true + true; 5", "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 8"),
             ("if (10 > 1) { true + false; }",
-             "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 19"),
+            "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 19"),
             ("if (10 > 1) { if (10 > 1) { return true + false; } return 1; }",
-             "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 40"),
+            "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 40"),
             ("foobar", "\"foobar\" is not defined at Line: 1, Column: 0"),
             (#""Hello" - "World";"#, "Can't apply operator \"-\" to String and String at Line: 1, Column: 8")
         ]

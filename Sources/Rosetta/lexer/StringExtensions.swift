@@ -39,7 +39,6 @@ public extension String {
 }
 
 public extension String {
-
     /// This is a utility `subscript` to make string manipulation les cumbersome
     /// it will work the same way as the current `String` `subscript` but
     /// using an `Int` index and mapping it to the right `Index` value

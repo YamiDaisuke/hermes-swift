@@ -22,6 +22,6 @@ struct CallExpression: Expression {
     var args: [Expression] = []
 
     var description: String {
-        "\(function)(\(args.map({ $0.description }).joined(separator: ", ")))"
+        "\(function)(\(args.map { $0.description }.joined(separator: ", ")))"
     }
 }

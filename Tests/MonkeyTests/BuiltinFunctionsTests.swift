@@ -10,9 +10,10 @@ import XCTest
 @testable import MonkeyLang
 
 class BuiltinFunctionsTests: XCTestCase {
-    var environment: Environment<Object>!
+    var environment: Environment<Object> = Environment()
 
     override func setUp() {
+        super.setUp()
         self.environment = Environment()
     }
 

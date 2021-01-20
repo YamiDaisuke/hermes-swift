@@ -49,12 +49,13 @@ public extension Lexer {
     /// character pointers accordingly
     ///
     /// - Returns: The `Character` at the new position and the `Character` as a `Tuple`
-    @discardableResult mutating func readChar() -> (current: Character?, next: Character?) {
+    @discardableResult
+    mutating func readChar() -> (current: Character?, next: Character?)? {
         self.currentColumn += 1
         guard self.currentColumn < currentLine.count else {
             // TODO: Should we set currentColum to some special value
             self.readingChars = (current: nil, next: nil)
-            return self.readingChars!
+            return self.readingChars
         }
 
         let char = currentLine[self.currentColumn]
@@ -70,7 +71,7 @@ public extension Lexer {
         }
 
         self.readingChars = (current: char, next: next)
-        return self.readingChars!
+        return self.readingChars
     }
 
     /// Skips characters in the input source while a condition is met, starting from
@@ -95,6 +96,7 @@ public extension Lexer {
                 break
             }
             self.readChar()
+            // swiftlint:disable:next force_unwrapping
         } while self.readingChars?.current != nil && predicate(self.readingChars!.current!)
     }
 
@@ -119,6 +121,7 @@ public extension Lexer {
             }
             output += String(current)
             self.readChar()
+            // swiftlint:disable:next force_unwrapping
         } while self.readingChars?.current != nil && predicate(self.readingChars!.current!)
 
         return output
@@ -126,14 +129,13 @@ public extension Lexer {
 }
 
 public extension StringLexer {
-
     /// Moves column, line index and line pointers to the next line in the original
     /// `self.input`
     mutating func readLine() {
         self.currentLineNumber += 1
         self.currentColumn = -1
 
-        guard self.input.count > 0 else {
+        guard !self.input.isEmpty else {
             return
         }
 

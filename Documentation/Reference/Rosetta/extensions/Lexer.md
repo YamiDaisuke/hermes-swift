@@ -9,7 +9,7 @@ public extension Lexer
 ### `readChar()`
 
 ```swift
-@discardableResult mutating func readChar() -> (current: Character?, next: Character?)
+mutating func readChar() -> (current: Character?, next: Character?)?
 ```
 
 Reads the next `Character` from the input and updates the column, line, and

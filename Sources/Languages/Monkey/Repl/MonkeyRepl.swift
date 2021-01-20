@@ -10,7 +10,7 @@ import Rosetta
 import MonkeyLang
 
 struct MonkeyRepl {
-
+    // swiftlint:disable indentation_width
     static let monkeyFace: String = #"""
                 __,__
        .--.  .-"     "-.  .--.
@@ -24,13 +24,14 @@ struct MonkeyRepl {
             '._ '-=-' _.'
                '~---~'
     """#
-
+    // swiftlint:enable indentation_width
     let welcomeMessage: String
     let prompt: String
 
     init(
         welcomeMessage: String = "Welcome!!!\nFeel free to type in commands\n",
-        prompt: String = ">>>" ) {
+        prompt: String = ">>>"
+    ) {
         self.welcomeMessage = welcomeMessage
         self.prompt = prompt
     }

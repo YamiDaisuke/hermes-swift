@@ -9,12 +9,13 @@ import Foundation
 import Rosetta
 
 protocol MonkeyExpressionParser {
-
 }
 
 extension MonkeyExpressionParser {
-    func parseExpressionList<P>(withEndDelimiter end: Token.Kind,
-                                parser: inout P) throws -> [Expression] where P: Parser {
+    func parseExpressionList<P>(
+        withEndDelimiter end: Token.Kind,
+        parser: inout P
+    ) throws -> [Expression] where P: Parser {
         var args: [Expression] = []
 
         guard parser.nextToken?.type != end else {

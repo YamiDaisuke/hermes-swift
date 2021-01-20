@@ -22,8 +22,10 @@ static func eval(node: Node, environment: Environment<BaseType>) throws -> BaseT
 ### `handleControlTransfer(_:environment:)`
 
 ```swift
-static func handleControlTransfer(_ statement: ControlTransfer,
-                                  environment: Environment<BaseType>) throws -> BaseType?
+static func handleControlTransfer(
+    _ statement: ControlTransfer,
+    environment: Environment<BaseType>
+) throws -> BaseType?
 ```
 
 Evaluates `ControlTransfer` wrapper and generates the corresponding output

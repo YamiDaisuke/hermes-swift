@@ -68,7 +68,7 @@ public struct MonkeyParser: Parser {
             self.readToken()
         }
 
-        guard errors.count == 0 else {
+        guard errors.isEmpty else {
             throw AllParserError(withErrors: errors)
         }
 
@@ -96,7 +96,10 @@ public struct MonkeyParser: Parser {
         }
 
         try expectNext(toBe: .identifier)
-        let identifierToken = self.currentToken!
+        guard let identifierToken = self.currentToken else {
+            return nil
+        }
+
         let name = Identifier(token: identifierToken, value: identifierToken.literal)
 
         try expectNext(toBe: .assign)
@@ -148,7 +151,11 @@ public struct MonkeyParser: Parser {
 
         while self.nextToken?.type != .semicolon && precedence < self.nextPrecendece {
             self.readToken()
-            leftExpression = try self.infixParser.parse(&self, lhs: leftExpression!)
+            guard let currentLhs = leftExpression else {
+                return nil
+            }
+
+            leftExpression = try self.infixParser.parse(&self, lhs: currentLhs)
         }
 
         return leftExpression

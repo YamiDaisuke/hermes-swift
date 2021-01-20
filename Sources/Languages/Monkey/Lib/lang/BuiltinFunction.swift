@@ -44,7 +44,7 @@ extension BuiltinFunction {
             return Integer(value: array.elements.count)
         }
 
-        throw InvalidArgumentType("String or Array", got: args.first!.type)
+        throw InvalidArgumentType("String or Array", got: args.first?.type ?? "null")
     }
 
     /// `first` function expects a single `MArray` parameter and will return
@@ -55,7 +55,7 @@ extension BuiltinFunction {
         }
 
         guard let array = args.first as? MArray else {
-            throw InvalidArgumentType("Array", got: args.first!.type)
+            throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
         }
 
         return array[Integer(value: 0)]
@@ -70,7 +70,7 @@ extension BuiltinFunction {
         }
 
         guard let array = args.first as? MArray else {
-            throw InvalidArgumentType("Array", got: args.first!.type)
+            throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
         }
 
         return array[Integer(value: array.elements.count - 1)]
@@ -86,10 +86,10 @@ extension BuiltinFunction {
         }
 
         guard let array = args.first as? MArray else {
-            throw InvalidArgumentType("Array", got: args.first!.type)
+            throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
         }
 
-        guard array.elements.count > 0 else {
+        guard !array.elements.isEmpty else {
             return Null.null
         }
 
@@ -109,7 +109,7 @@ extension BuiltinFunction {
         }
 
         guard let array = args.first as? MArray else {
-            throw InvalidArgumentType("Array", got: args.first!.type)
+            throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
         }
 
         var newElements = array.elements

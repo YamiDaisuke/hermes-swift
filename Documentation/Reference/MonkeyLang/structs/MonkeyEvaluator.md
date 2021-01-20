@@ -16,8 +16,10 @@ public static func eval(node: Node, environment: Environment<Object>) throws -> 
 ### `handleControlTransfer(_:environment:)`
 
 ```swift
-public static func handleControlTransfer(_ statement: ControlTransfer,
-                                         environment: Environment<Object>) throws -> Object?
+public static func handleControlTransfer(
+    _ statement: ControlTransfer,
+    environment: Environment<Object>
+) throws -> Object?
 ```
 
 #### Parameters

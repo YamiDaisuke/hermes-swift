@@ -55,7 +55,6 @@ class MonkeyParserExpressionTests: XCTestCase {
             if let boolValue = test.value as? Bool {
                 MKAssertBoolLiteral(expression: prefix?.rhs, expected: boolValue)
             }
-
         }
     }
 

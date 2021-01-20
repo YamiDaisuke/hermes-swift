@@ -16,6 +16,6 @@ struct ArrayLiteral: Expression {
     var elements: [Expression]
 
     var description: String {
-        "[\(elements.map({$0.description}).joined(separator: ", "))]"
+        "[\(elements.map { $0.description }.joined(separator: ", "))]"
     }
 }

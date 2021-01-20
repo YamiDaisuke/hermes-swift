@@ -9,17 +9,7 @@ import XCTest
 @testable import Rosetta
 
 class StringExtensionsTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testIntSubscripts() throws {
-
         let myString = "my string for testing"
 
         let first = myString[0]
@@ -43,5 +33,4 @@ class StringExtensionsTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-
 }
