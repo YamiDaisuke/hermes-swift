@@ -37,6 +37,7 @@ extension Token.Kind {
 extension Token.Kind {
     static let comma = Token.Kind(",")
     static let semicolon = Token.Kind(";")
+    static let colon = Token.Kind(":")
 
     static let lparen = Token.Kind("(")
     static let rparen = Token.Kind(")")

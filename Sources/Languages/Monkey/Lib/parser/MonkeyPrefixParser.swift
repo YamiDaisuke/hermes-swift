@@ -29,6 +29,8 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
             return try parseGroupedExpression(&parser)
         case Token.Kind.lbracket:
             return try parseArrayLiteral(&parser)
+        case Token.Kind.lbrace:
+            return try parseHashLiteral(&parser)
         case Token.Kind.if:
             return try parseIfExpression(&parser)
         case Token.Kind.function:
@@ -89,6 +91,34 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
 
         let elements = try self.parseExpressionList(withEndDelimiter: .rbracket, parser: &parser)
         return ArrayLiteral(token: token, elements: elements)
+    }
+
+    func parseHashLiteral<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .lbrace else {
+            throw InvalidToken(parser.currentToken)
+        }
+
+        var pairs: [HashLiteral.Pair] = []
+        while parser.nextToken?.type != .rbrace {
+            parser.readToken()
+            guard let key = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
+                throw InvalidExpression(parser.currentToken)
+            }
+            try parser.expectNext(toBe: .colon)
+            parser.readToken()
+            guard let value = try parser.parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
+                throw InvalidExpression(parser.currentToken)
+            }
+
+            if parser.nextToken?.type != .rbrace {
+                try parser.expectNext(toBe: .comma)
+            }
+            pairs.append((key: key, value: value))
+        }
+
+        try parser.expectNext(toBe: .rbrace)
+
+        return HashLiteral(token: token, pairs: pairs)
     }
 
     func parseIfExpression<P>(_ parser: inout P) throws -> Expression? where P: Parser {

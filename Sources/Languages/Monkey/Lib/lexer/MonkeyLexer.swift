@@ -111,6 +111,8 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
             }
         case ";":
             token = Token(type: .semicolon, literal: String(char))
+        case ":":
+            token = Token(type: .colon, literal: String(char))
         case "(":
             token = Token(type: .lparen, literal: String(char))
         case ")":
