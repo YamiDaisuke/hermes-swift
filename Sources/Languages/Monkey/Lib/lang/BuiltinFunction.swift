@@ -117,6 +117,15 @@ extension BuiltinFunction {
         return MArray(elements: newElements)
     }
 
+    /// `puts` function takes any number or parameters and print them to the stdout
+    /// one per each line. Returns `null`
+    static let puts = BuiltinFunction { (args) throws -> Object? in
+        for arg in args {
+            print(arg)
+        }
+        return Null.null
+    }
+
     /// Here we map builtin functions with their respective indentifier
     /// if no function is found with the given name returns `nil`
     static subscript(name: String) -> BuiltinFunction? {
@@ -130,7 +139,9 @@ extension BuiltinFunction {
         case "rest":
             return .rest
         case "push":
-            return push
+            return .push
+        case "puts":
+            return .puts
         default:
             return nil
         }

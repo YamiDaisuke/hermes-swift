@@ -76,7 +76,7 @@ class MonkeyEvaluatorTests: XCTestCase {
             "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 40"),
             ("foobar", "\"foobar\" is not defined at Line: 1, Column: 0"),
             (#""Hello" - "World";"#, "Can't apply operator \"-\" to String and String at Line: 1, Column: 8"),
-            (#"{"name": "Monkey"}[fn(x) { x }];"#, "Can't use type: function as Hash Key at Line: 1, Column: 18"),
+            (#"{"name": "Monkey"}[fn(x) { x }];"#, "Can't use type: function as Hash Key at Line: 1, Column: 18")
         ]
 
         for test in tests {
