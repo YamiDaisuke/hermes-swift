@@ -3,7 +3,7 @@
 # `MString`
 
 ```swift
-public struct MString: Object
+public struct MString: Object, Hashable
 ```
 
 Monkey Language `String` object, we have

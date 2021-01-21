@@ -8,7 +8,7 @@
 import Foundation
 
 /// A Boolean value in Monkey
-public struct Boolean: Object {
+public struct Boolean: Object, Hashable {
     /// Convinience constant, there is no need to have a Boole instance
     /// for each expression that results in either `true` or `false`
     public static let `true` = Boolean(value: true)

@@ -40,6 +40,7 @@
 		F883BE6025B3961700E9CA9F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE5F25B3961700E9CA9F /* String.swift */; };
 		F8B3F22925B87ADF00D729F0 /* HashLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3F22825B87ADF00D729F0 /* HashLiteral.swift */; };
 		F8B3F23225B8876C00D729F0 /* ParseHashLiteralsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3F23125B8876C00D729F0 /* ParseHashLiteralsTests.swift */; };
+		F8B3F25725B8E0FB00D729F0 /* Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3F25625B8E0FB00D729F0 /* Hash.swift */; };
 		F8B8093825B49A240042EDCC /* BuiltinFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8093725B49A240042EDCC /* BuiltinFunction.swift */; };
 		F8B8094125B4A6510042EDCC /* ArrayLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8094025B4A6510042EDCC /* ArrayLiteral.swift */; };
 		F8B8094A25B4AC7B0042EDCC /* IndexExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8094925B4AC7B0042EDCC /* IndexExpression.swift */; };
@@ -168,6 +169,7 @@
 		F883BE5F25B3961700E9CA9F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		F8B3F22825B87ADF00D729F0 /* HashLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashLiteral.swift; sourceTree = "<group>"; };
 		F8B3F23125B8876C00D729F0 /* ParseHashLiteralsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseHashLiteralsTests.swift; sourceTree = "<group>"; };
+		F8B3F25625B8E0FB00D729F0 /* Hash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hash.swift; sourceTree = "<group>"; };
 		F8B8093725B49A240042EDCC /* BuiltinFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltinFunction.swift; sourceTree = "<group>"; };
 		F8B8094025B4A6510042EDCC /* ArrayLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayLiteral.swift; sourceTree = "<group>"; };
 		F8B8094925B4AC7B0042EDCC /* IndexExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexExpression.swift; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 				F883BE5F25B3961700E9CA9F /* String.swift */,
 				F8B8093725B49A240042EDCC /* BuiltinFunction.swift */,
 				F8B8095925B4B4B90042EDCC /* MArray.swift */,
+				F8B3F25625B8E0FB00D729F0 /* Hash.swift */,
 			);
 			path = lang;
 			sourceTree = "<group>";
@@ -721,6 +724,7 @@
 				F86EF15B25B63B2000852143 /* MonkeyInfixParser.swift in Sources */,
 				OBJ_92 /* Identifier.swift in Sources */,
 				F883BE5725B3960700E9CA9F /* Function.swift in Sources */,
+				F8B3F25725B8E0FB00D729F0 /* Hash.swift in Sources */,
 				OBJ_93 /* IfExpression.swift in Sources */,
 				OBJ_94 /* InfixExpression.swift in Sources */,
 				F8B8095A25B4B4B90042EDCC /* MArray.swift in Sources */,

@@ -51,6 +51,8 @@ extension MonkeyEvaluatorTests {
         ("testEvaluatorErrors", testEvaluatorErrors),
         ("testFunctionCall", testFunctionCall),
         ("testFunctionObject", testFunctionObject),
+        ("testHashIndexExpressions", testHashIndexExpressions),
+        ("testHashLiteral", testHashLiteral),
         ("testIfElseExpression", testIfElseExpression),
         ("testLetStatement", testLetStatement),
         ("testReturnStatement", testReturnStatement),

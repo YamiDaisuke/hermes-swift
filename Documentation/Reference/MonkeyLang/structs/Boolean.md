@@ -3,7 +3,7 @@
 # `Boolean`
 
 ```swift
-public struct Boolean: Object
+public struct Boolean: Object, Hashable
 ```
 
 A Boolean value in Monkey

@@ -109,3 +109,15 @@ struct InvalidArgumentType: EvaluatorError {
         self.column = column
     }
 }
+
+struct InvalidHashKey: EvaluatorError {
+    var message: String
+    var line: Int?
+    var column: Int?
+
+    init(_ got: ObjectType, line: Int? = nil, column: Int? = nil) {
+        self.message = "Can't use type: \(got) as Hash Key"
+        self.line = line
+        self.column = column
+    }
+}

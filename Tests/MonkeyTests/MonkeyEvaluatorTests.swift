@@ -75,7 +75,8 @@ class MonkeyEvaluatorTests: XCTestCase {
             ("if (10 > 1) { if (10 > 1) { return true + false; } return 1; }",
             "Can't apply operator \"+\" to Boolean and Boolean at Line: 1, Column: 40"),
             ("foobar", "\"foobar\" is not defined at Line: 1, Column: 0"),
-            (#""Hello" - "World";"#, "Can't apply operator \"-\" to String and String at Line: 1, Column: 8")
+            (#""Hello" - "World";"#, "Can't apply operator \"-\" to String and String at Line: 1, Column: 8"),
+            (#"{"name": "Monkey"}[fn(x) { x }];"#, "Can't use type: function as Hash Key at Line: 1, Column: 18"),
         ]
 
         for test in tests {
@@ -170,6 +171,69 @@ class MonkeyEvaluatorTests: XCTestCase {
                 MKAssertInteger(object: evaluated, expected: expected)
             } else {
                 XCTAssert((evaluated == Null.null).value)
+            }
+        }
+    }
+
+    func testHashIndexExpressions() throws {
+        let tests = [
+            (#"{"foo": 5}["foo"]"#, 5),
+            (#"{"foo": 5}["bar"]"#, nil),
+            (#"let key = "foo"; {"foo": 5}[key]"#, 5),
+            (#"{}["foo"]"#, nil),
+            (#"{5: 5}[5]"#, 5),
+            (#"{true: 5}[true]"#, 5),
+            (#"{false: 5}[false]"#, 5)
+        ]
+
+        for test in tests {
+            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            if let expected = test.1 {
+                MKAssertInteger(object: evaluated, expected: expected)
+            } else {
+                XCTAssert((evaluated == Null.null).value)
+            }
+        }
+    }
+
+    func testHashLiteral() throws {
+        let input = """
+        let two = "two";
+        {
+            "one": 10 - 9,
+            "two": 1 + 1,
+            "thr" + "ee": 6 / 2,
+            4: 4,
+            true: 5,
+            false: 6
+        }
+        """
+        let evaluated = try Utils.testEval(input: input, environment: self.environment)
+        let hash = evaluated as? Hash
+        XCTAssertNotNil(hash)
+
+        let expected: [(Any, Int, String)] = [
+            ("one", 1, "string"),
+            ("two", 2, "string"),
+            ("three", 3, "string"),
+            (4, 4, "integer"),
+            (true, 5, "boolean"),
+            (false, 6, "boolean")
+        ]
+
+        for expect in expected {
+            switch expect.2 {
+            case "string":
+                let value = hash?.pairs[MString(value: expect.0 as? String ?? "")]
+                MKAssertInteger(object: value, expected: expect.1)
+            case "integer":
+                let value = hash?.pairs[Integer(value: expect.0 as? Int ?? -1)]
+                MKAssertInteger(object: value, expected: expect.1)
+            case "boolean":
+                let value = hash?.pairs[Boolean(expect.0 as? Bool ?? false)]
+                MKAssertInteger(object: value, expected: expect.1)
+            default:
+                XCTFail("Never will happen")
             }
         }
     }
