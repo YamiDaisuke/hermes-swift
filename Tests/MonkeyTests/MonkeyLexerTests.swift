@@ -36,6 +36,7 @@ class MonkeyLexerTests: XCTestCase {
         "foobar"
         "foo bar"
         [1, 2];
+        {"foo": "bar"}
         """
         // swiftlint:enable indentation_width
         let tokens: [Token] = [
@@ -128,6 +129,11 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .int, literal: "2"),
             Token(type: .rbracket, literal: "]"),
             Token(type: .semicolon, literal: ";"),
+            Token(type: .lbrace, literal: "{"),
+            Token(type: .string, literal: "foo"),
+            Token(type: .colon, literal: ":"),
+            Token(type: .string, literal: "bar"),
+            Token(type: .rbrace, literal: "}"),
             Token(type: .eof, literal: "")
         ]
 

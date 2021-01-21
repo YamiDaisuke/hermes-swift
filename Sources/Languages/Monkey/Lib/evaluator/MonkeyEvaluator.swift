@@ -61,6 +61,8 @@ public struct MonkeyEvaluator: Evaluator {
             case let array as ArrayLiteral:
                 let elements = try evalExpressions(array.elements, environment: environment)
                 return MArray(elements: elements)
+            case let hash as HashLiteral:
+                return try evalHashLiteral(hash, environment: environment)
             case let indexExpr as IndexExpression:
                 return try evalIndexExpression(indexExpr, environment: environment)
             default:
@@ -88,19 +90,46 @@ public struct MonkeyEvaluator: Evaluator {
         return statement.value
     }
 
+    /// Evals an `HashLiteral` to produce the `Hash` object
+    /// - Parameters:
+    ///   - expression: The litral
+    ///   - environment: The current `Environment`
+    /// - Throws: `EvaluatorError` if any expression fails to parse
+    /// - Returns: A new `Hash` object 
+    static func evalHashLiteral(_ expression: HashLiteral, environment: Environment<Object>) throws -> Object? {
+        var hash = Hash(pairs: [:])
+        for pair in expression.pairs {
+            let key = try eval(node: pair.key, environment: environment)
+            let value = try eval(node: pair.value, environment: environment)
+            try hash.set(key ?? Null.null, value: value ?? Null.null)
+        }
+
+        return hash
+    }
+
+    /// Evals the result of a index expression. Index expressions are in this format
+    /// `<expression>[<expression>]`
+    /// - Parameters:
+    ///   - expression: The index expression representation
+    ///   - environment: The current `Environment`
+    /// - Throws: `InvalidInfixExpression` if the key or the lhs operand are not suitable for indexing
+    /// - Returns: The value associated with the index
     static func evalIndexExpression(_ expression: IndexExpression, environment: Environment<Object>) throws -> Object? {
         let lhs = try eval(node: expression.lhs, environment: environment)
         let index = try eval(node: expression.index, environment: environment)
 
-        guard let array = lhs as? MArray else {
+        switch lhs {
+        case let array as MArray:
+            guard let intIndex = index as? Integer else {
+                throw InvalidInfixExpression("[]", lhs: lhs, rhs: index)
+            }
+
+            return array[intIndex]
+        case let hash as Hash:
+            return try hash.get(index ?? Null.null)
+        default:
             throw InvalidInfixExpression("[]", lhs: lhs, rhs: index)
         }
-
-        guard let intIndex = index as? Integer else {
-            throw InvalidInfixExpression("[]", lhs: lhs, rhs: index)
-        }
-
-        return array[intIndex]
     }
 
     /// Evals a list of expression used as function arguments

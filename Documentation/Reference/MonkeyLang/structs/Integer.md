@@ -3,7 +3,7 @@
 # `Integer`
 
 ```swift
-public struct Integer: Object
+public struct Integer: Object, Hashable
 ```
 
 An Integer value in Monkey

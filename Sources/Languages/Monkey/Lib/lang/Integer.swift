@@ -8,7 +8,7 @@
 import Foundation
 
 /// An Integer value in Monkey
-public struct Integer: Object {
+public struct Integer: Object, Hashable {
     public var type: ObjectType { "Integer" }
     public var value: Int
 
