@@ -11,7 +11,7 @@ import Rosetta
 enum MonkeyPrecedence: Int {
     case lowest
     case equals // ==
-    case lessGreater // > or <
+    case lessGreater // > or < or <= or >=
     case sum // +
     case product // *
     case prefix // -X, !X
@@ -37,6 +37,8 @@ public struct MonkeyParser: Parser {
         .notEquals: .equals,
         .lt: .lessGreater,
         .gt: .lessGreater,
+        .lte: .lessGreater,
+        .gte: .lessGreater,
         .plus: .sum,
         .minus: .sum,
         .slash: .product,

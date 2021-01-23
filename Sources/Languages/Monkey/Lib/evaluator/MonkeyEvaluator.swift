@@ -368,6 +368,10 @@ public struct MonkeyEvaluator: Evaluator {
             return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: >)
         case "<":
             return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: <)
+        case ">=":
+            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: >=)
+        case "<=":
+            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: <=)
         case "==":
             return applyEqualInfix(lhs: lhs, rhs: rhs)
         case "!=":

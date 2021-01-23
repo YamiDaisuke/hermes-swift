@@ -72,9 +72,27 @@ public struct Integer: Object, Hashable {
     /// - Parameters:
     ///   - lhs: An `Integer` value
     ///   - rhs: An `Integer` value
+    /// - Returns: `true` if `lhs` is greater than or equals to `rhs` otherwise `false`
+    public static func >= (lhs: Integer, rhs: Integer) -> Boolean {
+        return Boolean(lhs.value >= rhs.value)
+    }
+
+    /// Compares two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
     /// - Returns: `true` if `lhs` is lower than `rhs` otherwise `false`
     public static func < (lhs: Integer, rhs: Integer) -> Boolean {
         return Boolean(lhs.value < rhs.value)
+    }
+
+    /// Compares two `Integer` values
+    /// - Parameters:
+    ///   - lhs: An `Integer` value
+    ///   - rhs: An `Integer` value
+    /// - Returns: `true` if `lhs` is lower than or equals to `rhs` otherwise `false`
+    public static func <= (lhs: Integer, rhs: Integer) -> Boolean {
+        return Boolean(lhs.value <= rhs.value)
     }
 
     /// Compares two `Integer` values
