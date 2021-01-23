@@ -62,18 +62,6 @@ struct InvalidInfixExpression: EvaluatorError {
     }
 }
 
-struct ReferenceError: EvaluatorError {
-    var message: String
-    var line: Int?
-    var column: Int?
-
-    init(_ identifier: String, line: Int? = nil, column: Int? = nil) {
-        self.message = "\"\(identifier)\" is not defined"
-        self.line = line
-        self.column = column
-    }
-}
-
 struct InvalidCallExpression: EvaluatorError {
     var message: String
     var line: Int?
@@ -117,6 +105,18 @@ struct InvalidHashKey: EvaluatorError {
 
     init(_ got: ObjectType, line: Int? = nil, column: Int? = nil) {
         self.message = "Can't use type: \(got) as Hash Key"
+        self.line = line
+        self.column = column
+    }
+}
+
+struct TypeError: EvaluatorError {
+    var message: String
+    var line: Int?
+    var column: Int?
+
+    init(_ got: ObjectType, expected: ObjectType, line: Int? = nil, column: Int? = nil) {
+        self.message = "Can't assign value of type: \(got) to variable of type: \(expected)"
         self.line = line
         self.column = column
     }

@@ -9,11 +9,12 @@ import Foundation
 import Rosetta
 import MonkeyLang
 
+// swiftlint:disable indentation_width
 /*
- func getKeyPress () -> Int {
-     var key: Int = 0
-     var char: cc_t = 0
-     let cct = (
+func getKeyPress () -> Int {
+    var key: Int = 0
+    var char: cc_t = 0
+    let cct = (
          char, char, char, char, char,
          char, char, char, char, char,
          char, char, char, char, char,
@@ -30,7 +31,7 @@ import MonkeyLang
      return key
  }
  */
-
+// swiftlint:enable indentation_width
 struct MonkeyRepl {
     // swiftlint:disable indentation_width
     static let monkeyFace: String = #"""

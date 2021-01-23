@@ -46,7 +46,9 @@ extension MonkeyEvaluatorTests {
     static let __allTests__MonkeyEvaluatorTests = [
         ("testArrayIndexExpression", testArrayIndexExpression),
         ("testArrayLiteral", testArrayLiteral),
+        ("testAssignStatement", testAssignStatement),
         ("testClousure", testClousure),
+        ("testDeclareStatement", testDeclareStatement),
         ("testEvalStrings", testEvalStrings),
         ("testEvaluatorErrors", testEvaluatorErrors),
         ("testFunctionCall", testFunctionCall),
@@ -54,7 +56,6 @@ extension MonkeyEvaluatorTests {
         ("testHashIndexExpressions", testHashIndexExpressions),
         ("testHashLiteral", testHashLiteral),
         ("testIfElseExpression", testIfElseExpression),
-        ("testLetStatement", testLetStatement),
         ("testReturnStatement", testReturnStatement),
     ]
 }
@@ -90,8 +91,10 @@ extension MonkeyParserStatementsTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__MonkeyParserStatementsTests = [
+        ("testParseAssignStatement", testParseAssignStatement),
         ("testParseLetStatement", testParseLetStatement),
         ("testParseLetStatementErrors", testParseLetStatementErrors),
+        ("testParseVarStatement", testParseVarStatement),
         ("testReturnStatement", testReturnStatement),
     ]
 }

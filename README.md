@@ -71,6 +71,19 @@ Comparison of String values with any other value.
 - A string will be equal to boolean `false` if it is empty
 - A string will never be equal to any other value
 
+### Constants and variables 
+
+Support of declaration constants using `let <identifier> = <expression>;` 
+and variables using `var <identifier> = <expression>;`.
+
+Variables can later be assigned to new values but the value must be 
+the same type for example the following lines will produce an error:
+
+```
+var a = 10;
+a = true;
+```
+
 ## Documentation
 
 Documentation can be found [here](Documentation/Reference/README.md)

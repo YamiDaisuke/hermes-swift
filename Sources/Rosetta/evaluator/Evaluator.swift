@@ -20,7 +20,45 @@ public extension EvaluatorError {
         if let line = line, let col = column {
             output += " at Line: \(line), Column: \(col)"
         }
+
         return output
+    }
+}
+
+public struct AssignConstantError: EvaluatorError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+
+    public init(_ name: String, line: Int? = nil, column: Int? = nil) {
+        self.message = "Cannot assign to value: \"\(name)\" is a constant"
+        self.line = line
+        self.column = column
+    }
+}
+
+public struct RedeclarationError: EvaluatorError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+
+    public init(_ name: String, line: Int? = nil, column: Int? = nil) {
+        self.message = "Cannot redeclare: \"\(name)\" it already exists"
+        self.line = line
+        self.column = column
+    }
+}
+
+
+public struct ReferenceError: EvaluatorError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+
+    public init(_ identifier: String, line: Int? = nil, column: Int? = nil) {
+        self.message = "\"\(identifier)\" is not defined"
+        self.line = line
+        self.column = column
     }
 }
 
@@ -66,8 +104,15 @@ public extension Evaluator {
 /// this implementation is prepared to keep
 /// track of outer environments like clousures
 public class Environment<BaseType> {
+    public enum VariableType {
+        case `let`
+        case `var`
+    }
+
+    typealias Container = (type: VariableType, value: BaseType)
+
     /// Current scope variables
-    var store: [String: BaseType] = [:]
+    var store: [String: Container] = [:]
     /// Outer score variables
     var outer: Environment<BaseType>?
 
@@ -78,30 +123,91 @@ public class Environment<BaseType> {
         self.outer = outer
     }
 
-    /// Gets or set a variable value
-    public subscript(key: String) -> BaseType? {
-        /// Returns the associated value of a variable
-        /// giving priority to the current scope
-        get {
-            return self.store[key] ?? outer?[key]
+    /// Returns the associated value of a variable
+    /// giving priority to the current scope
+    /// - Parameter key: The identifier for this variable or constant
+    /// - Returns: The associated value or `nil` if the variable or constant doesn't exits
+    public func get(_ key: String) -> BaseType? {
+        return self.store[key]?.value ?? outer?.get(key)
+    }
+
+    /// Returns the store value with the associated metadata
+    /// - Parameter key: The identifier for this variable or constant
+    /// - Returns: The associated value or `nil` if the variable or constant doesn't exits
+    func getRaw(_ key: String) -> Container? {
+        return self.store[key] ?? outer?.getRaw(key)
+    }
+
+    /// Creates a new variable or constant in this environment
+    /// - Parameters:
+    ///   - key: The identifier for this variable or constant
+    ///   - value: The value to associate
+    ///   - type: Wheter this is a variable or a constant. Default `let` I.E.: constant
+    /// - Throws: `RedeclarationError` if the variable already exists
+    public func create(_ key: String, value: BaseType?, type: VariableType = .let) throws {
+        guard self.store[key] == nil else {
+            throw RedeclarationError(key)
         }
-        /// Sets a new variable value, if the variable exists
-        /// within the current scope that  varaible is assigned
-        /// if the variable does not exists in the current scope
-        /// but exists in the outer one that variable is assiged.
-        /// If none exists the variable is created in the current scope
-        set(newValue) {
-            if self.store[key] != nil {
-                self.store[key] = newValue
+
+        guard let value = value else {
+            return
+        }
+
+        self.store[key] = (type: type, value: value)
+    }
+
+    /// Sets a new variable or constant value.
+    ///
+    /// if the variable exists within the current scope that  varaible is assigned
+    /// if the variable does not exists in the current scope but exists in the outer
+    /// one that variable is assiged.
+    /// If the `key` references an existing constant an error is thrown
+    /// - Parameters:
+    ///   - key: The identifier for this variable or constant
+    ///   - value: The value to associate
+    ///   - type: Wheter this is a variable or a constant. Default `let` I.E.: constant
+    /// - Throws: `AssignConstantError` If the `key` references an existing constant
+    ///           `ReferenceError` if the `key` doesn't exists
+    public func set(_ key: String, value: BaseType?, type: VariableType = .let) throws {
+        if let current = self.store[key] {
+            guard current.type == .var else {
+                throw AssignConstantError(key)
+            }
+
+            guard let value = value else {
+                self.store[key] = nil
                 return
             }
 
-            if self.outer?[key] != nil {
-                self.outer?[key] = newValue
+            self.store[key] = (type: .var, value: value)
+            return
+        }
+
+        if let current = self.outer?.getRaw(key) {
+            guard current.type == .var else {
+                throw AssignConstantError(key)
+            }
+
+            guard let value = value else {
+                self.store[key] = nil
                 return
             }
 
-            self.store[key] = newValue
+            self.store[key] = (type: .var, value: value)
+            return
         }
+
+        throw ReferenceError(key)
+    }
+
+    /// Checks if `key` exists in this `Environment`. By default only checks
+    /// the inner context
+    ///
+    /// - Parameters:
+    ///   - key: The identifier for the variable or constant
+    ///   - includeOuter: Wheter to check the outer context or not. By default `false`
+    /// - Returns: `true` if there is a value stored `false` otherwise
+    public func contains(key: String, includeOuter: Bool = false) -> Bool {
+        return store[key] != nil || (includeOuter && outer?.get(key) != nil)
     }
 }

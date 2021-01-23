@@ -36,9 +36,18 @@ public struct MonkeyEvaluator: Evaluator {
                 return statement.value ? Boolean.true : Boolean.false
             case let statement as StringLiteral:
                 return MString(value: statement.value)
-            case let letStmt as LetStatement:
-                let value = try eval(node: letStmt.value, environment: environment)
-                environment[letStmt.name.value] = value
+            case let declareStmt as DeclareStatement:
+                let value = try eval(node: declareStmt.value, environment: environment)
+                let type: Environment<Object>.VariableType = declareStmt.token.type == .let ? .let : .var
+                try environment.create(declareStmt.name.value, value: value, type: type)
+                return Null.null
+            case let assignStmt as AssignStatement:
+                let value = try eval(node: assignStmt.value, environment: environment)
+                let currentType = environment.get(assignStmt.name.value)?.type
+                guard currentType != nil && value?.type == currentType else {
+                    throw TypeError(value?.type ?? "null", expected: currentType ?? "null")
+                }
+                try environment.set(assignStmt.name.value, value: value)
                 return Null.null
             case let identifier as Identifier:
                 return try evalIdentifier(identifier, environment: environment)
@@ -160,7 +169,7 @@ public struct MonkeyEvaluator: Evaluator {
     /// - Throws: `ReferenceError` if the `Identifier` does not exists in `environment` or is a builtin function
     /// - Returns: The value asociated with `identifier`
     static func evalIdentifier(_ identifier: Identifier, environment: Environment<Object>) throws -> Object? {
-        if let value = environment[identifier.value] {
+        if let value = environment.get(identifier.value) {
             return value
         }
 
@@ -213,7 +222,7 @@ public struct MonkeyEvaluator: Evaluator {
         for index in 0..<args.count {
             let name = function.parameters[index]
             let value = args[index]
-            newEnv[name] = value
+            try newEnv.create(name, value: value)
         }
 
         return newEnv

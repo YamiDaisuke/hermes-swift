@@ -10,13 +10,6 @@ import XCTest
 @testable import MonkeyLang
 
 class EvaluateOperationsTests: XCTestCase {
-    var environment: Environment<Object> = Environment()
-
-    override func setUp() {
-        super.setUp()
-        self.environment = Environment()
-    }
-
     func testEvalInteger() throws {
         let tests = [
             ("5", 5),
@@ -37,7 +30,7 @@ class EvaluateOperationsTests: XCTestCase {
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             MKAssertInteger(object: evaluated, expected: test.1)
         }
     }
@@ -70,7 +63,7 @@ class EvaluateOperationsTests: XCTestCase {
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             MKAssertBoolean(object: evaluated, expected: test.1)
         }
     }
@@ -85,7 +78,7 @@ class EvaluateOperationsTests: XCTestCase {
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             let string = evaluated as? MString
             XCTAssertNotNil(string)
             XCTAssertEqual(string?.value, test.1)
@@ -107,7 +100,7 @@ class EvaluateOperationsTests: XCTestCase {
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             MKAssertBoolean(object: evaluated, expected: test.1)
         }
     }
@@ -123,7 +116,7 @@ class EvaluateOperationsTests: XCTestCase {
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             MKAssertBoolean(object: evaluated, expected: test.1)
         }
     }

@@ -95,17 +95,23 @@ public struct MonkeyParser: Parser {
         }
 
         switch token.type {
-        case Token.Kind.let:
-            return try parseLetStatement()
+        case Token.Kind.let, Token.Kind.var:
+            return try parseDeclareStatement()
         case Token.Kind.return:
             return try parseReturnStatement()
+        case Token.Kind.identifier:
+            if self.nextToken?.type == .assign {
+                return try parseAssignStatement()
+            } else {
+                return try parseExpressionStatement()
+            }
         default:
             return try parseExpressionStatement()
         }
     }
 
-    mutating func parseLetStatement() throws -> LetStatement? {
-        guard let token = self.currentToken, token.type == .let else {
+    mutating func parseDeclareStatement() throws -> DeclareStatement? {
+        guard let token = self.currentToken, token.type == .let || token.type == .var else {
             throw InvalidToken(self.currentToken)
         }
 
@@ -124,7 +130,23 @@ public struct MonkeyParser: Parser {
         }
         try expectNext(toBe: .semicolon)
 
-        return LetStatement(token: token, name: name, value: expression)
+        return DeclareStatement(token: token, name: name, value: expression)
+    }
+
+    mutating func parseAssignStatement() throws -> AssignStatement? {
+        guard let identifier = self.currentToken, identifier.type == .identifier else {
+            throw InvalidToken(self.currentToken)
+        }
+
+        let name = Identifier(token: identifier, value: identifier.literal)
+        try expectNext(toBe: .assign)
+        self.readToken()
+        guard let expression = try parseExpression(withPrecedence: MonkeyPrecedence.lowest.rawValue) else {
+            throw InvalidExpression(self.currentToken)
+        }
+        try expectNext(toBe: .semicolon)
+
+        return AssignStatement(token: identifier, name: name, value: expression)
     }
 
     mutating func parseReturnStatement() throws -> ReturnStatement? {

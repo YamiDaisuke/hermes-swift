@@ -10,16 +10,9 @@ import XCTest
 @testable import MonkeyLang
 
 class MonkeyEvaluatorTests: XCTestCase {
-    var environment: Environment<Object> = Environment()
-
-    override func setUp() {
-        super.setUp()
-        self.environment = Environment()
-    }
-
     func testEvalStrings() throws {
         let input = "\"Hello World!\""
-        let evaluated = try Utils.testEval(input: input, environment: self.environment)
+        let evaluated = try Utils.testEval(input: input, environment: Environment())
         let string = evaluated as? MString
         XCTAssertNotNil(string)
         XCTAssertEqual(string?.value, "Hello World!")
@@ -38,7 +31,7 @@ class MonkeyEvaluatorTests: XCTestCase {
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             if let expected = test.1 {
                 MKAssertInteger(object: evaluated, expected: expected)
             } else {
@@ -58,7 +51,7 @@ class MonkeyEvaluatorTests: XCTestCase {
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             MKAssertInteger(object: evaluated, expected: test.1)
         }
     }
@@ -81,30 +74,80 @@ class MonkeyEvaluatorTests: XCTestCase {
 
         for test in tests {
             do {
-                _ = try Utils.testEval(input: test.0, environment: self.environment)
+                _ = try Utils.testEval(input: test.0, environment: Environment())
             } catch let error as EvaluatorError {
                 XCTAssertEqual(error.description, test.1)
             }
         }
     }
 
-    func testLetStatement() throws {
+    func testDeclareStatement() throws {
         let tests = [
             ("let a = 5; a;", 5),
             ("let a = 5 * 5; a;", 25),
             ("let a = 5; let b = a; b;", 5),
-            ("let a = 5; let b = a; let c = a + b + 5; c;", 15)
+            ("let a = 5; let b = a; let c = a + b + 5; c;", 15),
+            ("let a = 5; let a = 10; a;", nil),
+            ("var a = 5; a;", 5),
+            ("var a = 5 * 5; a;", 25),
+            ("var a = 5; let b = a; b;", 5),
+            ("var a = 5; let b = a; let c = a + b + 5; c;", 15),
+            ("var a = 5; var a = 10; a;", nil)
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
-            MKAssertInteger(object: evaluated, expected: test.1)
+            do {
+                let evaluated = try Utils.testEval(input: test.0, environment: Environment())
+                if let expected = test.1 {
+                    MKAssertInteger(object: evaluated, expected: expected)
+                } else {
+                    XCTFail("Expected and error")
+                }
+            } catch let error as RedeclarationError {
+                XCTAssertNil(test.1)
+                XCTAssertEqual(error.description, "Cannot redeclare: \"a\" it already exists at Line: 1, Column: 11")
+            } catch {
+                XCTFail("Unexpected error: \(error)")
+            }
+        }
+    }
+
+    func testAssignStatement() throws {
+        let tests = [
+            ("var a = 5; a = 10; a;", 10),
+            ("var a = 10; a = 5 * 5; a;", 25),
+            ("var a = 5; let b = 10; a = b; a;", 10),
+            ("var a = 5; let b = a; a = a + b + 5; a;", 15),
+            ("let a = 5; a = 10; a;", nil),
+            ("var a = 5; a = true; a;", nil)
+        ]
+
+        for test in tests {
+            do {
+                let evaluated = try Utils.testEval(input: test.0, environment: Environment())
+                if let expected = test.1 {
+                    MKAssertInteger(object: evaluated, expected: expected)
+                } else {
+                    XCTFail("Expected and error")
+                }
+            } catch let error as AssignConstantError {
+                XCTAssertNil(test.1)
+                XCTAssertEqual(error.description, "Cannot assign to value: \"a\" is a constant at Line: 1, Column: 11")
+            } catch let error as TypeError {
+                XCTAssertNil(test.1)
+                XCTAssertEqual(
+                    error.description,
+                    "Can't assign value of type: Boolean to variable of type: Integer at Line: 1, Column: 11"
+                )
+            } catch {
+                XCTFail("Unexpected error")
+            }
         }
     }
 
     func testFunctionObject() throws {
         let input = "fn(x) { x + 2; };"
-        let evaluated = try Utils.testEval(input: input, environment: self.environment)
+        let evaluated = try Utils.testEval(input: input, environment: Environment())
         let function = evaluated as? Function
         XCTAssertNotNil(function)
         XCTAssertEqual(function?.parameters.count, 1)
@@ -123,26 +166,28 @@ class MonkeyEvaluatorTests: XCTestCase {
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             MKAssertInteger(object: evaluated, expected: test.1)
         }
     }
 
     func testClousure() throws {
         let input = """
+        let a = 10;
         let newAdder = fn(x) {
-            fn(y) { x + y };
+            let a = 20;
+            return fn(y) { x + y };
         };
         let addTwo = newAdder(2);
         addTwo(2);
         """
-        let evaluated = try Utils.testEval(input: input, environment: self.environment)
+        let evaluated = try Utils.testEval(input: input, environment: Environment())
         MKAssertInteger(object: evaluated, expected: 4)
     }
 
     func testArrayLiteral() throws {
         let input = "[1, 2 * 2, 3 + 3]"
-        let evaluated = try Utils.testEval(input: input, environment: self.environment)
+        let evaluated = try Utils.testEval(input: input, environment: Environment())
         let array = evaluated as? MArray
         XCTAssertNotNil(array)
         XCTAssertEqual(array?.elements.count, 3)
@@ -165,8 +210,8 @@ class MonkeyEvaluatorTests: XCTestCase {
             ("[1, 2, 3][-1]", nil)
         ]
 
-        for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+        for test in tests.prefix(7) {
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             if let expected = test.1 {
                 MKAssertInteger(object: evaluated, expected: expected)
             } else {
@@ -187,7 +232,7 @@ class MonkeyEvaluatorTests: XCTestCase {
         ]
 
         for test in tests {
-            let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             if let expected = test.1 {
                 MKAssertInteger(object: evaluated, expected: expected)
             } else {
@@ -208,7 +253,7 @@ class MonkeyEvaluatorTests: XCTestCase {
             false: 6
         }
         """
-        let evaluated = try Utils.testEval(input: input, environment: self.environment)
+        let evaluated = try Utils.testEval(input: input, environment: Environment())
         let hash = evaluated as? Hash
         XCTAssertNotNil(hash)
 
