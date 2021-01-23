@@ -139,6 +139,25 @@ Compares two `Integer` values
 | lhs | An `Integer` value |
 | rhs | An `Integer` value |
 
+### `>=(_:_:)`
+
+```swift
+public static func >= (lhs: Integer, rhs: Integer) -> Boolean
+```
+
+Compares two `Integer` values
+- Parameters:
+  - lhs: An `Integer` value
+  - rhs: An `Integer` value
+- Returns: `true` if `lhs` is greater than or equals to `rhs` otherwise `false`
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| lhs | An `Integer` value |
+| rhs | An `Integer` value |
+
 ### `<(_:_:)`
 
 ```swift
@@ -150,6 +169,25 @@ Compares two `Integer` values
   - lhs: An `Integer` value
   - rhs: An `Integer` value
 - Returns: `true` if `lhs` is lower than `rhs` otherwise `false`
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| lhs | An `Integer` value |
+| rhs | An `Integer` value |
+
+### `<=(_:_:)`
+
+```swift
+public static func <= (lhs: Integer, rhs: Integer) -> Boolean
+```
+
+Compares two `Integer` values
+- Parameters:
+  - lhs: An `Integer` value
+  - rhs: An `Integer` value
+- Returns: `true` if `lhs` is lower than or equals to `rhs` otherwise `false`
 
 #### Parameters
 
