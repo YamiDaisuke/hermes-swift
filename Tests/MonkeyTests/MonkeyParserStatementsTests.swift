@@ -47,7 +47,7 @@ class MonkeyParserStatementsTests: XCTestCase {
 
             let statement = program?.statements.first
             XCTAssertEqual(statement?.literal, "let")
-            let letStatement = statement as? LetStatement
+            let letStatement = statement as? DeclareStatement
             XCTAssertNotNil(letStatement)
             XCTAssertEqual(letStatement?.name.literal, test.identifier)
 
@@ -65,6 +65,88 @@ class MonkeyParserStatementsTests: XCTestCase {
 
             if test.type == "identifier" {
                 let value = letStatement?.value as? Identifier
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value?.value, test.val)
+            }
+        }
+    }
+
+    func testParseVarStatement() throws {
+        let tests = [
+            (input: "var x = 5;", identifier: "x", val: "5", type: "int"),
+            (input: "var y = true;", identifier: "y", val: "true", type: "bool"),
+            (input: "var foobar = y;", identifier: "foobar", val: "y", type: "identifier")
+        ]
+
+        for test in tests {
+            let lexer = MonkeyLexer(withString: test.input)
+            var parser = MonkeyParser(lexer: lexer)
+
+            let program = try parser.parseProgram()
+            XCTAssertNotNil(program)
+            XCTAssertEqual(program?.statements.count, 1)
+
+            let statement = program?.statements.first
+            XCTAssertEqual(statement?.literal, "var")
+            let varStatement = statement as? DeclareStatement
+            XCTAssertNotNil(varStatement)
+            XCTAssertEqual(varStatement?.name.literal, test.identifier)
+
+            if test.type == "int" {
+                let value = varStatement?.value as? IntegerLiteral
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value?.value.description, test.val)
+            }
+
+            if test.type == "bool" {
+                let value = varStatement?.value as? BooleanLiteral
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value?.value.description, test.val)
+            }
+
+            if test.type == "identifier" {
+                let value = varStatement?.value as? Identifier
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value?.value, test.val)
+            }
+        }
+    }
+
+    func testParseAssignStatement() throws {
+        let tests = [
+            (input: "x = 10;", identifier: "x", val: "10", type: "int"),
+            (input: "y = true;", identifier: "y", val: "true", type: "bool"),
+            (input: "foobar = y;", identifier: "foobar", val: "y", type: "identifier")
+        ]
+
+        for test in tests {
+            let lexer = MonkeyLexer(withString: test.input)
+            var parser = MonkeyParser(lexer: lexer)
+
+            let program = try parser.parseProgram()
+            XCTAssertNotNil(program)
+            XCTAssertEqual(program?.statements.count, 1)
+
+            let statement = program?.statements.first
+            XCTAssertEqual(statement?.literal, test.identifier)
+            let assignStatement = statement as? AssignStatement
+            XCTAssertNotNil(assignStatement)
+            XCTAssertEqual(assignStatement?.name.literal, test.identifier)
+
+            if test.type == "int" {
+                let value = assignStatement?.value as? IntegerLiteral
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value?.value.description, test.val)
+            }
+
+            if test.type == "bool" {
+                let value = assignStatement?.value as? BooleanLiteral
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value?.value.description, test.val)
+            }
+
+            if test.type == "identifier" {
+                let value = assignStatement?.value as? Identifier
                 XCTAssertNotNil(value)
                 XCTAssertEqual(value?.value, test.val)
             }

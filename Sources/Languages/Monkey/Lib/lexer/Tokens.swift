@@ -51,6 +51,7 @@ extension Token.Kind {
 extension Token.Kind {
     static let function = Token.Kind("fn")
     static let `let` = Token.Kind("let")
+    static let `var` = Token.Kind("var")
     static let `true` = Token.Kind("true")
     static let `false` = Token.Kind("false")
     // swiftlint:disable:next identifier_name
@@ -59,6 +60,6 @@ extension Token.Kind {
     static let `return` = Token.Kind("return")
 
     static var keywords: Set<Token.Kind> {
-        [.function, .let, .true, .false, .if, .else, .return]
+        [.function, .let, .var, .true, .false, .if, .else, .return]
     }
 }

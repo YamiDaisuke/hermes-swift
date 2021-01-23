@@ -45,6 +45,8 @@
 		F8B8094125B4A6510042EDCC /* ArrayLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8094025B4A6510042EDCC /* ArrayLiteral.swift */; };
 		F8B8094A25B4AC7B0042EDCC /* IndexExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8094925B4AC7B0042EDCC /* IndexExpression.swift */; };
 		F8B8095A25B4B4B90042EDCC /* MArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B8095925B4B4B90042EDCC /* MArray.swift */; };
+		F8C3471125BB30C4007DACD6 /* AssignStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C3471025BB30C4007DACD6 /* AssignStatement.swift */; };
+		F8C3472325BB6AD8007DACD6 /* DeclareStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C3472225BB6AD8007DACD6 /* DeclareStatement.swift */; };
 		OBJ_100 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* Types.swift */; };
 		OBJ_102 /* Rosetta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rosetta::Rosetta::Product" /* Rosetta.framework */; };
 		OBJ_109 /* MonkeyEvaluatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_47 /* MonkeyEvaluatorTests.swift */; };
@@ -85,7 +87,6 @@
 		OBJ_93 /* IfExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* IfExpression.swift */; };
 		OBJ_94 /* InfixExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* InfixExpression.swift */; };
 		OBJ_95 /* IntegerLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* IntegerLiteral.swift */; };
-		OBJ_96 /* LetStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* LetStatement.swift */; };
 		OBJ_97 /* MonkeyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_28 /* MonkeyParser.swift */; };
 		OBJ_98 /* PrefixExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* PrefixExpression.swift */; };
 		OBJ_99 /* ReturnStatement.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_30 /* ReturnStatement.swift */; };
@@ -174,6 +175,8 @@
 		F8B8094025B4A6510042EDCC /* ArrayLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayLiteral.swift; sourceTree = "<group>"; };
 		F8B8094925B4AC7B0042EDCC /* IndexExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexExpression.swift; sourceTree = "<group>"; };
 		F8B8095925B4B4B90042EDCC /* MArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MArray.swift; sourceTree = "<group>"; };
+		F8C3471025BB30C4007DACD6 /* AssignStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignStatement.swift; sourceTree = "<group>"; };
+		F8C3472225BB6AD8007DACD6 /* DeclareStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeclareStatement.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_12 /* MonkeyEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyEvaluator.swift; sourceTree = "<group>"; };
 		OBJ_13 /* MonkeyEvaluatorErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyEvaluatorErrors.swift; sourceTree = "<group>"; };
@@ -189,7 +192,6 @@
 		OBJ_24 /* IfExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IfExpression.swift; sourceTree = "<group>"; };
 		OBJ_25 /* InfixExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfixExpression.swift; sourceTree = "<group>"; };
 		OBJ_26 /* IntegerLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerLiteral.swift; sourceTree = "<group>"; };
-		OBJ_27 /* LetStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetStatement.swift; sourceTree = "<group>"; };
 		OBJ_28 /* MonkeyParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParser.swift; sourceTree = "<group>"; };
 		OBJ_29 /* PrefixExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefixExpression.swift; sourceTree = "<group>"; };
 		OBJ_30 /* ReturnStatement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnStatement.swift; sourceTree = "<group>"; };
@@ -329,13 +331,14 @@
 				OBJ_24 /* IfExpression.swift */,
 				OBJ_25 /* InfixExpression.swift */,
 				OBJ_26 /* IntegerLiteral.swift */,
-				OBJ_27 /* LetStatement.swift */,
 				OBJ_29 /* PrefixExpression.swift */,
 				OBJ_30 /* ReturnStatement.swift */,
 				F883BE1625B385DC00E9CA9F /* StringLiteral.swift */,
 				F8B8094025B4A6510042EDCC /* ArrayLiteral.swift */,
 				F8B8094925B4AC7B0042EDCC /* IndexExpression.swift */,
 				F8B3F22825B87ADF00D729F0 /* HashLiteral.swift */,
+				F8C3471025BB30C4007DACD6 /* AssignStatement.swift */,
+				F8C3472225BB6AD8007DACD6 /* DeclareStatement.swift */,
 			);
 			path = ast;
 			sourceTree = "<group>";
@@ -708,6 +711,7 @@
 				OBJ_82 /* MonkeyEvaluator.swift in Sources */,
 				OBJ_83 /* MonkeyEvaluatorErrors.swift in Sources */,
 				OBJ_84 /* MonkeyLexer.swift in Sources */,
+				F8C3472325BB6AD8007DACD6 /* DeclareStatement.swift in Sources */,
 				F883BE6025B3961700E9CA9F /* String.swift in Sources */,
 				OBJ_85 /* Tokens.swift in Sources */,
 				F883BE4E25B395F500E9CA9F /* Return.swift in Sources */,
@@ -718,6 +722,7 @@
 				F883BE3325B3958600E9CA9F /* Null.swift in Sources */,
 				OBJ_88 /* CallExpression.swift in Sources */,
 				OBJ_89 /* MonkeyPrefixParser.swift in Sources */,
+				F8C3471125BB30C4007DACD6 /* AssignStatement.swift in Sources */,
 				OBJ_90 /* ExpressionStatement.swift in Sources */,
 				OBJ_91 /* FunctionLiteral.swift in Sources */,
 				F883BE2A25B3957D00E9CA9F /* Object.swift in Sources */,
@@ -734,7 +739,6 @@
 				F8B8094125B4A6510042EDCC /* ArrayLiteral.swift in Sources */,
 				F8B3F22925B87ADF00D729F0 /* HashLiteral.swift in Sources */,
 				F883BE1725B385DC00E9CA9F /* StringLiteral.swift in Sources */,
-				OBJ_96 /* LetStatement.swift in Sources */,
 				OBJ_97 /* MonkeyParser.swift in Sources */,
 				OBJ_98 /* PrefixExpression.swift in Sources */,
 				OBJ_99 /* ReturnStatement.swift in Sources */,

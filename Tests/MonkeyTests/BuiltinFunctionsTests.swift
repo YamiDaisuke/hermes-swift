@@ -10,13 +10,6 @@ import XCTest
 @testable import MonkeyLang
 
 class BuiltinFunctionsTests: XCTestCase {
-    var environment: Environment<Object> = Environment()
-
-    override func setUp() {
-        super.setUp()
-        self.environment = Environment()
-    }
-
     func testLenFunction() throws {
         let tests: [(String, Any)] = [
             ("len(\"\")", 0),
@@ -33,7 +26,7 @@ class BuiltinFunctionsTests: XCTestCase {
 
         for test in tests {
             do {
-                let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+                let evaluated = try Utils.testEval(input: test.0, environment: Environment())
                 MKAssertInteger(object: evaluated, expected: test.1 as? Int ?? -1)
             } catch let error as WrongArgumentCount {
                 XCTAssertEqual(error.description, test.1 as? String ?? "")
@@ -58,7 +51,7 @@ class BuiltinFunctionsTests: XCTestCase {
 
         for test in tests {
             do {
-                let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+                let evaluated = try Utils.testEval(input: test.0, environment: Environment())
                 if let expected = test.1 as? Int {
                     MKAssertInteger(object: evaluated, expected: expected)
                 } else {
@@ -87,7 +80,7 @@ class BuiltinFunctionsTests: XCTestCase {
 
         for test in tests {
             do {
-                let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+                let evaluated = try Utils.testEval(input: test.0, environment: Environment())
                 if let expected = test.1 as? Int {
                     MKAssertInteger(object: evaluated, expected: expected)
                 } else {
@@ -116,7 +109,7 @@ class BuiltinFunctionsTests: XCTestCase {
 
         for test in tests {
             do {
-                let evaluated = try Utils.testEval(input: test.0, environment: self.environment) as? MArray
+                let evaluated = try Utils.testEval(input: test.0, environment: Environment()) as? MArray
                 if let expected = test.1 as? Int {
                     XCTAssertEqual(evaluated?.elements.count, expected)
                 } else {
@@ -146,7 +139,7 @@ class BuiltinFunctionsTests: XCTestCase {
 
         for test in tests {
             do {
-                let evaluated = try Utils.testEval(input: test.0, environment: self.environment)
+                let evaluated = try Utils.testEval(input: test.0, environment: Environment())
                 if let expected = test.1 as? Int {
                     let array = evaluated as? MArray
                     XCTAssertEqual(array?.elements.count, expected)
