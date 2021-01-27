@@ -23,11 +23,13 @@ public struct InvalidExpression: ParseError {
     public var message: String
     public var line: Int?
     public var column: Int?
+    public var file: String?
 
-    public init(_ token: Token?, line: Int? = nil, column: Int? = nil) {
+    public init(_ token: Token?, line: Int? = nil, column: Int? = nil, file: String? = nil) {
         self.message = "Can't parse expression starting at: \(token?.literal ?? "")"
         self.line = line ?? token?.line
         self.column = column ?? token?.column
+        self.file = file
     }
 }
 

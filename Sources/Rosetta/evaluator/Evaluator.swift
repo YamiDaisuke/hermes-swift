@@ -7,61 +7,6 @@
 
 import Foundation
 
-/// All Evaluation errors should implement this protocol
-public protocol EvaluatorError: Error, CustomStringConvertible {
-    var message: String { get }
-    var line: Int? { get set }
-    var column: Int? { get set }
-}
-
-public extension EvaluatorError {
-    var description: String {
-        var output = self.message
-        if let line = line, let col = column {
-            output += " at Line: \(line), Column: \(col)"
-        }
-
-        return output
-    }
-}
-
-public struct AssignConstantError: EvaluatorError {
-    public var message: String
-    public var line: Int?
-    public var column: Int?
-
-    public init(_ name: String, line: Int? = nil, column: Int? = nil) {
-        self.message = "Cannot assign to value: \"\(name)\" is a constant"
-        self.line = line
-        self.column = column
-    }
-}
-
-public struct RedeclarationError: EvaluatorError {
-    public var message: String
-    public var line: Int?
-    public var column: Int?
-
-    public init(_ name: String, line: Int? = nil, column: Int? = nil) {
-        self.message = "Cannot redeclare: \"\(name)\" it already exists"
-        self.line = line
-        self.column = column
-    }
-}
-
-
-public struct ReferenceError: EvaluatorError {
-    public var message: String
-    public var line: Int?
-    public var column: Int?
-
-    public init(_ identifier: String, line: Int? = nil, column: Int? = nil) {
-        self.message = "\"\(identifier)\" is not defined"
-        self.line = line
-        self.column = column
-    }
-}
-
 public protocol Evaluator {
     /// This is the language base type for all types
     /// for example in swift this will be `Any` for

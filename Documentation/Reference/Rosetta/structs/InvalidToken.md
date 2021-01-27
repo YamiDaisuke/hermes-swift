@@ -6,6 +6,8 @@
 public struct InvalidToken: ParseError
 ```
 
+Throw this error when the next token is not valid for the current language
+
 ## Properties
 ### `message`
 
@@ -25,9 +27,15 @@ public var line: Int?
 public var column: Int?
 ```
 
-## Methods
-### `init(_:line:column:)`
+### `file`
 
 ```swift
-public init(_ token: Token?, line: Int? = nil, column: Int? = nil)
+public var file: String?
+```
+
+## Methods
+### `init(_:line:column:file:)`
+
+```swift
+public init(_ token: Token?, line: Int? = nil, column: Int? = nil, file: String? = nil)
 ```

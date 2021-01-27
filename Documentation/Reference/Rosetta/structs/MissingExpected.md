@@ -29,9 +29,15 @@ public var line: Int?
 public var column: Int?
 ```
 
-## Methods
-### `init(type:line:column:)`
+### `file`
 
 ```swift
-public init(type: Token.Kind, line: Int? = nil, column: Int? = nil)
+public var file: String?
+```
+
+## Methods
+### `init(type:line:column:file:)`
+
+```swift
+public init(type: Token.Kind, line: Int? = nil, column: Int? = nil, file: String? = nil)
 ```

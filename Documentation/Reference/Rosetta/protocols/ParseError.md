@@ -3,7 +3,7 @@
 # `ParseError`
 
 ```swift
-public protocol ParseError: Error, CustomStringConvertible
+public protocol ParseError: RosettaError
 ```
 
 All Parsing errors should implement this protocol
@@ -13,16 +13,4 @@ All Parsing errors should implement this protocol
 
 ```swift
 var message: String
-```
-
-### `line`
-
-```swift
-var line: Int?
-```
-
-### `column`
-
-```swift
-var column: Int?
 ```

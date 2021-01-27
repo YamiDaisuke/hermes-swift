@@ -29,6 +29,12 @@ public var line: Int?
 public var column: Int?
 ```
 
+### `file`
+
+```swift
+public var file: String?
+```
+
 ### `description`
 
 ```swift

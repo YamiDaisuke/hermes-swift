@@ -14,11 +14,13 @@ struct MissingPrefixFunc: ParseError {
     var message: String
     var line: Int?
     var column: Int?
+    var file: String?
 
     init(token: Token) {
         self.message = "Missing prefix parse function for \(token.literal)"
         self.line = token.line
         self.column = token.column
+        self.file = token.file
     }
 }
 

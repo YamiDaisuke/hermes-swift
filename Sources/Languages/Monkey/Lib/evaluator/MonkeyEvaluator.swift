@@ -78,12 +78,9 @@ public struct MonkeyEvaluator: Evaluator {
                 throw UnknownSyntaxToken(node)
             }
         } catch var error as EvaluatorError {
-            if error.line == nil {
-                error.line = node.token.line
-            }
-            if error.column == nil {
-                error.column = node.token.column
-            }
+            error.line = error.line ?? node.token.line
+            error.column = error.column ?? node.token.column
+            error.file = error.file ?? node.token.file
             throw error
         } catch {
             throw error

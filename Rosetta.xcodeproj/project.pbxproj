@@ -38,6 +38,10 @@
 		F883BE4E25B395F500E9CA9F /* Return.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE4D25B395F500E9CA9F /* Return.swift */; };
 		F883BE5725B3960700E9CA9F /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE5625B3960700E9CA9F /* Function.swift */; };
 		F883BE6025B3961700E9CA9F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F883BE5F25B3961700E9CA9F /* String.swift */; };
+		F88AC92125BF7EA40005E9BA /* StreamReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88AC92025BF7EA40005E9BA /* StreamReader.swift */; };
+		F88AC93E25C20C960005E9BA /* ReadFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88AC91525BF7DDD0005E9BA /* ReadFileTests.swift */; };
+		F88AC94725C21B560005E9BA /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88AC94625C21B560005E9BA /* Error.swift */; };
+		F88AC95025C21F0C0005E9BA /* EvaluatorErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88AC94F25C21F0C0005E9BA /* EvaluatorErrors.swift */; };
 		F8B3F22925B87ADF00D729F0 /* HashLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3F22825B87ADF00D729F0 /* HashLiteral.swift */; };
 		F8B3F23225B8876C00D729F0 /* ParseHashLiteralsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3F23125B8876C00D729F0 /* ParseHashLiteralsTests.swift */; };
 		F8B3F25725B8E0FB00D729F0 /* Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3F25625B8E0FB00D729F0 /* Hash.swift */; };
@@ -168,6 +172,10 @@
 		F883BE4D25B395F500E9CA9F /* Return.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Return.swift; sourceTree = "<group>"; };
 		F883BE5625B3960700E9CA9F /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
 		F883BE5F25B3961700E9CA9F /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		F88AC91525BF7DDD0005E9BA /* ReadFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadFileTests.swift; sourceTree = "<group>"; };
+		F88AC92025BF7EA40005E9BA /* StreamReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamReader.swift; sourceTree = "<group>"; };
+		F88AC94625C21B560005E9BA /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		F88AC94F25C21F0C0005E9BA /* EvaluatorErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluatorErrors.swift; sourceTree = "<group>"; };
 		F8B3F22825B87ADF00D729F0 /* HashLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashLiteral.swift; sourceTree = "<group>"; };
 		F8B3F23125B8876C00D729F0 /* ParseHashLiteralsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseHashLiteralsTests.swift; sourceTree = "<group>"; };
 		F8B3F25625B8E0FB00D729F0 /* Hash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hash.swift; sourceTree = "<group>"; };
@@ -307,6 +315,14 @@
 			path = utils;
 			sourceTree = "<group>";
 		};
+		F88AC91F25BF7E910005E9BA /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				F88AC92025BF7EA40005E9BA /* StreamReader.swift */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
 		OBJ_11 /* MonkeyLang */ = {
 			isa = PBXGroup;
 			children = (
@@ -364,9 +380,11 @@
 		OBJ_33 /* Rosetta */ = {
 			isa = PBXGroup;
 			children = (
+				F88AC91F25BF7E910005E9BA /* utils */,
 				OBJ_34 /* evaluator */,
 				OBJ_36 /* lexer */,
 				OBJ_40 /* parser */,
+				F88AC94625C21B560005E9BA /* Error.swift */,
 			);
 			name = Rosetta;
 			path = Sources/Rosetta;
@@ -376,6 +394,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_35 /* Evaluator.swift */,
+				F88AC94F25C21F0C0005E9BA /* EvaluatorErrors.swift */,
 			);
 			path = evaluator;
 			sourceTree = "<group>";
@@ -447,6 +466,7 @@
 				OBJ_53 /* LexerTests.swift */,
 				OBJ_54 /* StringExtensionsTests.swift */,
 				OBJ_55 /* XCTestManifests.swift */,
+				F88AC91525BF7DDD0005E9BA /* ReadFileTests.swift */,
 			);
 			name = RosettaTests;
 			path = Tests/RosettaTests;
@@ -668,11 +688,14 @@
 				OBJ_123 /* Evaluator.swift in Sources */,
 				OBJ_124 /* Lexer.swift in Sources */,
 				OBJ_125 /* StringExtensions.swift in Sources */,
+				F88AC92125BF7EA40005E9BA /* StreamReader.swift in Sources */,
 				OBJ_126 /* Token.swift in Sources */,
 				OBJ_127 /* Node.swift in Sources */,
 				OBJ_128 /* ParseError.swift in Sources */,
 				OBJ_129 /* Parser.swift in Sources */,
+				F88AC94725C21B560005E9BA /* Error.swift in Sources */,
 				OBJ_130 /* Program.swift in Sources */,
+				F88AC95025C21F0C0005E9BA /* EvaluatorErrors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,6 +712,7 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_149 /* LexerTests.swift in Sources */,
+				F88AC93E25C20C960005E9BA /* ReadFileTests.swift in Sources */,
 				OBJ_150 /* StringExtensionsTests.swift in Sources */,
 				OBJ_151 /* XCTestManifests.swift in Sources */,
 			);

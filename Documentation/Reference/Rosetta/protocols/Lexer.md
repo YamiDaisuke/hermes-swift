@@ -66,6 +66,6 @@ Should read this `Lexer` input source and return the next parsed
 mutating func readLine()
 ```
 
-Reads the next line in the file and moves the
+Reads the next line and moves the
 `currentLineNumber` and `currentColumn`
 pointers of the `Lexer` to the right value
