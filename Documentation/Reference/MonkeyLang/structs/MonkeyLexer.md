@@ -3,7 +3,7 @@
 # `MonkeyLexer`
 
 ```swift
-public struct MonkeyLexer: Lexer, StringLexer, FileLexer
+public struct MonkeyLexer: Lexer
 ```
 
 ## Properties
@@ -23,6 +23,12 @@ public let filePath: URL?
 
 ```swift
 public var input: String
+```
+
+### `streamReader`
+
+```swift
+public var streamReader: StreamReader?
 ```
 
 ### `currentLineNumber`
@@ -66,6 +72,12 @@ public init(withFilePath filePath: URL)
 
 ```swift
 public init(withString input: String)
+```
+
+### `readLine()`
+
+```swift
+public mutating func readLine()
 ```
 
 ### `nextToken()`

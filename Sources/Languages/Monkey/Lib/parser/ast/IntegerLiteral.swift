@@ -14,11 +14,13 @@ struct InvalidIntegerLiteral: ParseError {
     var message: String
     var line: Int?
     var column: Int?
+    var file: String?
 
-    init(literal: String, line: Int? = nil, column: Int? = nil) {
+    init(literal: String, line: Int? = nil, column: Int? = nil, file: String? = nil) {
         self.message = "Invalid Integer Literal \(literal)"
         self.line = line
         self.column = column
+        self.file = file
     }
 }
 

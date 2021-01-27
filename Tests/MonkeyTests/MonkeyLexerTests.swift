@@ -198,11 +198,78 @@ class MonkeyLexerTests: XCTestCase {
         ]
 
         var lexer = MonkeyLexer(withString: input)
-        for token in tokens.prefix(3) {
+        for token in tokens {
             let next = lexer.nextToken()
             XCTAssertEqual(next, token)
             XCTAssertEqual(next.line, token.line)
             XCTAssertEqual(next.column, token.column)
         }
+    }
+
+    func testNextTokenFromFile() throws {
+        // swiftlint:disable indentation_width
+        let input = """
+        let five = 5;
+        let ten = 10;
+
+        let add = fn(x, y) {
+             x + y;
+        };
+
+        """
+
+        // swiftlint:enable indentation_width
+        let tokens: [Token] = [
+            Token(type: .let, literal: "let", line: 1, column: 0),
+            Token(type: .identifier, literal: "five", line: 1, column: 4),
+            Token(type: .assign, literal: "=", line: 1, column: 9),
+            Token(type: .int, literal: "5", line: 1, column: 11),
+            Token(type: .semicolon, literal: ";", line: 1, column: 12),
+            Token(type: .let, literal: "let", line: 2, column: 0),
+            Token(type: .identifier, literal: "ten", line: 2, column: 4),
+            Token(type: .assign, literal: "=", line: 2, column: 8),
+            Token(type: .int, literal: "10", line: 2, column: 10),
+            Token(type: .semicolon, literal: ";", line: 2, column: 12),
+            Token(type: .let, literal: "let", line: 4, column: 0),
+            Token(type: .identifier, literal: "add", line: 4, column: 4),
+            Token(type: .assign, literal: "=", line: 4, column: 8),
+            Token(type: .function, literal: "fn", line: 4, column: 10),
+            Token(type: .lparen, literal: "(", line: 4, column: 12),
+            Token(type: .identifier, literal: "x", line: 4, column: 13),
+            Token(type: .comma, literal: ",", line: 4, column: 14),
+            Token(type: .identifier, literal: "y", line: 4, column: 16),
+            Token(type: .rparen, literal: ")", line: 4, column: 17),
+            Token(type: .lbrace, literal: "{", line: 4, column: 19),
+            Token(type: .identifier, literal: "x", line: 5, column: 5),
+            Token(type: .plus, literal: "+", line: 5, column: 7),
+            Token(type: .identifier, literal: "y", line: 5, column: 9),
+            Token(type: .semicolon, literal: ";", line: 5, column: 10),
+            Token(type: .rbrace, literal: "}", line: 6, column: 0),
+            Token(type: .semicolon, literal: ";", line: 6, column: 1),
+            Token(type: .eof, literal: "", line: 7, column: 0)
+        ]
+
+        let file = writeToFile(input, file: "testNextTokenFromFile")
+        var lexer = MonkeyLexer(withFilePath: file)
+        for token in tokens.prefix(1) {
+            let next = lexer.nextToken()
+            XCTAssertEqual(next, token)
+            XCTAssertEqual(next.line, token.line)
+            XCTAssertEqual(next.column, token.column)
+            XCTAssertEqual(next.file, file.absoluteString)
+        }
+    }
+
+    func writeToFile(_ string: String, file: String) -> URL {
+        let path = FileManager.default.temporaryDirectory
+        let filePath = path.appendingPathComponent(file)
+        print()
+        do {
+            try string.write(to: filePath, atomically: true, encoding: String.Encoding.utf8)
+        } catch {
+            // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+        }
+
+        return filePath
     }
 }

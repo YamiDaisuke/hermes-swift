@@ -14,3 +14,14 @@ A Lexer that uses a `String` as input for processing
 ```swift
 var input: String
 ```
+
+## Methods
+### `readStringLine()`
+
+```swift
+mutating func readStringLine()
+```
+
+Reads the next line in the input `String` and moves the
+`currentLineNumber` and `currentColumn`
+pointers of the `Lexer` to the right value

@@ -66,6 +66,7 @@ extension MonkeyLexerTests {
     // to regenerate.
     static let __allTests__MonkeyLexerTests = [
         ("testNextToken", testNextToken),
+        ("testNextTokenFromFile", testNextTokenFromFile),
         ("testNextTokenWithLineNumber", testNextTokenWithLineNumber),
     ]
 }

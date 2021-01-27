@@ -8,22 +8,8 @@
 import Foundation
 
 /// All Parsing errors should implement this protocol
-public protocol ParseError: Error, CustomStringConvertible {
+public protocol ParseError: RosettaError {
     var message: String { get }
-    var line: Int? { get }
-    var column: Int? { get }
-}
-
-public extension ParseError {
-    var description: String {
-        var output = self.message
-
-        if let line = line, let col = column {
-            output += " at Line: \(line), Column: \(col)"
-        }
-
-        return output
-    }
 }
 
 /// Helper error struct, so we can accumulate all errors
@@ -33,6 +19,7 @@ public struct AllParserError: ParseError {
     public var message: String
     public var line: Int?
     public var column: Int?
+    public var file: String?
     var errors: [ParseError]
 
     public init(withErrors errors: [ParseError]) {
@@ -57,22 +44,27 @@ public struct MissingExpected: ParseError {
     public var message: String
     public var line: Int?
     public var column: Int?
+    public var file: String?
 
-    public init(type: Token.Kind, line: Int? = nil, column: Int? = nil) {
+    public init(type: Token.Kind, line: Int? = nil, column: Int? = nil, file: String? = nil) {
         self.message = "Expected token \"\(type)\""
         self.line = line
         self.column = column
+        self.file = file
     }
 }
 
+/// Throw this error when the next token is not valid for the current language
 public struct InvalidToken: ParseError {
     public var message: String
     public var line: Int?
     public var column: Int?
+    public var file: String?
 
-    public init(_ token: Token?, line: Int? = nil, column: Int? = nil) {
+    public init(_ token: Token?, line: Int? = nil, column: Int? = nil, file: String? = nil) {
         self.message = "Invalid token \"\(token?.literal ?? "")\""
         self.line = line ?? token?.line
         self.column = column ?? token?.column
+        self.file = file
     }
 }

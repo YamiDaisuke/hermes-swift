@@ -28,7 +28,7 @@ public protocol Lexer {
     /// - Returns: A valid `Token` instance for the current language
     mutating func nextToken() -> Token
 
-    /// Reads the next line in the file and moves the
+    /// Reads the next line and moves the
     /// `currentLineNumber` and `currentColumn`
     /// pointers of the `Lexer` to the right value
     mutating func readLine()
@@ -37,11 +37,22 @@ public protocol Lexer {
 /// A Lexer that uses a file as the input for processing
 public protocol FileLexer: Lexer {
     var filePath: URL? { get }
+    var streamReader: StreamReader? { get }
+
+    /// Reads the next line in the file and moves the
+    /// `currentLineNumber` and `currentColumn`
+    /// pointers of the `Lexer` to the right value
+    mutating func readFileLine()
 }
 
 /// A Lexer that uses a `String` as input for processing
 public protocol StringLexer: Lexer {
     var input: String { get set }
+
+    /// Reads the next line in the input `String` and moves the
+    /// `currentLineNumber` and `currentColumn`
+    /// pointers of the `Lexer` to the right value
+    mutating func readStringLine()
 }
 
 public extension Lexer {
@@ -131,7 +142,7 @@ public extension Lexer {
 public extension StringLexer {
     /// Moves column, line index and line pointers to the next line in the original
     /// `self.input`
-    mutating func readLine() {
+    mutating func readStringLine() {
         self.currentLineNumber += 1
         self.currentColumn = -1
 
@@ -152,5 +163,19 @@ public extension StringLexer {
 
         self.readCharacterCount += count
         self.currentLine = String(input[start..<(start + count)])
+    }
+}
+
+public extension FileLexer {
+    mutating func readFileLine() {
+        self.currentLineNumber += 1
+        self.currentColumn = -1
+
+        guard let nextLine = self.streamReader?.nextLine() else {
+            return
+        }
+
+        self.readCharacterCount += nextLine.count
+        self.currentLine = nextLine
     }
 }

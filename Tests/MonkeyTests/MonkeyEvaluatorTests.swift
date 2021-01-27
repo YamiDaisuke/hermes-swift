@@ -210,7 +210,7 @@ class MonkeyEvaluatorTests: XCTestCase {
             ("[1, 2, 3][-1]", nil)
         ]
 
-        for test in tests.prefix(7) {
+        for test in tests {
             let evaluated = try Utils.testEval(input: test.0, environment: Environment())
             if let expected = test.1 {
                 MKAssertInteger(object: evaluated, expected: expected)

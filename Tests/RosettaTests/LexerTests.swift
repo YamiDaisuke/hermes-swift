@@ -22,6 +22,35 @@ class LexerTest: XCTestCase {
         }
 
         var input: String
+
+        mutating func readLine() {
+            readStringLine()
+        }
+    }
+
+    struct AFileLexer: Lexer, FileLexer {
+        var readingChars: (current: Character?, next: Character?)?
+
+        var currentLineNumber = 0
+        var currentColumn = 0
+        var currentLine = ""
+        var readCharacterCount = 0
+
+        var filePath: URL?
+        var streamReader: StreamReader?
+
+        init(filePath: URL) {
+            self.filePath = filePath
+            self.streamReader = StreamReader(url: filePath)
+        }
+
+        mutating func nextToken() -> Token {
+            return Token.init(type: .eof, literal: "")
+        }
+
+        mutating func readLine() {
+            readFileLine()
+        }
     }
 
     func testReadChar() throws {
@@ -77,7 +106,7 @@ class LexerTest: XCTestCase {
         XCTAssertEqual(output?.next, nil)
     }
 
-    func testReadline() throws {
+    func testReadStringline() throws {
         // Ideal case
         let input = "My Text with\nline breaks\n"
 
@@ -102,7 +131,7 @@ class LexerTest: XCTestCase {
         XCTAssertEqual(lexer.currentLineNumber, 1)
         XCTAssertEqual(lexer.readCharacterCount, 0)
 
-        // Initial empty String
+        // Initial empty line
 
         lexer = AStringLexer(input: "\nHello there")
         lexer.readLine()
@@ -115,5 +144,58 @@ class LexerTest: XCTestCase {
         XCTAssertEqual(lexer.currentColumn, -1)
         XCTAssertEqual(lexer.currentLineNumber, 2)
         XCTAssertEqual(lexer.readCharacterCount, lexer.input.count)
+    }
+
+    func testReadFileString() throws {
+        // Ideal case
+        let input = "My Text with\nline breaks\n"
+
+        var lexer = AFileLexer(filePath: writeToFile(input, file: "idealcase.mky"))
+        lexer.readLine()
+        XCTAssertEqual(lexer.currentLine, "My Text with\n")
+        XCTAssertEqual(lexer.currentColumn, -1)
+        XCTAssertEqual(lexer.currentLineNumber, 1)
+        XCTAssertEqual(lexer.readCharacterCount, "My Text with\n".count)
+        lexer.readLine()
+        XCTAssertEqual(lexer.currentLine, "line breaks\n")
+        XCTAssertEqual(lexer.currentColumn, -1)
+        XCTAssertEqual(lexer.currentLineNumber, 2)
+        XCTAssertEqual(lexer.readCharacterCount, input.count)
+
+        // Empty String
+
+        lexer = AFileLexer(filePath: writeToFile("", file: "empty.mky"))
+        lexer.readLine()
+        XCTAssertEqual(lexer.currentLine, "")
+        XCTAssertEqual(lexer.currentColumn, -1)
+        XCTAssertEqual(lexer.currentLineNumber, 1)
+        XCTAssertEqual(lexer.readCharacterCount, 0)
+
+        // Initial empty line
+
+        lexer = AFileLexer(filePath: writeToFile("\nHello there", file: "firstlineempty.mky"))
+        lexer.readLine()
+        XCTAssertEqual(lexer.currentLine, "\n")
+        XCTAssertEqual(lexer.currentColumn, -1)
+        XCTAssertEqual(lexer.currentLineNumber, 1)
+        XCTAssertEqual(lexer.readCharacterCount, 1)
+        lexer.readLine()
+        XCTAssertEqual(lexer.currentLine, "Hello there")
+        XCTAssertEqual(lexer.currentColumn, -1)
+        XCTAssertEqual(lexer.currentLineNumber, 2)
+        XCTAssertEqual(lexer.readCharacterCount, 12)
+    }
+
+    func writeToFile(_ string: String, file: String) -> URL {
+        let path = FileManager.default.temporaryDirectory
+        let filePath = path.appendingPathComponent(file)
+        print()
+        do {
+            try string.write(to: filePath, atomically: true, encoding: String.Encoding.utf8)
+        } catch {
+            // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+        }
+
+        return filePath
     }
 }

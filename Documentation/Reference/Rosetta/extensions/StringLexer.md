@@ -6,10 +6,10 @@ public extension StringLexer
 ```
 
 ## Methods
-### `readLine()`
+### `readStringLine()`
 
 ```swift
-mutating func readLine()
+mutating func readStringLine()
 ```
 
 Moves column, line index and line pointers to the next line in the original

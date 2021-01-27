@@ -13,7 +13,7 @@ extension String: Error { }
 /// Convinience so we can throw `Character` as Errors
 extension Character: Error { }
 
-public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
+public struct MonkeyLexer: Lexer {
     public static let scapeCharacters: [Character: Character] = [
         "n": "\n",
         "t": "\t",
@@ -25,6 +25,8 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
 
     public let filePath: URL?
     public var input: String
+
+    public var streamReader: StreamReader?
 
     public var currentLineNumber = 0
     public var currentColumn = 0
@@ -41,6 +43,10 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
     public init(withFilePath filePath: URL) {
         self.filePath = filePath
         self.input = ""
+        self.streamReader = StreamReader(url: filePath)
+
+        self.readLine()
+        self.readChar()
     }
 
     public init(withString input: String) {
@@ -51,10 +57,18 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
         self.readChar()
     }
 
+    public mutating func readLine() {
+        if filePath != nil {
+            self.readFileLine()
+        } else {
+            self.readStringLine()
+        }
+    }
+
     // swiftlint:disable function_body_length
     public mutating func nextToken() -> Token {
         // TODO: Reduce body size
-        guard !self.input.isEmpty else {
+        guard !self.input.isEmpty || self.streamReader != nil else {
             return Token(type: .eof, literal: "", line: self.currentLineNumber, column: self.currentColumn)
         }
 
@@ -71,6 +85,8 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
 
         let startLine = self.currentLineNumber
         let startColumn = self.currentColumn
+        let file = filePath?.absoluteString
+
         var token = Token(type: .eof, literal: "")
         switch char {
         case "=":
@@ -143,10 +159,10 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
             if char.isIdentifierLetter {
                 let literal = self.readIdentifier()
                 let type: Token.Kind = Token.Kind.keywords.contains(literal) ? literal : .identifier
-                return Token(type: type, literal: literal, line: startLine, column: startColumn)
+                return Token(type: type, literal: literal, file: file, line: startLine, column: startColumn)
             } else if char.isNumber {
                 let literal = self.readNumber()
-                return Token(type: .int, literal: literal, line: startLine, column: startColumn)
+                return Token(type: .int, literal: literal, file: file, line: startLine, column: startColumn)
             }
             token = Token(type: .ilegal, literal: String(char))
         }
@@ -154,6 +170,8 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
         self.readChar()
         token.line = startLine
         token.column = startColumn
+        token.file = file
+
         return token
     }
 
@@ -207,4 +225,10 @@ public struct MonkeyLexer: Lexer, StringLexer, FileLexer {
 
         return output
     }
+}
+
+extension MonkeyLexer: StringLexer {
+}
+
+extension MonkeyLexer: FileLexer {
 }
