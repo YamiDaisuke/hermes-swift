@@ -1,13 +1,13 @@
 name: Linux Test
 on:
   push:
-    branches: [ main ]
+    branches: [ fea/repl ]
   pull_request:
     branches: [ main ]
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: swift:latest
+    container: rosetta-swift:latest
     steps:
     - uses: actions/checkout@v2
     - name: Build

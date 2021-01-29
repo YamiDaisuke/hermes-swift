@@ -38,7 +38,24 @@ public protocol KeyReading {
 }
 
 public class KeyReader: KeyReading {
+    var fileHandle: FileHandle?
+    var currentTerminal: termios?
+
     public init() { }
+
+    /// Call this  function when you want to abort the current reading session
+    /// and restore the terminal raw mode
+    public func abort() {
+        guard let handle = fileHandle else {
+            return
+        }
+
+        guard let terminal = self.currentTerminal else {
+            return
+        }
+
+        restoreRawMode(fileHandle: handle, originalTerm: terminal)
+    }
 
     /// Subscribes to key events. It blocks the thread until an exit or enter event is delivered.
     ///
@@ -46,6 +63,10 @@ public class KeyReader: KeyReading {
     public func subscribe(subscriber: @escaping (KeyEvent) -> Void) {
         let fileHandle = FileHandle.standardInput
         let originalTerm = enableRawMode(fileHandle: fileHandle)
+
+        self.fileHandle = fileHandle
+        self.currentTerminal = originalTerm
+
         var char: UInt8 = 0
 
         defer {
@@ -110,8 +131,11 @@ public class KeyReader: KeyReading {
         tcgetattr(fileHandle.fileDescriptor, &raw)
 
         let original = raw
-
+        #if os(Linux)
+        raw.c_lflag &= ~(UInt32(ECHO | ICANON))
+        #else
         raw.c_lflag &= ~(UInt(ECHO | ICANON))
+        #endif
         tcsetattr(fileHandle.fileDescriptor, TCSAFLUSH, &raw)
 
         return original
