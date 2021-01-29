@@ -15,6 +15,8 @@ public protocol Repl {
     /// The prompt sequence to read input
     var prompt: String { get }
 
+    /// Handles user input
+//    var keyReader: KeyReader? { get set }
     /// We use `TerminalController` to manipulate the terminal input
     var controller: TerminalController? { get }
     /// Store here the previous comands so the user can navigate his history
@@ -30,8 +32,13 @@ public protocol Repl {
     func printError(_ error: Error)
 }
 
-public extension Repl {
+extension Notification.Name {
+    public static let abort = Notification.Name("repl.abort")
+}
 
+private var sigintSrc: DispatchSourceSignal?
+
+public extension Repl {
     /// Handle the user input
     ///
     /// - Currently the input can be edited by using left and right arrow keys,
@@ -44,9 +51,13 @@ public extension Repl {
         guard let controller = self.controller else {
             return ""
         }
+
         let keyReader = KeyReader()
         var buffer: [Character] = []
         var stackPointer = -1
+
+        handleSIGINT(keyReader: keyReader)
+
         while true {
             buffer = []
             controller.write("\(prompt) ", inColor: .cyan, bold: true)
@@ -98,9 +109,7 @@ public extension Repl {
             }
 
             if clear { continue }
-
             controller.endLine()
-
             return String(buffer)
         }
     }
@@ -139,6 +148,20 @@ public extension Repl {
             controller.write(
                 "\(Specials.scape)7\(Specials.deleteToRight)\(string)\(Specials.scape)8"
             )
+        }
+    }
+
+    private func handleSIGINT(keyReader: KeyReader) {
+        DispatchQueue.global().async {
+            guard sigintSrc == nil else { return }
+            signal(SIGINT, SIG_IGN) // Make sure the signal does not terminate the application.
+            sigintSrc = DispatchSource.makeSignalSource(signal: SIGINT)
+            sigintSrc?.setEventHandler {
+                print()
+                keyReader.abort()
+                exit(0)
+            }
+            sigintSrc?.resume()
         }
     }
 }

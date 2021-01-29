@@ -80,6 +80,7 @@ struct MonkeyRepl: Repl {
     ///
     /// Current commands:
     /// - **.env:** Prints the current values stored in the `Environment`
+    /// - **.exit:** Closes the current session
     /// - Parameter input: The read string
     /// - Returns: `true` if `input` matches a supported command, `false` otherwise
     func replCommand(_ input: String) -> Bool {
@@ -87,6 +88,9 @@ struct MonkeyRepl: Repl {
         case ".env":
             print(self.environment)
             return true
+        case ".exit":
+            // keyReader.abort()
+            exit(0)
         default:
             return false
         }

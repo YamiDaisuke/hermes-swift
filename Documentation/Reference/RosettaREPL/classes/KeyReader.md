@@ -13,6 +13,15 @@ public class KeyReader: KeyReading
 public init()
 ```
 
+### `abort()`
+
+```swift
+public func abort()
+```
+
+Call this  function when you want to abort the current reading session
+and restore the terminal raw mode
+
 ### `subscribe(subscriber:)`
 
 ```swift
