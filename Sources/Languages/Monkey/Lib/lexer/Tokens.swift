@@ -25,10 +25,8 @@ extension Token.Kind {
     static let notEquals = Token.Kind("!=")
     static let asterisk = Token.Kind("*")
     static let slash = Token.Kind("/")
-    // swiftlint:disable:next identifier_name
     static let lt = Token.Kind("<")
     static let lte = Token.Kind("<=")
-    // swiftlint:disable:next identifier_name
     static let gt = Token.Kind(">")
     static let gte = Token.Kind(">=")
 }
@@ -54,7 +52,6 @@ extension Token.Kind {
     static let `var` = Token.Kind("var")
     static let `true` = Token.Kind("true")
     static let `false` = Token.Kind("false")
-    // swiftlint:disable:next identifier_name
     static let `if` = Token.Kind("if")
     static let `else` = Token.Kind("else")
     static let `return` = Token.Kind("return")

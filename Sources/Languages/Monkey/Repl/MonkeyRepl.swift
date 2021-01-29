@@ -8,31 +8,10 @@
 import Foundation
 import Rosetta
 import MonkeyLang
+import RosettaREPL
+import TSCBasic
 
-// swiftlint:disable indentation_width
-/*
-func getKeyPress () -> Int {
-    var key: Int = 0
-    var char: cc_t = 0
-    let cct = (
-         char, char, char, char, char,
-         char, char, char, char, char,
-         char, char, char, char, char,
-         char, char, char, char, char
-     ) // Set of 20 Special Characters
-     var oldt = termios(c_iflag: 0, c_oflag: 0, c_cflag: 0, c_lflag: 0, c_cc: cct, c_ispeed: 0, c_ospeed: 0)
-
-     tcgetattr(STDIN_FILENO, &oldt) // 1473
-     var newt = oldt
-     newt.c_lflag = 1217  // Reset ICANON and Echo off
-     tcsetattr( STDIN_FILENO, TCSANOW, &newt)
-     key = Int(getchar())  // works like "getch()"
-     tcsetattr( STDIN_FILENO, TCSANOW, &oldt)
-     return key
- }
- */
-// swiftlint:enable indentation_width
-struct MonkeyRepl {
+struct MonkeyRepl: Repl {
     // swiftlint:disable indentation_width
     static let monkeyFace: String = #"""
                 __,__
@@ -51,26 +30,41 @@ struct MonkeyRepl {
     let welcomeMessage: String
     let prompt: String
 
+    var controller: TerminalController?
+    var stack: [String] = []
+    let environment = Environment<Object>()
+
     init(
         welcomeMessage: String = "Welcome!!!\nFeel free to type in commands\n",
         prompt: String = ">>>"
     ) {
         self.welcomeMessage = welcomeMessage
         self.prompt = prompt
+        self.controller = TerminalController(stream: stdoutStream)
     }
 
-    func run() {
+    /// REPL loop exectution 
+    mutating func run() {
         print(welcomeMessage)
-        let environment = Environment<Object>()
+        guard let controller = controller  else {
+            return
+        }
+
         while true {
-            print(prompt, terminator: " ")
-            let input = readLine() ?? ""
+            let input = self.readInput()
+
+            guard !replCommand(input) else {
+                continue
+            }
+
+            stack.append(input)
             let lexer = MonkeyLexer(withString: input)
             var parser = MonkeyParser(lexer: lexer)
             do {
                 if let program = try parser.parseProgram() {
                     let result = try MonkeyEvaluator.eval(program: program, environment: environment)
-                    print(result?.description ?? "")
+                    controller.write(result?.description ?? "", inColor: .green)
+                    controller.endLine()
                 } else {
                     throw "Program not parsed"
                 }
@@ -82,9 +76,33 @@ struct MonkeyRepl {
         }
     }
 
+    /// Activate commands specific to this REPL tool
+    ///
+    /// Current commands:
+    /// - **.env:** Prints the current values stored in the `Environment`
+    /// - Parameter input: The read string
+    /// - Returns: `true` if `input` matches a supported command, `false` otherwise
+    func replCommand(_ input: String) -> Bool {
+        switch input {
+        case ".env":
+            print(self.environment)
+            return true
+        default:
+            return false
+        }
+    }
+
+    /// Prints errors nicely
+    /// - Parameter error: Catched `Error`
     func printError(_ error: Error) {
-        print(MonkeyRepl.monkeyFace)
-        print("Woops! We ran into some monkey business here!\n")
-        print(error)
+        guard let controller = controller  else {
+            return
+        }
+
+        controller.write(MonkeyRepl.monkeyFace, inColor: .red)
+        controller.endLine()
+        controller.write("Woops! We ran into some monkey business here!\n", inColor: .red)
+        controller.write("\(error)", inColor: .red)
+        controller.endLine()
     }
 }
