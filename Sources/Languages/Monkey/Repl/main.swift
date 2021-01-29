@@ -8,9 +8,5 @@
 import Foundation
 import Rosetta
 
-// let repl = MonkeyRepl()
-// repl.run()
-let path = FileManager.default.currentDirectoryPath
-print(path)
-// let reader = StreamReader(url: URL(string: "/Users/frankcruz/test.mky")!)
-// print(reader?.nextLine() ?? "n/a")
+var repl = MonkeyRepl()
+repl.run()

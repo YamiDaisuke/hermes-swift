@@ -14,15 +14,21 @@ let package = Package(
             targets: ["MonkeyLang"]),
         .library(
             name: "Rosetta",
-            targets: ["Rosetta"])
+            targets: ["Rosetta"]),
+        .library(
+            name: "RosettaREPL",
+            targets: ["RosettaREPL"])
     ],
-    dependencies: [ ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-tools-support-core.git", from: "0.1.12")
+    ],
     targets: [
         .target(
             name: "Monkey",
             dependencies: [
                 "Rosetta",
-                "MonkeyLang"
+                "MonkeyLang",
+                "RosettaREPL"
             ],
             path: "./Sources/Languages/Monkey/Repl/"),
         .target(
@@ -35,6 +41,12 @@ let package = Package(
             name: "Rosetta",
             dependencies: [],
             path: "./Sources/Rosetta/"),
+        .target(
+            name: "RosettaREPL",
+            dependencies: [
+                .product(name: "SwiftToolsSupport", package: "swift-tools-support-core")
+            ],
+            path: "./Sources/RosettaREPL/"),
         .testTarget(
             name: "MonkeyTests",
             dependencies: ["MonkeyLang", "Rosetta"]),

@@ -3,7 +3,7 @@
 # `Environment.VariableType`
 
 ```swift
-public enum VariableType
+public enum VariableType: String, CustomStringConvertible
 ```
 
 ## Cases
@@ -17,4 +17,11 @@ case `let`
 
 ```swift
 case `var`
+```
+
+## Properties
+### `description`
+
+```swift
+public var description: String
 ```
