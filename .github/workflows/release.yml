@@ -1,0 +1,100 @@
+name: Release
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  buildLinux:
+    runs-on: ubuntu-latest
+    container: yamidaisuke/rosetta-swift:latest
+    steps:
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build
+      run: swift build -c release
+    - name: Compress output
+      run: cp ./.build/release/Monkey monkey && zip monkey-linux-${{ steps.get_version.outputs.VERSION }}.zip monkey && rm monkey
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-binary
+        path: monkey-linux-${{ steps.get_version.outputs.VERSION }}.zip
+  buildMacOS:
+    runs-on: macos-latest
+    steps:
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build
+      run: swift build -c release
+    - name: Compress output
+      run: cp ./.build/release/Monkey monkey && zip monkey-macos-${{ steps.get_version.outputs.VERSION }}.zip monkey && rm monkey
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: macos-binary
+        path: monkey-macos-${{ steps.get_version.outputs.VERSION }}.zip
+  publish:
+    runs-on: ubuntu-latest
+    needs: [buildLinux, buildMacOS]
+    steps:
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Get Changelog Entry
+      id: changelog_reader
+      uses: mindsers/changelog-reader-action@v2
+      with:
+        validation_depth: 10
+        version: ${{ steps.get_version.outputs.VERSION }}
+        path: ./CHANGELOG.md
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: ${{ steps.changelog_reader.outputs.changes }}
+        draft: true
+        prerelease: false
+    - name: Download linux artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: linux-binary
+    - name: Download macos artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: macos-binary
+    - name: Upload linux binaries
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./monkey-linux-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_name: monkey-linux-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_content_type: application/zip
+    - name: Upload macos binaries
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./monkey-macos-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_name: monkey-macos-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_content_type: application/zip
+    - name: Publish release
+      uses: StuYarrow/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        id: ${{ steps.create_release.outputs.id }}

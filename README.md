@@ -35,19 +35,21 @@ implementation but nothing else.
 After cloning this repo run `./scripts/install-hooks.sh` to configure git hooks. This will ensure documentation
 is update on each commit and will prevent broken tests and lint errors to be pushed in the repo.
 
-## TODO
+## Documentation
 
-Outside the scope of the book my current stretch goals (so far) and aditional taks are:
+Documentation can be found [here](Documentation/Reference/README.md)
 
-- [X] Create each component as a swift package not tied to the Monkey language, the idea is that you can
-implement a series of `protocols` and `classes` and provide your very own language that should work
-with this library
-- [X] Modify Lexer to include line and column information for each token
-- [ ] Modify Lexer to read from files and parse tokens line by line
-- [X] Implement CI steps
-- [X] Create an standalone build and test script to work without XCode
-- [ ] CI steps to build release artifacts
-- [X] Support Linux
+## Install Monkey CLI
+
+Download the latest release binaries or compile using `swift build -c release` and include the `monkey` binary in your path. Then execute:
+
+```bash
+## To start the interactive REPL console
+$ monkey
+
+### To evaluate a file containing Monkey code
+$ monkey filename.mky
+```
 
 ## Language Extra Features
 
@@ -73,12 +75,12 @@ Comparison of String values with any other value.
 - A string will be equal to boolean `false` if it is empty
 - A string will never be equal to any other value
 
-### Constants and variables 
+### Constants and variables
 
-Support of declaration constants using `let <identifier> = <expression>;` 
+Support of declaration constants using `let <identifier> = <expression>;`
 and variables using `var <identifier> = <expression>;`.
 
-Variables can later be assigned to new values but the value must be 
+Variables can later be assigned to new values but the value must be
 the same type for example the following lines will produce an error:
 
 ```
@@ -86,6 +88,16 @@ var a = 10;
 a = true;
 ```
 
-## Documentation
+## TODO
 
-Documentation can be found [here](Documentation/Reference/README.md)
+Outside the scope of the book my current stretch goals (so far) and aditional taks are:
+
+- [X] Create each component as a swift package not tied to the Monkey language, the idea is that you can
+implement a series of `protocols` and `classes` and provide your very own language that should work
+with this library
+- [X] Modify Lexer to include line and column information for each token
+- [X] Modify Lexer to read from files and parse tokens line by line
+- [X] Implement CI steps
+- [X] Create an standalone build and test script to work without XCode
+- [X] CI steps to build release artifacts
+- [X] Support Linux

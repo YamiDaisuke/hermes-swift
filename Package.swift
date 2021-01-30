@@ -44,7 +44,7 @@ let package = Package(
         .target(
             name: "RosettaREPL",
             dependencies: [
-                .product(name: "SwiftToolsSupport", package: "swift-tools-support-core")
+                .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core")
             ],
             path: "./Sources/RosettaREPL/"),
         .testTarget(
