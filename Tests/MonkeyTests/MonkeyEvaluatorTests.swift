@@ -9,6 +9,7 @@ import XCTest
 @testable import Rosetta
 @testable import MonkeyLang
 
+// swiftlint:disable type_body_length
 class MonkeyEvaluatorTests: XCTestCase {
     func testEvalStrings() throws {
         let input = "\"Hello World!\""

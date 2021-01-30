@@ -49,9 +49,13 @@ public extension Evaluator {
 /// this implementation is prepared to keep
 /// track of outer environments like clousures
 public class Environment<BaseType> {
-    public enum VariableType {
+    public enum VariableType: String, CustomStringConvertible {
         case `let`
         case `var`
+
+        public var description: String {
+            self.rawValue
+        }
     }
 
     typealias Container = (type: VariableType, value: BaseType)
@@ -154,5 +158,13 @@ public class Environment<BaseType> {
     /// - Returns: `true` if there is a value stored `false` otherwise
     public func contains(key: String, includeOuter: Bool = false) -> Bool {
         return store[key] != nil || (includeOuter && outer?.get(key) != nil)
+    }
+}
+
+extension Environment: CustomStringConvertible {
+    public var description: String {
+        let outer = self.outer?.description ?? "nil"
+        let current = self.store.map { "  \($0.key): \($0.value)" }.joined(separator: ",\n")
+        return "{\n\(current),\n  outer: \(outer)\n}"
     }
 }

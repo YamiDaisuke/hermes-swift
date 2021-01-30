@@ -67,15 +67,28 @@ public struct MonkeyLexer: Lexer {
 
     // swiftlint:disable function_body_length
     public mutating func nextToken() -> Token {
+        let file = filePath?.absoluteString.replacingOccurrences(of: "file://", with: "")
         // TODO: Reduce body size
         guard !self.input.isEmpty || self.streamReader != nil else {
-            return Token(type: .eof, literal: "", line: self.currentLineNumber, column: self.currentColumn)
+            return Token(
+                type: .eof,
+                literal: "",
+                file: file,
+                line: self.currentLineNumber,
+                column: self.currentColumn
+            )
         }
 
         self.skipWhitespace()
 
         guard let char = self.readingChars?.current else {
-            return Token(type: .eof, literal: "", line: self.currentLineNumber, column: self.currentColumn)
+            return Token(
+                type: .eof,
+                literal: "",
+                file: file,
+                line: self.currentLineNumber,
+                column: self.currentColumn
+            )
         }
 
         var next = ""
@@ -85,7 +98,6 @@ public struct MonkeyLexer: Lexer {
 
         let startLine = self.currentLineNumber
         let startColumn = self.currentColumn
-        let file = filePath?.absoluteString
 
         var token = Token(type: .eof, literal: "")
         switch char {

@@ -26,19 +26,8 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      codeCoverageEnabled = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Rosetta::MonkeyTests"
-               BuildableName = "MonkeyTests.xctest"
-               BlueprintName = "MonkeyTests"
-               ReferencedContainer = "container:Rosetta.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
@@ -46,6 +35,16 @@
                BlueprintIdentifier = "Rosetta::RosettaTests"
                BuildableName = "RosettaTests.xctest"
                BlueprintName = "RosettaTests"
+               ReferencedContainer = "container:Rosetta.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "Rosetta::MonkeyTests"
+               BuildableName = "MonkeyTests.xctest"
+               BlueprintName = "MonkeyTests"
                ReferencedContainer = "container:Rosetta.xcodeproj">
             </BuildableReference>
          </TestableReference>
