@@ -172,6 +172,7 @@ public extension FileLexer {
         self.currentColumn = -1
 
         guard let nextLine = self.streamReader?.nextLine() else {
+            self.currentLine = ""
             return
         }
 

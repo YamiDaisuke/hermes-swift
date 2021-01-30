@@ -51,3 +51,18 @@ Moves the cursor to the right
 | Name | Description |
 | ---- | ----------- |
 | steps | Number of positions to move. Default 1 |
+
+### `printError(_:)`
+
+```swift
+static func printError(_ error: Any)
+```
+
+Calls print function wrapped in red color modifier for terminal output
+- Parameter error: The object to print
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| error | The object to print |

@@ -32,9 +32,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Rosetta::MonkeyTests"
-               BuildableName = "MonkeyTests.xctest"
-               BlueprintName = "MonkeyTests"
+               BlueprintIdentifier = "Rosetta::RosettaTests"
+               BuildableName = "RosettaTests.xctest"
+               BlueprintName = "RosettaTests"
                ReferencedContainer = "container:Rosetta.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -42,9 +42,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Rosetta::RosettaTests"
-               BuildableName = "RosettaTests.xctest"
-               BlueprintName = "RosettaTests"
+               BlueprintIdentifier = "Rosetta::MonkeyTests"
+               BuildableName = "MonkeyTests.xctest"
+               BlueprintName = "MonkeyTests"
                ReferencedContainer = "container:Rosetta.xcodeproj">
             </BuildableReference>
          </TestableReference>

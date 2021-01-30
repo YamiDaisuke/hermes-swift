@@ -53,4 +53,10 @@ public extension TerminalController {
     func moveRight(steps: Int = 1) {
         self.write("\(Specials.scape)[\(steps)C")
     }
+
+    /// Calls print function wrapped in red color modifier for terminal output
+    /// - Parameter error: The object to print 
+    static func printError(_ error: Any) {
+        print("\u{001B}[31m\(error)\u{001B}[0m")
+    }
 }

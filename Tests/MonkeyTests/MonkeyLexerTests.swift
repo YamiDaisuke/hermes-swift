@@ -10,6 +10,7 @@ import XCTest
 @testable import MonkeyLang
 
 // swiftlint:disable function_body_length
+// swiftlint:disable type_body_length
 class MonkeyLexerTests: XCTestCase {
     func testNextToken() throws {
         // swiftlint:disable indentation_width
@@ -251,12 +252,12 @@ class MonkeyLexerTests: XCTestCase {
 
         let file = writeToFile(input, file: "testNextTokenFromFile")
         var lexer = MonkeyLexer(withFilePath: file)
-        for token in tokens.prefix(1) {
+        for token in tokens {
             let next = lexer.nextToken()
             XCTAssertEqual(next, token)
             XCTAssertEqual(next.line, token.line)
             XCTAssertEqual(next.column, token.column)
-            XCTAssertEqual(next.file, file.absoluteString)
+            XCTAssertEqual(next.file, file.absoluteString.replacingOccurrences(of: "file://", with: ""))
         }
     }
 
