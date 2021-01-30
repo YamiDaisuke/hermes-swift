@@ -14,23 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Rosetta::RosettaREPL"
-               BuildableName = "RosettaREPL.framework"
-               BlueprintName = "RosettaREPL"
-               ReferencedContainer = "container:Rosetta.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Rosetta::MonkeyLang"
-               BuildableName = "MonkeyLang.framework"
-               BlueprintName = "MonkeyLang"
+               BlueprintIdentifier = "Rosetta::Rosetta"
+               BuildableName = "Rosetta.framework"
+               BlueprintName = "Rosetta"
                ReferencedContainer = "container:Rosetta.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -56,9 +42,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Rosetta::Rosetta"
-               BuildableName = "Rosetta.framework"
-               BlueprintName = "Rosetta"
+               BlueprintIdentifier = "Rosetta::MonkeyLang"
+               BuildableName = "MonkeyLang.framework"
+               BlueprintName = "MonkeyLang"
+               ReferencedContainer = "container:Rosetta.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "Rosetta::RosettaREPL"
+               BuildableName = "RosettaREPL.framework"
+               BlueprintName = "RosettaREPL"
                ReferencedContainer = "container:Rosetta.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
