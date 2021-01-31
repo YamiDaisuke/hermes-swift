@@ -51,6 +51,8 @@ $ monkey
 $ monkey filename.mky
 ```
 
+![](./images/repl.gif)
+
 ## Language Extra Features
 
 Besides the language features include in the books, I have added the following by my own:
