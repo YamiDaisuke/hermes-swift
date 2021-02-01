@@ -57,6 +57,18 @@ Convinience cast an `MString` to one of the
 `Bolean` constants. `""` matches to `false`
 any other `MString` maps to `true`
 
+### `isEquals(other:)`
+
+```swift
+public func isEquals(other: Object) -> Bool
+```
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| other | Another Object instance |
+
 ### `!(_:)`
 
 ```swift

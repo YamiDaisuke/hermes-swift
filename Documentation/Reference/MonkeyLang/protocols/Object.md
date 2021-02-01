@@ -16,3 +16,22 @@ type in C#
 ```swift
 var type: ObjectType
 ```
+
+## Methods
+### `isEquals(other:)`
+
+```swift
+func isEquals(other: Object) -> Bool
+```
+
+Compare agaist other object
+
+To avoid problems with the use of `Self` when implementing
+`Equatable` we use this approach.
+- Parameter other: Another Object instance
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| other | Another Object instance |

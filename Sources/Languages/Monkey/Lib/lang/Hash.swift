@@ -17,6 +17,34 @@ struct Hash: Object {
         "{\(pairs.map { "\"\($0.key)\" : \"\($0.value)\"" }.joined(separator: ", "))}"
     }
 
+    /// Compare agaist other object
+    ///
+    /// To be consider equal `other` must be of type `Hash`, contains the same
+    /// keys and each value must be equal to the corresponding value in `other`
+    /// - Parameter other: The other `Object`
+    /// - Returns: `true` if `self` is equals to `other`
+    func isEquals(other: Object) -> Bool {
+        guard let other = other as? Hash else {
+            return false
+        }
+
+        guard other.pairs.count == self.pairs.count else {
+            return false
+        }
+
+        for pair in self.pairs {
+            guard let otherPair = other.pairs[pair.key] else {
+                return false
+            }
+
+            guard otherPair.isEquals(other: pair.value) else {
+                return false
+            }
+        }
+
+        return true
+    }
+
     /// Returns the value associated with a key
     /// - Parameter key: Should be one of `Integer`, `Boolean` or `MString`
     /// - Throws: `InvalidHashKey` if the key is not from a supported type

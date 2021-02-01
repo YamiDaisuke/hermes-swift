@@ -19,6 +19,14 @@ public struct MString: Object, Hashable {
         "\(value.description)"
     }
 
+    public func isEquals(other: Object) -> Bool {
+        guard let other = other as? MString else {
+            return false
+        }
+
+        return Bool(self == other)
+    }
+
     /// Concatenate two `MString` values
     /// - Parameters:
     ///   - lhs: An `MString` value

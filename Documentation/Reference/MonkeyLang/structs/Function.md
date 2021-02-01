@@ -37,3 +37,16 @@ This will be a reference to the function outer environment
 ```swift
 public var description: String
 ```
+
+## Methods
+### `isEquals(other:)`
+
+```swift
+public func isEquals(other: Object) -> Bool
+```
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| other | Another Object instance |

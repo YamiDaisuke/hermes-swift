@@ -14,4 +14,11 @@ public typealias ObjectType = String
 /// type in C#
 public protocol Object: CustomStringConvertible {
     var type: ObjectType { get }
+
+    /// Compare agaist other object
+    ///
+    /// To avoid problems with the use of `Self` when implementing
+    /// `Equatable` we use this approach.
+    /// - Parameter other: Another Object instance
+    func isEquals(other: Object) -> Bool
 }

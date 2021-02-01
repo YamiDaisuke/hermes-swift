@@ -22,4 +22,9 @@ public struct Function: Object {
     public var description: String {
         "fn(\(parameters.joined(separator: ", "))) \(body)"
     }
+
+    public func isEquals(other: Object) -> Bool {
+        guard let otherFn = other as? Function else { return false }
+        return otherFn.description == self.description
+    }
 }

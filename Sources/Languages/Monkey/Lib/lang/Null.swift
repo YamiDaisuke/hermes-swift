@@ -16,6 +16,10 @@ public struct Null: Object {
 
     public var description: String { "null" }
 
+    public func isEquals(other: Object) -> Bool {
+        return Bool(self == other)
+    }
+
     /// Compares any `Object` agaist the `Null` value
     ///
     /// - Parameters:
