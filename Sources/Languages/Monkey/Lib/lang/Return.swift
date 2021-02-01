@@ -16,4 +16,9 @@ public struct Return: Object {
     public var description: String {
         "return \(value?.description ?? "null")"
     }
+
+    public func isEquals(other: Object) -> Bool {
+        guard let otherFn = other as? Function else { return false }
+        return otherFn.description == self.description
+    }
 }

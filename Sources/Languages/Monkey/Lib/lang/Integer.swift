@@ -16,6 +16,11 @@ public struct Integer: Object, Hashable {
         value.description
     }
 
+    public func isEquals(other: Object) -> Bool {
+        guard let other = other as? Integer else { return false }
+        return Bool(other == self)
+    }
+
     /// Returns the result of multiply the value of this `Integer` by -1
     /// - Parameter rhs: The `Integer`value
     /// - Returns: Negative `rhs` if it is Positive and Positve `rhs` otherwise

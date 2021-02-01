@@ -22,6 +22,11 @@ public struct BuiltinFunction: Object {
         self.function = function
     }
 
+    /// Currently not supported
+    public func isEquals(other: Object) -> Bool {
+        return false
+    }
+
     public var description: String {
         "BuiltinFunction"
     }

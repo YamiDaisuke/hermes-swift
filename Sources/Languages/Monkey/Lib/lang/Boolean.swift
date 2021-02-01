@@ -47,6 +47,14 @@ public struct Boolean: Object, Hashable {
         value.description
     }
 
+    public func isEquals(other: Object) -> Bool {
+        guard let other = other as? Boolean else {
+            return false
+        }
+
+        return Bool(self == other)
+    }
+
     /// Compares any `Object` agaist a `Boolean` value
     ///
     /// - Parameters:
@@ -143,5 +151,11 @@ public struct Boolean: Object, Hashable {
     /// - Returns: `false` if `rhs` produces the same `Boolean` value as `lhs` otherwise `true`
     public static func != (lhs: Boolean, rhs: Object?) -> Boolean {
         return Boolean.notEquals(lhs: rhs, rhs: lhs)
+    }
+}
+
+public extension Bool {
+    init(_ boolean: Boolean) {
+        self = boolean.value
     }
 }

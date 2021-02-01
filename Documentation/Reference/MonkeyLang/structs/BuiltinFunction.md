@@ -28,3 +28,11 @@ public var description: String
 ```swift
 public init(_ function: @escaping MonkeyFunction)
 ```
+
+### `isEquals(other:)`
+
+```swift
+public func isEquals(other: Object) -> Bool
+```
+
+Currently not supported
