@@ -34,6 +34,12 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		F8FA21A225C73E91006EC560 /* OpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA21A125C73E91006EC560 /* OpCode.swift */; };
+		F8FA21CF25C74534006EC560 /* BytecodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA21CE25C74534006EC560 /* BytecodeTests.swift */; };
+		F8FA21DF25C74728006EC560 /* Bytecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA21DE25C74728006EC560 /* Bytecode.swift */; };
+		F8FA21F025C83335006EC560 /* Compiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA21EF25C83335006EC560 /* Compiler.swift */; };
+		F8FA220F25C84181006EC560 /* MonkeyCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA220E25C84181006EC560 /* MonkeyCompiler.swift */; };
+		F8FA223225C851CB006EC560 /* MonkeyCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA223125C851CB006EC560 /* MonkeyCompilerTests.swift */; };
 		OBJ_217 /* MonkeyRepl.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* MonkeyRepl.swift */; };
 		OBJ_218 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* main.swift */; };
 		OBJ_220 /* RosettaREPL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rosetta::RosettaREPL::Product" /* RosettaREPL.framework */; };
@@ -391,6 +397,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F8FA21A125C73E91006EC560 /* OpCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpCode.swift; sourceTree = "<group>"; };
+		F8FA21CE25C74534006EC560 /* BytecodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BytecodeTests.swift; sourceTree = "<group>"; };
+		F8FA21DE25C74728006EC560 /* Bytecode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bytecode.swift; sourceTree = "<group>"; };
+		F8FA21EF25C83335006EC560 /* Compiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compiler.swift; sourceTree = "<group>"; };
+		F8FA220E25C84181006EC560 /* MonkeyCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCompiler.swift; sourceTree = "<group>"; };
+		F8FA223125C851CB006EC560 /* MonkeyCompilerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCompilerTests.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_100 /* CacheableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableSequence.swift; sourceTree = "<group>"; };
 		OBJ_101 /* CodableResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableResult.swift; sourceTree = "<group>"; };
@@ -666,9 +678,81 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F8FA21A025C73E4F006EC560 /* bytecode */ = {
+			isa = PBXGroup;
+			children = (
+				F8FA21A125C73E91006EC560 /* OpCode.swift */,
+				F8FA21DE25C74728006EC560 /* Bytecode.swift */,
+			);
+			path = bytecode;
+			sourceTree = "<group>";
+		};
+		F8FA21BF25C74073006EC560 /* bytecode */ = {
+			isa = PBXGroup;
+			children = (
+				F8FA21CE25C74534006EC560 /* BytecodeTests.swift */,
+			);
+			path = bytecode;
+			sourceTree = "<group>";
+		};
+		F8FA21EE25C83323006EC560 /* compiler */ = {
+			isa = PBXGroup;
+			children = (
+				F8FA21EF25C83335006EC560 /* Compiler.swift */,
+			);
+			path = compiler;
+			sourceTree = "<group>";
+		};
+		F8FA220D25C84150006EC560 /* compiler */ = {
+			isa = PBXGroup;
+			children = (
+				F8FA220E25C84181006EC560 /* MonkeyCompiler.swift */,
+			);
+			path = compiler;
+			sourceTree = "<group>";
+		};
+		F8FA222C25C85057006EC560 /* compiler */ = {
+			isa = PBXGroup;
+			children = (
+				F8FA223125C851CB006EC560 /* MonkeyCompilerTests.swift */,
+			);
+			path = compiler;
+			sourceTree = "<group>";
+		};
+		F8FA222D25C85061006EC560 /* lexer */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_77 /* LexerTypesTests.swift */,
+				OBJ_79 /* MonkeyLexerTests.swift */,
+			);
+			path = lexer;
+			sourceTree = "<group>";
+		};
+		F8FA222E25C85067006EC560 /* parser */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_81 /* MonkeyParserStatementsTests.swift */,
+				OBJ_80 /* MonkeyParserExpressionTests.swift */,
+				OBJ_82 /* ParseHashLiteralsTests.swift */,
+				OBJ_83 /* ParseLiteralsTests.swift */,
+			);
+			path = parser;
+			sourceTree = "<group>";
+		};
+		F8FA223025C8507F006EC560 /* evaluator */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_78 /* MonkeyEvaluatorTests.swift */,
+				OBJ_75 /* BuiltinFunctionsTests.swift */,
+				OBJ_76 /* EvaluateOperationsTests.swift */,
+			);
+			path = evaluator;
+			sourceTree = "<group>";
+		};
 		OBJ_11 /* MonkeyLang */ = {
 			isa = PBXGroup;
 			children = (
+				F8FA220D25C84150006EC560 /* compiler */,
 				OBJ_12 /* evaluator */,
 				OBJ_15 /* lang */,
 				OBJ_27 /* lexer */,
@@ -862,7 +946,7 @@
 			path = ast;
 			sourceTree = "<group>";
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -879,12 +963,13 @@
 				OBJ_210 /* README.md */,
 				OBJ_211 /* ACKNOWLEDGMENTS.md */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_53 /* Rosetta */ = {
 			isa = PBXGroup;
 			children = (
+				F8FA21EE25C83323006EC560 /* compiler */,
+				F8FA21A025C73E4F006EC560 /* bytecode */,
 				OBJ_54 /* Error.swift */,
 				OBJ_55 /* evaluator */,
 				OBJ_58 /* lexer */,
@@ -967,15 +1052,10 @@
 		OBJ_74 /* MonkeyTests */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_75 /* BuiltinFunctionsTests.swift */,
-				OBJ_76 /* EvaluateOperationsTests.swift */,
-				OBJ_77 /* LexerTypesTests.swift */,
-				OBJ_78 /* MonkeyEvaluatorTests.swift */,
-				OBJ_79 /* MonkeyLexerTests.swift */,
-				OBJ_80 /* MonkeyParserExpressionTests.swift */,
-				OBJ_81 /* MonkeyParserStatementsTests.swift */,
-				OBJ_82 /* ParseHashLiteralsTests.swift */,
-				OBJ_83 /* ParseLiteralsTests.swift */,
+				F8FA223025C8507F006EC560 /* evaluator */,
+				F8FA222E25C85067006EC560 /* parser */,
+				F8FA222D25C85061006EC560 /* lexer */,
+				F8FA222C25C85057006EC560 /* compiler */,
 				OBJ_84 /* XCTestManifests.swift */,
 				OBJ_85 /* utils */,
 			);
@@ -1005,6 +1085,7 @@
 		OBJ_88 /* RosettaTests */ = {
 			isa = PBXGroup;
 			children = (
+				F8FA21BF25C74073006EC560 /* bytecode */,
 				OBJ_89 /* LexerTests.swift */,
 				OBJ_90 /* ReadFileTests.swift */,
 				OBJ_91 /* StringExtensionsTests.swift */,
@@ -1316,7 +1397,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_193 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1374,6 +1455,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				F8FA220F25C84181006EC560 /* MonkeyCompiler.swift in Sources */,
 				OBJ_245 /* MonkeyEvaluator.swift in Sources */,
 				OBJ_246 /* MonkeyEvaluatorErrors.swift in Sources */,
 				OBJ_247 /* Boolean.swift in Sources */,
@@ -1426,6 +1508,7 @@
 				OBJ_295 /* MonkeyParserStatementsTests.swift in Sources */,
 				OBJ_296 /* ParseHashLiteralsTests.swift in Sources */,
 				OBJ_297 /* ParseLiteralsTests.swift in Sources */,
+				F8FA223225C851CB006EC560 /* MonkeyCompilerTests.swift in Sources */,
 				OBJ_298 /* XCTestManifests.swift in Sources */,
 				OBJ_299 /* CustomAsserts.swift in Sources */,
 				OBJ_300 /* Utils.swift in Sources */,
@@ -1437,10 +1520,13 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_310 /* Error.swift in Sources */,
+				F8FA21A225C73E91006EC560 /* OpCode.swift in Sources */,
+				F8FA21F025C83335006EC560 /* Compiler.swift in Sources */,
 				OBJ_311 /* Evaluator.swift in Sources */,
 				OBJ_312 /* EvaluatorErrors.swift in Sources */,
 				OBJ_313 /* Lexer.swift in Sources */,
 				OBJ_314 /* StringExtensions.swift in Sources */,
+				F8FA21DF25C74728006EC560 /* Bytecode.swift in Sources */,
 				OBJ_315 /* Token.swift in Sources */,
 				OBJ_316 /* Node.swift in Sources */,
 				OBJ_317 /* ParseError.swift in Sources */,
@@ -1475,6 +1561,7 @@
 				OBJ_355 /* LexerTests.swift in Sources */,
 				OBJ_356 /* ReadFileTests.swift in Sources */,
 				OBJ_357 /* StringExtensionsTests.swift in Sources */,
+				F8FA21CF25C74534006EC560 /* BytecodeTests.swift in Sources */,
 				OBJ_358 /* XCTestManifests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
