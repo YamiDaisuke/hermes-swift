@@ -30,6 +30,12 @@ public var description: String
 ```
 
 ## Methods
+### `init(_:)`
+
+```swift
+public init(_ value: String)
+```
+
 ### `isEquals(other:)`
 
 ```swift

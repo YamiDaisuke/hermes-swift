@@ -34,6 +34,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		F802AC3225CC914A00CC46DD /* MonkeyOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F802AC3125CC914A00CC46DD /* MonkeyOperations.swift */; };
 		OBJ_217 /* MonkeyRepl.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* MonkeyRepl.swift */; };
 		OBJ_218 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* main.swift */; };
 		OBJ_220 /* RosettaREPL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rosetta::RosettaREPL::Product" /* RosettaREPL.framework */; };
@@ -391,6 +392,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F802AC3125CC914A00CC46DD /* MonkeyOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyOperations.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_100 /* CacheableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableSequence.swift; sourceTree = "<group>"; };
 		OBJ_101 /* CodableResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableResult.swift; sourceTree = "<group>"; };
@@ -683,6 +685,7 @@
 			children = (
 				OBJ_13 /* MonkeyEvaluator.swift */,
 				OBJ_14 /* MonkeyEvaluatorErrors.swift */,
+				F802AC3125CC914A00CC46DD /* MonkeyOperations.swift */,
 			);
 			path = evaluator;
 			sourceTree = "<group>";
@@ -862,7 +865,7 @@
 			path = ast;
 			sourceTree = "<group>";
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -879,7 +882,6 @@
 				OBJ_210 /* README.md */,
 				OBJ_211 /* ACKNOWLEDGMENTS.md */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_53 /* Rosetta */ = {
@@ -1316,7 +1318,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_193 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1385,6 +1387,7 @@
 				OBJ_253 /* Null.swift in Sources */,
 				OBJ_254 /* Object.swift in Sources */,
 				OBJ_255 /* Return.swift in Sources */,
+				F802AC3225CC914A00CC46DD /* MonkeyOperations.swift in Sources */,
 				OBJ_256 /* String.swift in Sources */,
 				OBJ_257 /* Types.swift in Sources */,
 				OBJ_258 /* MonkeyLexer.swift in Sources */,

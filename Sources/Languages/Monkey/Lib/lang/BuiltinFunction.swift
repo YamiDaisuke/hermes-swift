@@ -42,11 +42,11 @@ extension BuiltinFunction {
         }
 
         if let string = args.first as? MString {
-            return Integer(value: string.value.count)
+            return Integer(string.value.count)
         }
 
         if let array = args.first as? MArray {
-            return Integer(value: array.elements.count)
+            return Integer(array.elements.count)
         }
 
         throw InvalidArgumentType("String or Array", got: args.first?.type ?? "null")
@@ -63,7 +63,7 @@ extension BuiltinFunction {
             throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
         }
 
-        return array[Integer(value: 0)]
+        return array[Integer(0)]
     }
 
     /// `last` function expects a single `MArray` parameter and will return
@@ -78,7 +78,7 @@ extension BuiltinFunction {
             throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
         }
 
-        return array[Integer(value: array.elements.count - 1)]
+        return array[Integer(array.elements.count - 1)]
     }
 
     /// `rest` function expects a single `MArray` parameter and will return

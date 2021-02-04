@@ -19,11 +19,11 @@ public struct MonkeyEvaluator: Evaluator {
                 return try eval(node: expression.expression, environment: environment)
             case let prefix as PrefixExpression:
                 let rhs = try eval(node: prefix.rhs, environment: environment)
-                return try evalPrefix(operator: prefix.operatorSymbol, rhs: rhs)
+                return try MonkeyOperations.evalPrefix(operator: prefix.operatorSymbol, rhs: rhs)
             case let infix as InfixExpression:
                 let lhs = try eval(node: infix.lhs, environment: environment)
                 let rhs = try eval(node: infix.rhs, environment: environment)
-                return try evalInfix(lhs: lhs, operatorSymbol: infix.operatorSymbol, rhs: rhs)
+                return try MonkeyOperations.evalInfix(lhs: lhs, operatorSymbol: infix.operatorSymbol, rhs: rhs)
             case let ifExpression as IfExpression:
                 return try evalIfExpression(ifExpression, environment: environment)
             case let block as BlockStatement:
@@ -31,11 +31,11 @@ public struct MonkeyEvaluator: Evaluator {
             case let returnStmt as ReturnStatement:
                 return try evalReturnStatement(returnStmt, environment: environment)
             case let statement as IntegerLiteral:
-                return Integer(value: statement.value)
+                return Integer(statement.value)
             case let statement as BooleanLiteral:
                 return statement.value ? Boolean.true : Boolean.false
             case let statement as StringLiteral:
-                return MString(value: statement.value)
+                return MString(statement.value)
             case let declareStmt as DeclareStatement:
                 let value = try eval(node: declareStmt.value, environment: environment)
                 let type: Environment<Object>.VariableType = declareStmt.token.type == .let ? .let : .var
@@ -55,18 +55,7 @@ public struct MonkeyEvaluator: Evaluator {
                 let params = function.params.map({ $0.value })
                 return Function(parameters: params, body: function.body, environment: environment)
             case let call as CallExpression:
-                let function = try eval(node: call.function, environment: environment)
-                let args = try evalExpressions(call.args, environment: environment)
-
-                if let function = function as? Function {
-                    return try applyFunction(function, args: args)
-                }
-
-                if let function = function as? BuiltinFunction {
-                    return try applyBuiltinFunction(function, args: args)
-                }
-
-                throw InvalidCallExpression(function?.type ?? "Unknown")
+                return try evalCallExpression(call, environment: environment)
             case let array as ArrayLiteral:
                 let elements = try evalExpressions(array.elements, environment: environment)
                 return MArray(elements: elements)
@@ -159,6 +148,10 @@ public struct MonkeyEvaluator: Evaluator {
     }
 
     /// Evals an `Indentifer` node and returns the stored value from the current `Enviroment`
+    /// or a `BuiltinFunction` if one exits with the `identifier`
+    ///
+    /// **Important:** `Environment` have precendence over `BuiltinFunction` in this way we can
+    /// override the behaviour or `BuiltinFunction`
     ///
     /// - Parameters:
     ///   - identifier: The requested value `Identifier`
@@ -175,6 +168,21 @@ public struct MonkeyEvaluator: Evaluator {
         }
 
         throw ReferenceError(identifier.value, line: identifier.token.line, column: identifier.token.column)
+    }
+
+    static func evalCallExpression(_ expression: CallExpression, environment: Environment<Object>) throws -> Object? {
+        let function = try eval(node: expression.function, environment: environment)
+        let args = try evalExpressions(expression.args, environment: environment)
+
+        if let function = function as? Function {
+            return try applyFunction(function, args: args)
+        }
+
+        if let function = function as? BuiltinFunction {
+            return try applyBuiltinFunction(function, args: args)
+        }
+
+        throw InvalidCallExpression(function?.type ?? "Unknown")
     }
 
     /// Applies a `Function` that's being called
@@ -276,202 +284,5 @@ public struct MonkeyEvaluator: Evaluator {
         }
 
         return Null.null
-    }
-
-    // MARK: - Prefix Operators
-
-    /// Applies a prefix operator agaist any `Object` value.
-    ///
-    /// Currenty supported operators are:
-    /// - `!<rhs>` where `rhs` can be of type `Boolean` or  `Integer`
-    /// - `-<rhs>` where `rhs` can be of type `Integer`
-    /// - Parameters:
-    ///   - operatorSymbol: A `String` representing the operator. E.G.: !, -
-    ///   - rhs: The `Object` to apply  the operator
-    /// - Throws: `UnknownOperator` if  `operatorSymbol` is not supported.
-    ///           `EvaluatorError` if any expression or statement fails to be evaluated
-    /// - Returns: The resulting value after applying the operator or `Null` if the operator
-    ///            does not support the type of `rhs`
-    static func evalPrefix(operator operatorSymbol: String, rhs: Object?) throws -> Object? {
-        switch operatorSymbol {
-        case "!":
-            return evalBangOperator(rhs: rhs)
-        case "-":
-            return try evalMinusPrefix(rhs: rhs)
-        default:
-            throw UnknownOperator(operatorSymbol)
-        }
-    }
-
-    /// Evals minus (-) prefix operator
-    /// - Parameter rhs: An `Object` value
-    /// - Throws: `InvalidPrefixExpression` if the operand expression is not an `Integer`
-    /// - Returns: The resul of multiplying a `Integer` value by -1.
-    ///            If the `Object` can't be cast to `Integer` returns `Null`
-    static func evalMinusPrefix(rhs: Object?) throws-> Object? {
-        guard let int = rhs as? Integer else {
-            throw InvalidPrefixExpression("-", rhs: rhs)
-        }
-
-        return -int
-    }
-
-    /// Evals bang (!) prefix operator
-    /// - Parameter rhs: An `Object` value
-    /// - Returns: The negation of the `Boolean` representation of `rhs`.
-    ///            If `rhs` is an `Integer` any value other than `0` will produce `true`
-    ///            when represented as `Boolean`.
-    ///            If `rhs` is `Null` the `Boolean` representation is `false`
-    static func evalBangOperator(rhs: Object?) -> Object? {
-        return rhs != Boolean.true
-    }
-
-    // MARK: Infix Operators
-
-    /// Evals operations in the form `<expression> <operator> <expression>`
-    ///
-    /// Supported operators:
-    /// - `<Integer> + <Integer>`
-    /// - `<String> + <String>`
-    /// - `<String> + <Object>`
-    /// - `<Object> + <String>`
-    /// - `<Integer> - <Integer>`
-    /// - `<Integer> * <Integer>`
-    /// - `<Integer> / <Integer>`
-    /// - `<Integer> > <Integer>`
-    /// - `<Integer> < <Integer>`
-    /// - `<Object> == <Object>`
-    /// - `<Object> != <Object>`
-    /// Equality and Inequality agaist `Boolean` values will use the other value thruty or falsy
-    /// representation.
-    /// - Parameters:
-    ///   - lhs: The left side operand expression
-    ///   - operatorSymbol: The operator symbol. E.G.: +,-,*
-    ///   - rhs: The right side operand expression
-    /// - Throws: `UnknownOperator` if  `operatorSymbol` is not supported.
-    ///           `EvaluatorError` if any expression or statement fails to be evaluated
-    /// - Returns: The result of the operation
-    static func evalInfix(lhs: Object?, operatorSymbol: String, rhs: Object?) throws -> Object? {
-        switch operatorSymbol {
-        case "+":
-            return try applyAddition(lhs: lhs, rhs: rhs)
-        case "-":
-            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: -)
-        case "*":
-            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: *)
-        case "/":
-            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: /)
-        case ">":
-            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: >)
-        case "<":
-            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: <)
-        case ">=":
-            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: >=)
-        case "<=":
-            return try applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: <=)
-        case "==":
-            return applyEqualInfix(lhs: lhs, rhs: rhs)
-        case "!=":
-            return applyInequalityInfix(lhs: lhs, rhs: rhs)
-        default:
-            throw UnknownOperator(operatorSymbol)
-        }
-    }
-
-    static func applyAddition(lhs: Object?, rhs: Object?) throws -> Object? {
-        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
-            return lhs + rhs
-        }
-
-        if let string = lhs as? MString {
-            return string + rhs
-        }
-
-        if let string = rhs as? MString {
-            return lhs + string
-        }
-
-        throw InvalidInfixExpression("+", lhs: lhs, rhs: rhs)
-    }
-
-    /// Applies the corresponding infix operation to two `Integer` operands
-    /// - Parameters:
-    ///   - lhs: Any `Object` value
-    ///   - rhs: Any `Object` value
-    ///   - operation: A function to apply the operation
-    /// - Throws: `InvalidInfixExpression` if the operand expressions are not `Integer`
-    /// - Returns: The result of applying the `operation` if both `lhs` and `rhs` are
-    ///            `Integer`. If not returns `Null`
-    static func applyIntegerInfix(
-        lhs: Object?,
-        rhs: Object?,
-        symbol: String,
-        operation: (Integer, Integer) -> Object
-    ) throws -> Object? {
-        guard let intLhs = lhs as? Integer, let intRhs = rhs as? Integer else {
-            throw InvalidInfixExpression(symbol, lhs: lhs, rhs: rhs)
-        }
-
-        return operation(intLhs, intRhs)
-    }
-
-    /// Test two objects for equality
-    /// - Parameters:
-    ///   - lhs: Any `Object` value
-    ///   - rhs: Any `Object` value
-    /// - Returns: `true` if both objects are the same, `Integer` and `Boolean` are
-    ///            compared by value. Otherwise `false`
-    static func applyEqualInfix(lhs: Object?, rhs: Object?) -> Boolean? {
-        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
-            return lhs == rhs
-        }
-
-        if let lhs = lhs as? MString, let rhs = rhs as? MString {
-            return lhs == rhs
-        }
-
-        if let rhs = rhs as? Boolean {
-            return lhs == rhs
-        }
-
-        if let lhs = lhs as? Boolean {
-            return lhs == rhs
-        }
-
-        return .false
-    }
-
-    /// Test two objects for inequality
-    /// - Parameters:
-    ///   - lhs: Any `Object` value
-    ///   - rhs: Any `Object` value
-    /// - Returns: `false` if both objects are the same, `Integer` and `Boolean` are
-    ///            compared by value. Otherwise `true`
-    static func applyInequalityInfix(lhs: Object?, rhs: Object?) -> Boolean? {
-        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
-            return lhs != rhs
-        }
-
-        if let lhs = lhs as? MString, let rhs = rhs as? MString {
-            return lhs != rhs
-        }
-
-        if let rhs = rhs as? MString {
-            return lhs != rhs
-        }
-
-        if let lhs = lhs as? MString {
-            return lhs != rhs
-        }
-
-        if let rhs = rhs as? Boolean {
-            return lhs != rhs
-        }
-
-        if let lhs = lhs as? Boolean {
-            return lhs != rhs
-        }
-
-        return .false
     }
 }
