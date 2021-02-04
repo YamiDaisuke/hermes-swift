@@ -14,6 +14,8 @@ public struct Null: Object {
     public static let null = Null()
     public var type: ObjectType { "null" }
 
+    private init() { }
+
     public var description: String { "null" }
 
     public func isEquals(other: Object) -> Bool {

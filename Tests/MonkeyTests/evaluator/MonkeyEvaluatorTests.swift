@@ -270,10 +270,10 @@ class MonkeyEvaluatorTests: XCTestCase {
         for expect in expected {
             switch expect.2 {
             case "string":
-                let value = hash?.pairs[MString(value: expect.0 as? String ?? "")]
+                let value = hash?.pairs[MString(expect.0 as? String ?? "")]
                 MKAssertInteger(object: value, expected: expect.1)
             case "integer":
-                let value = hash?.pairs[Integer(value: expect.0 as? Int ?? -1)]
+                let value = hash?.pairs[Integer(expect.0 as? Int ?? -1)]
                 MKAssertInteger(object: value, expected: expect.1)
             case "boolean":
                 let value = hash?.pairs[Boolean(expect.0 as? Bool ?? false)]

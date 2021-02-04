@@ -34,14 +34,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		F8FA21A225C73E91006EC560 /* OpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA21A125C73E91006EC560 /* OpCode.swift */; };
-		F8FA21CF25C74534006EC560 /* BytecodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA21CE25C74534006EC560 /* BytecodeTests.swift */; };
-		F8FA21DF25C74728006EC560 /* Bytecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA21DE25C74728006EC560 /* Bytecode.swift */; };
-		F8FA21F025C83335006EC560 /* Compiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA21EF25C83335006EC560 /* Compiler.swift */; };
-		F8FA220F25C84181006EC560 /* MonkeyCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA220E25C84181006EC560 /* MonkeyCompiler.swift */; };
-		F8FA223225C851CB006EC560 /* MonkeyCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA223125C851CB006EC560 /* MonkeyCompilerTests.swift */; };
-		F8FA228825CB4CB0006EC560 /* VMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA228725CB4CAF006EC560 /* VMTests.swift */; };
-		F8FA229925CB4EB3006EC560 /* VM.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA229825CB4EB3006EC560 /* VM.swift */; };
+		F802AC3225CC914A00CC46DD /* MonkeyOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F802AC3125CC914A00CC46DD /* MonkeyOperations.swift */; };
 		OBJ_217 /* MonkeyRepl.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* MonkeyRepl.swift */; };
 		OBJ_218 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* main.swift */; };
 		OBJ_220 /* RosettaREPL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rosetta::RosettaREPL::Product" /* RosettaREPL.framework */; };
@@ -399,14 +392,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F8FA21A125C73E91006EC560 /* OpCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpCode.swift; sourceTree = "<group>"; };
-		F8FA21CE25C74534006EC560 /* BytecodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BytecodeTests.swift; sourceTree = "<group>"; };
-		F8FA21DE25C74728006EC560 /* Bytecode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bytecode.swift; sourceTree = "<group>"; };
-		F8FA21EF25C83335006EC560 /* Compiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compiler.swift; sourceTree = "<group>"; };
-		F8FA220E25C84181006EC560 /* MonkeyCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCompiler.swift; sourceTree = "<group>"; };
-		F8FA223125C851CB006EC560 /* MonkeyCompilerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCompilerTests.swift; sourceTree = "<group>"; };
-		F8FA228725CB4CAF006EC560 /* VMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMTests.swift; sourceTree = "<group>"; };
-		F8FA229825CB4EB3006EC560 /* VM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VM.swift; sourceTree = "<group>"; };
+		F802AC3125CC914A00CC46DD /* MonkeyOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyOperations.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_100 /* CacheableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableSequence.swift; sourceTree = "<group>"; };
 		OBJ_101 /* CodableResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableResult.swift; sourceTree = "<group>"; };
@@ -780,6 +766,7 @@
 			children = (
 				OBJ_13 /* MonkeyEvaluator.swift */,
 				OBJ_14 /* MonkeyEvaluatorErrors.swift */,
+				F802AC3125CC914A00CC46DD /* MonkeyOperations.swift */,
 			);
 			path = evaluator;
 			sourceTree = "<group>";
@@ -1481,6 +1468,7 @@
 				OBJ_253 /* Null.swift in Sources */,
 				OBJ_254 /* Object.swift in Sources */,
 				OBJ_255 /* Return.swift in Sources */,
+				F802AC3225CC914A00CC46DD /* MonkeyOperations.swift in Sources */,
 				OBJ_256 /* String.swift in Sources */,
 				OBJ_257 /* Types.swift in Sources */,
 				OBJ_258 /* MonkeyLexer.swift in Sources */,

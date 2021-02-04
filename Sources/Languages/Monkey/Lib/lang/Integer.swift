@@ -12,6 +12,10 @@ public struct Integer: Object, Hashable {
     public var type: ObjectType { "Integer" }
     public var value: Int
 
+    public init(_ value: Int) {
+        self.value = value
+    }
+
     public var description: String {
         value.description
     }
@@ -25,7 +29,7 @@ public struct Integer: Object, Hashable {
     /// - Parameter rhs: The `Integer`value
     /// - Returns: Negative `rhs` if it is Positive and Positve `rhs` otherwise
     public static prefix func - (rhs: Integer) -> Integer {
-        return Integer(value: -rhs.value)
+        return Integer(-rhs.value)
     }
 
     /// Adds two `Integer` values
@@ -34,7 +38,7 @@ public struct Integer: Object, Hashable {
     ///   - rhs: An `Integer` value
     /// - Returns: A new `Integer` containing the sum of `lhs` and `rhs`
     public static func + (lhs: Integer, rhs: Integer) -> Integer {
-        return Integer(value: lhs.value + rhs.value)
+        return Integer(lhs.value + rhs.value)
     }
 
     /// Substract two `Integer` values
@@ -43,7 +47,7 @@ public struct Integer: Object, Hashable {
     ///   - rhs: An `Integer` value
     /// - Returns: A new `Integer` containing the substraction of `rhs` from `lhs`
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
-        return Integer(value: lhs.value - rhs.value)
+        return Integer(lhs.value - rhs.value)
     }
 
     /// Multiply two `Integer` values
@@ -52,7 +56,7 @@ public struct Integer: Object, Hashable {
     ///   - rhs: An `Integer` value
     /// - Returns: A new `Integer` containing the product of `lhs` times `rhs`
     public static func * (lhs: Integer, rhs: Integer) -> Integer {
-        return Integer(value: lhs.value * rhs.value)
+        return Integer(lhs.value * rhs.value)
     }
 
     /// Adds two `Integer` values
@@ -61,7 +65,7 @@ public struct Integer: Object, Hashable {
     ///   - rhs: An `Integer` value
     /// - Returns: A new `Integer` containing the division of `lhs` divided by `rhs`
     public static func / (lhs: Integer, rhs: Integer) -> Integer {
-        return Integer(value: lhs.value / rhs.value)
+        return Integer(lhs.value / rhs.value)
     }
 
     /// Compares two `Integer` values

@@ -15,6 +15,10 @@ public struct MString: Object, Hashable {
     public var type: ObjectType { "String" }
     public var value: String
 
+    public init(_ value: String) {
+        self.value = value
+    }
+
     public var description: String {
         "\(value.description)"
     }
@@ -33,7 +37,7 @@ public struct MString: Object, Hashable {
     ///   - rhs: An `MString` value
     /// - Returns: A new `MString` containing the concatenation of `lhs` and `rhs`
     public static func + (lhs: MString, rhs: MString) -> MString {
-        return MString(value: lhs.value + rhs.value)
+        return MString(lhs.value + rhs.value)
     }
 
     /// Concatenate two `MString` values
@@ -42,7 +46,7 @@ public struct MString: Object, Hashable {
     ///   - rhs: An `MString` value
     /// - Returns: A new `MString` containing the concatenation of `lhs` and `rhs`
     public static func + (lhs: MString, rhs: Object?) -> MString {
-        return MString(value: lhs.value + (rhs?.description ?? "null"))
+        return MString(lhs.value + (rhs?.description ?? "null"))
     }
 
     /// Concatenate two `MString` values
@@ -51,7 +55,7 @@ public struct MString: Object, Hashable {
     ///   - rhs: An `MString` value
     /// - Returns: A new `MString` containing the concatenation of `lhs` and `rhs`
     public static func + (lhs: Object?, rhs: MString) -> MString {
-        return MString(value: (lhs?.description ?? "null") + rhs.value)
+        return MString((lhs?.description ?? "null") + rhs.value)
     }
 
     /// Compares two `MString` values
