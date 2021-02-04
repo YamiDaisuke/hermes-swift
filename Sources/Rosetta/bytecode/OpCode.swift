@@ -9,8 +9,9 @@ import Foundation
 
 /// A byte mapping to one of the operations supported by the VM
 public typealias OpCode = UInt8
+public typealias Byte = UInt8
 /// A list of bytes representing one or several or part of a VM instruction
-public typealias Instructions = Array<UInt8>
+public typealias Instructions = [Byte]
 
 public extension Instructions {
     /// Returns a human readable representations of this set of instructions
@@ -20,10 +21,12 @@ public extension Instructions {
         while index < self.count {
             guard let opCode = OpCodes(rawValue: self[index]) else {
                 output += "Error: No opcode for: \(self[index])\n"
+                index += 1
                 continue
             }
             guard let def = OperationDefinition[opCode] else {
                 output += "Error: No defintion for: \(self[index])\n"
+                index += 1
                 continue
             }
 
@@ -40,12 +43,21 @@ public extension Instructions {
         return output
     }
 
-    /// Converts this slice of instruction bytes to the swift `Int32` representation
-    /// the instructions however can be of 1, 2, 3 or 4 bytes of length encoded in
-    /// big endian format
-    var intValue: Int32 {
+    /// Converts a number of bytes to `Int32` representation, the taken bytes must be
+    /// between 1 and 4, and reprent an int in big endian encoding
+    /// - Parameter bytes: The number of bytes, Must be between 1 and 4
+    /// - Returns: The `Int32` value
+    func readInt(bytes: Int, startIndex: Int = 0) -> Int32? {
+        guard bytes >= 1 && bytes <= 4 else {
+            return nil
+        }
+
+        guard startIndex <= self.count - bytes  else {
+            return nil
+        }
+
         var value: Int32 = 0
-        for byte in self {
+        for byte in self[startIndex..<(startIndex + bytes)] {
             value = value << 8
             value = value | Int32(byte)
         }

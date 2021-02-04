@@ -43,8 +43,10 @@ public enum Bytecode {
         operands.reserveCapacity(defintion.operandsWidth.count)
         var offset = 0
         for width in defintion.operandsWidth {
-            let instruction = Array(instructions[offset..<(offset + width)])
-            operands.append(instruction.intValue)
+            guard let int = instructions.readInt(bytes: width, startIndex: offset) else {
+                continue
+            }
+            operands.append(int)
             offset += width
         }
         return (operands, offset)

@@ -71,7 +71,7 @@ class BytecodeTests: XCTestCase {
         ]
 
         for test in tests {
-            let value = test.0.intValue
+            let value = test.0.readInt(bytes: test.0.count)
             XCTAssertEqual(value, test.1)
         }
     }

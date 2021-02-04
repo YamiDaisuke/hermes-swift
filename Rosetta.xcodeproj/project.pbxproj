@@ -40,6 +40,8 @@
 		F8FA21F025C83335006EC560 /* Compiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA21EF25C83335006EC560 /* Compiler.swift */; };
 		F8FA220F25C84181006EC560 /* MonkeyCompiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA220E25C84181006EC560 /* MonkeyCompiler.swift */; };
 		F8FA223225C851CB006EC560 /* MonkeyCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA223125C851CB006EC560 /* MonkeyCompilerTests.swift */; };
+		F8FA228825CB4CB0006EC560 /* VMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA228725CB4CAF006EC560 /* VMTests.swift */; };
+		F8FA229925CB4EB3006EC560 /* VM.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FA229825CB4EB3006EC560 /* VM.swift */; };
 		OBJ_217 /* MonkeyRepl.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* MonkeyRepl.swift */; };
 		OBJ_218 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* main.swift */; };
 		OBJ_220 /* RosettaREPL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rosetta::RosettaREPL::Product" /* RosettaREPL.framework */; };
@@ -403,6 +405,8 @@
 		F8FA21EF25C83335006EC560 /* Compiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compiler.swift; sourceTree = "<group>"; };
 		F8FA220E25C84181006EC560 /* MonkeyCompiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCompiler.swift; sourceTree = "<group>"; };
 		F8FA223125C851CB006EC560 /* MonkeyCompilerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCompilerTests.swift; sourceTree = "<group>"; };
+		F8FA228725CB4CAF006EC560 /* VMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMTests.swift; sourceTree = "<group>"; };
+		F8FA229825CB4EB3006EC560 /* VM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VM.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_100 /* CacheableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableSequence.swift; sourceTree = "<group>"; };
 		OBJ_101 /* CodableResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableResult.swift; sourceTree = "<group>"; };
@@ -715,6 +719,7 @@
 			isa = PBXGroup;
 			children = (
 				F8FA223125C851CB006EC560 /* MonkeyCompilerTests.swift */,
+				F8FA228725CB4CAF006EC560 /* VMTests.swift */,
 			);
 			path = compiler;
 			sourceTree = "<group>";
@@ -747,6 +752,14 @@
 				OBJ_76 /* EvaluateOperationsTests.swift */,
 			);
 			path = evaluator;
+			sourceTree = "<group>";
+		};
+		F8FA229725CB4EA5006EC560 /* vm */ = {
+			isa = PBXGroup;
+			children = (
+				F8FA229825CB4EB3006EC560 /* VM.swift */,
+			);
+			path = vm;
 			sourceTree = "<group>";
 		};
 		OBJ_11 /* MonkeyLang */ = {
@@ -968,6 +981,7 @@
 		OBJ_53 /* Rosetta */ = {
 			isa = PBXGroup;
 			children = (
+				F8FA229725CB4EA5006EC560 /* vm */,
 				F8FA21EE25C83323006EC560 /* compiler */,
 				F8FA21A025C73E4F006EC560 /* bytecode */,
 				OBJ_54 /* Error.swift */,
@@ -1501,6 +1515,7 @@
 			files = (
 				OBJ_289 /* BuiltinFunctionsTests.swift in Sources */,
 				OBJ_290 /* EvaluateOperationsTests.swift in Sources */,
+				F8FA228825CB4CB0006EC560 /* VMTests.swift in Sources */,
 				OBJ_291 /* LexerTypesTests.swift in Sources */,
 				OBJ_292 /* MonkeyEvaluatorTests.swift in Sources */,
 				OBJ_293 /* MonkeyLexerTests.swift in Sources */,
@@ -1527,6 +1542,7 @@
 				OBJ_313 /* Lexer.swift in Sources */,
 				OBJ_314 /* StringExtensions.swift in Sources */,
 				F8FA21DF25C74728006EC560 /* Bytecode.swift in Sources */,
+				F8FA229925CB4EB3006EC560 /* VM.swift in Sources */,
 				OBJ_315 /* Token.swift in Sources */,
 				OBJ_316 /* Node.swift in Sources */,
 				OBJ_317 /* ParseError.swift in Sources */,

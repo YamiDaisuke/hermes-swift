@@ -14,12 +14,20 @@ var description: String
 
 Returns a human readable representations of this set of instructions
 
-### `intValue`
+## Methods
+### `readInt(bytes:startIndex:)`
 
 ```swift
-var intValue: Int32
+func readInt(bytes: Int, startIndex: Int = 0) -> Int32?
 ```
 
-Converts this slice of instruction bytes to the swift `Int32` representation
-the instructions however can be of 1, 2, 3 or 4 bytes of length encoded in
-big endian format
+Converts a number of bytes to `Int32` representation, the taken bytes must be
+between 1 and 4, and reprent an int in big endian encoding
+- Parameter bytes: The number of bytes, Must be between 1 and 4
+- Returns: The `Int32` value
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| bytes | The number of bytes, Must be between 1 and 4 |

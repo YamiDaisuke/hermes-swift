@@ -92,7 +92,10 @@ identifier_name:
     - x
     - y
     - z
-
+    - vm
+type_name:
+  excluded:
+    - VM
 indentation_width:
   indentation_width: 4
 
