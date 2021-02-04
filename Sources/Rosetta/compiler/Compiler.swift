@@ -36,3 +36,7 @@ public extension Compiler {
         BytecodeProgram(instructions: self.instructions, constants: self.constants)
     }
 }
+
+/// All compilation errors should implement this protocol
+public protocol CompilerError: RosettaError {
+}

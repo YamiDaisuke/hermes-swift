@@ -9,27 +9,31 @@ import Foundation
 import Rosetta
 
 /// Monkey Lang compiler for the Rosetta VM
-struct MonkeyC: Compiler {
-    typealias BaseType = Object
+public struct MonkeyC: Compiler {
+    public typealias BaseType = Object
 
-    var instructions: Instructions = []
-    var constants: [Object] = []
+    public var instructions: Instructions = []
+    public var constants: [Object] = []
 
-    mutating func compile(_ program: Program) throws {
+    public init() { }
+
+    public mutating func compile(_ program: Program) throws {
         for node in program.statements {
             try self.compile(node)
         }
     }
 
-    mutating func compile(_ node: Node) throws {
+    public mutating func compile(_ node: Node) throws {
         switch node {
         case let expresion as ExpressionStatement:
             try self.compile(expresion.expression)
         case let infix as InfixExpression:
             try self.compile(infix.lhs)
             try self.compile(infix.rhs)
+            let operatorCode = try opCode(forOperator: infix.operatorSymbol)
+            self.emit(operatorCode, operands: [])
         case let integer as IntegerLiteral:
-            let value = Integer(value: integer.value)
+            let value = Integer(integer.value)
             self.emit(.constant, operands: [self.addConstant(value)])
         default:
             break
@@ -63,5 +67,18 @@ struct MonkeyC: Compiler {
     mutating func emit(_ operation: OpCodes, operands: [Int32]) -> Int {
         let instruction = Bytecode.make(operation, operands: operands)
         return addInstruction(instruction)
+    }
+
+    /// Converts an operator string representation to the corresponding `OpCode`
+    /// - Parameter operatorStr: The operator string
+    /// - Throws: `UnknownOperator` if the string does not match any `OpCode`
+    /// - Returns: The `OpCode`
+    func opCode(forOperator operatorStr: String) throws -> OpCodes {
+        switch operatorStr {
+        case "+":
+            return .add
+        default:
+            throw UnknownOperator(operatorStr)
+        }
     }
 }

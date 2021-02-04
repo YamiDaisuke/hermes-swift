@@ -15,9 +15,13 @@ class MonkeyCompilerTests: XCTestCase {
     func testIntegerArithmetic() throws {
         let tests: [TestCase] = [
             (
-                "1 + 1",
-                [Integer(value: 1), Integer(value: 2)],
-                [Bytecode.make(.constant, operands: [0]), Bytecode.make(.constant, operands: [1])]
+                "1 + 2",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.add, operands: [])
+                ]
             )
         ]
 
@@ -33,6 +37,7 @@ class MonkeyCompilerTests: XCTestCase {
             try compiler.compile(program)
             let bytecode = compiler.bytecode
             MKAssertInstructions(bytecode.instructions, test.instructions)
+            MKAssertConstants(bytecode.constants, test.constants)
         }
     }
 

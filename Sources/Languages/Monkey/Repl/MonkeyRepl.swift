@@ -9,7 +9,29 @@ import Foundation
 import Rosetta
 import MonkeyLang
 import RosettaREPL
+import TSCUtility
 import TSCBasic
+
+enum ReplMode: String, ArgumentKind {
+    init(argument: String) throws {
+        switch argument {
+        case "interpreted":
+            self = .interpreted
+        case "compiled":
+            self = .compiled
+        default:
+            throw "Invalid mode"
+        }
+    }
+
+    static var completion: ShellCompletion = ShellCompletion.values([
+        ("interpreted", "Code is interpreted on the fly"),
+        ("compiled", "Code is compiled and then run in the Rosetta VM"),
+    ])
+
+    case interpreted
+    case compiled
+}
 
 struct MonkeyRepl: Repl {
     // swiftlint:disable indentation_width
@@ -27,6 +49,8 @@ struct MonkeyRepl: Repl {
                '~---~'
     """#
     // swiftlint:enable indentation_width
+    let mode: ReplMode
+
     let welcomeMessage: String
     let prompt: String
 
@@ -35,9 +59,11 @@ struct MonkeyRepl: Repl {
     let environment = Environment<Object>()
 
     init(
+        mode: ReplMode = .interpreted,
         welcomeMessage: String = "Welcome!!!\nFeel free to type in commands\n",
         prompt: String = ">>>"
     ) {
+        self.mode = mode
         self.welcomeMessage = welcomeMessage
         self.prompt = prompt
         self.controller = TerminalController(stream: stdoutStream)
@@ -62,9 +88,20 @@ struct MonkeyRepl: Repl {
             var parser = MonkeyParser(lexer: lexer)
             do {
                 if let program = try parser.parseProgram() {
-                    let result = try MonkeyEvaluator.eval(program: program, environment: environment)
-                    controller.write(result?.description ?? "", inColor: .green)
-                    controller.endLine()
+                    switch self.mode {
+                    case .interpreted:
+                        let result = try MonkeyEvaluator.eval(program: program, environment: environment)
+                        controller.write(result?.description ?? "", inColor: .green)
+                        controller.endLine()
+                    case .compiled:
+                        var compiler = MonkeyC()
+                        try compiler.compile(program)
+                        var vm = VM(compiler.bytecode, operations: MonkeyVMOperations())
+                        try vm.run()
+                        let top = vm.stackTop
+                        controller.write(top?.description ?? "", inColor: .green)
+                        controller.endLine()
+                    }
                 } else {
                     throw "Program not parsed"
                 }

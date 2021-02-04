@@ -10,11 +10,12 @@ import XCTest
 
 class BytecodeTests: XCTestCase {
     typealias BaseType = Any
-    typealias Test = (opCode: OpCodes, operands: [Int32], expected: [UInt8])
+    typealias Test = (opCode: OpCodes, operands: [Int32], expected: [Byte])
 
     func testMake() {
         let tests: [Test] = [
-            (OpCodes.constant, [65534], [OpCodes.constant.rawValue, 255, 254])
+            (OpCodes.constant, [65534], [OpCodes.constant.rawValue, 255, 254]),
+            (OpCodes.add, [], [OpCodes.add.rawValue])
         ]
         for test in tests {
             let instructions = Bytecode.make(test.opCode, operands: test.operands)
@@ -30,11 +31,13 @@ class BytecodeTests: XCTestCase {
         instructions.append(contentsOf: Bytecode.make(.constant, operands: [1]))
         instructions.append(contentsOf: Bytecode.make(.constant, operands: [2]))
         instructions.append(contentsOf: Bytecode.make(.constant, operands: [65535]))
+        instructions.append(contentsOf: Bytecode.make(.add, operands: []))
 
         let expected = """
         0000 OpConstant 1
         0003 OpConstant 2
         0006 OpConstant 65535
+        0009 OpAdd
         """
 
         XCTAssertEqual(instructions.description, expected)

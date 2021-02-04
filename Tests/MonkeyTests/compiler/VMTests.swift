@@ -14,9 +14,9 @@ class VMTests: XCTestCase {
 
     func testIntegerArithmetic() throws {
         let tests: [TestCase] = [
-            ("1", Integer(value: 1)),
-            ("2", Integer(value: 2)),
-            ("1 + 2", Integer(value: 2)) // FIXME
+            ("1", Integer(1)),
+            ("2", Integer(2)),
+            ("1 + 2", Integer(3))
         ]
 
         try self.runVMTests(tests)
@@ -30,7 +30,7 @@ class VMTests: XCTestCase {
             var compiler = MonkeyC()
             try compiler.compile(program)
             let bytecode = compiler.bytecode
-            var vm = VM(bytecode)
+            var vm = VM(bytecode, operations: MonkeyVMOperations())
             try vm.run()
 
             let element = vm.stackTop

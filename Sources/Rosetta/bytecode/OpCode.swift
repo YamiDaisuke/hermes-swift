@@ -9,6 +9,7 @@ import Foundation
 
 /// A byte mapping to one of the operations supported by the VM
 public typealias OpCode = UInt8
+/// Just to make code clear 
 public typealias Byte = UInt8
 /// A list of bytes representing one or several or part of a VM instruction
 public typealias Instructions = [Byte]
@@ -32,7 +33,12 @@ public extension Instructions {
 
             let read = Bytecode.readOperands(def, instructions: Array(self[(index + 1)...]))
             let operandsString = read.values.map { $0.description }.joined(separator: ",")
-            output += String(format: "%04d %@ %@", index, def.name, operandsString)
+            output += String(
+                format: "%04d %@%@",
+                index,
+                def.name,
+                operandsString.isEmpty ? operandsString : " " + operandsString
+            )
             index += 1 + read.count
 
             if index < self.count {
@@ -70,6 +76,8 @@ public extension Instructions {
 public enum OpCodes: OpCode {
     /// Stores a constant value in the cosntants pool
     case constant = 0x00
+    /// Adds the top two values in the stack 
+    case add = 0x01
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed
@@ -85,6 +93,7 @@ public struct OperationDefinition {
     }
 
     private static let definitions: [OpCodes: OperationDefinition] = [
-        .constant: OperationDefinition(name: "OpConstant", operandsWidth: [2])
+        .constant: OperationDefinition(name: "OpConstant", operandsWidth: [2]),
+        .add: OperationDefinition(name: "OpAdd", operandsWidth: [])
     ]
 }

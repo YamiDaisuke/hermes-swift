@@ -8,7 +8,7 @@
 import Foundation
 import Rosetta
 
-struct UnknownOperator: EvaluatorError {
+struct UnknownOperator: EvaluatorError, CompilerError {
     var message: String
     var line: Int?
     var column: Int?
@@ -56,7 +56,7 @@ struct InvalidPrefixExpression: EvaluatorError {
     }
 }
 
-struct InvalidInfixExpression: EvaluatorError {
+struct InvalidInfixExpression: EvaluatorError, CompilerError {
     var message: String
     var line: Int?
     var column: Int?

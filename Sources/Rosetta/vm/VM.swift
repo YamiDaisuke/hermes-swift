@@ -11,26 +11,37 @@ import Foundation
 let kStackSize = 2048
 
 /// Rosetta VM implementation
-public struct VM<BaseType> {
+public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType == BaseType {
     var constants: [BaseType]
     var instructions: Instructions
 
+    var operations: Operations
+
     var stack: [BaseType]
     var stackPointer: Int
-    
-    var stackTop: BaseType? {
+
+    /// Returns the current value sitting a top of the stack if the stack is empty returns `nil`
+    public var stackTop: BaseType? {
         guard stackPointer > 0 else { return nil }
         return stack[stackPointer - 1]
     }
 
-    init(_ bytcode: BytecodeProgram<BaseType>) {
+    /// Init a new VM with a set of bytecode to run
+    /// - Parameters:
+    ///   - bytcode: The compiled bytecode
+    ///   - operations: An implementation of `VMOperations` in charge of applying the language
+    ///                 specific operations for this VM
+    public init(_ bytcode: BytecodeProgram<BaseType>, operations: Operations) {
         self.constants = bytcode.constants
         self.instructions = bytcode.instructions
+        self.operations = operations
         stack = []
         stack.reserveCapacity(kStackSize)
         stackPointer = 0
     }
 
+    /// Runs the VM against the assigned bytecode
+    /// - Throws: `VMError` if anything fails while interpreting the bytecode
     public mutating func run() throws {
         var index = 0
         while index < self.instructions.count {
@@ -42,6 +53,11 @@ public struct VM<BaseType> {
                 }
                 index += 2
                 try self.push(self.constants[Int(constIndex)])
+            case .add:
+                let rhs = self.pop()
+                let lhs = self.pop()
+                let value = try operations.add(lhs: lhs, rhs: rhs)
+                try self.push(value)
             default:
                 index += 1
             }
@@ -55,6 +71,16 @@ public struct VM<BaseType> {
 
         self.stack.insert(object, at: self.stackPointer)
         self.stackPointer += 1
+    }
+
+    mutating func pop() -> BaseType? {
+        guard !self.stack.isEmpty else {
+            return nil
+        }
+
+        let value = self.stack[self.stackPointer - 1]
+        self.stackPointer -= 1
+        return value
     }
 }
 
