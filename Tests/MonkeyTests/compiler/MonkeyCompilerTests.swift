@@ -20,7 +20,18 @@ class MonkeyCompilerTests: XCTestCase {
                 [
                     Bytecode.make(.constant, operands: [0]),
                     Bytecode.make(.constant, operands: [1]),
-                    Bytecode.make(.add, operands: [])
+                    Bytecode.make(.add, operands: []),
+                    Bytecode.make(.pop, operands: [])
+                ]
+            ),
+            (
+                "1; 2;",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.pop, operands: []),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.pop, operands: [])
                 ]
             )
         ]

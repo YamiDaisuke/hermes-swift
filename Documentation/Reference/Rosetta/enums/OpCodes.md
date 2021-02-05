@@ -12,15 +12,23 @@ The operation codes supported by the VM
 ### `constant`
 
 ```swift
-case constant = 0x00
+case constant
 ```
 
 Stores a constant value in the cosntants pool
 
+### `pop`
+
+```swift
+case pop
+```
+
+Pops the value at top of the stack
+
 ### `add`
 
 ```swift
-case add = 0x01
+case add
 ```
 
 Adds the top two values in the stack

@@ -75,9 +75,11 @@ public extension Instructions {
 /// The operation codes supported by the VM
 public enum OpCodes: OpCode {
     /// Stores a constant value in the cosntants pool
-    case constant = 0x00
+    case constant
+    /// Pops the value at top of the stack
+    case pop
     /// Adds the top two values in the stack 
-    case add = 0x01
+    case add
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed
@@ -94,6 +96,7 @@ public struct OperationDefinition {
 
     private static let definitions: [OpCodes: OperationDefinition] = [
         .constant: OperationDefinition(name: "OpConstant", operandsWidth: [2]),
+        .pop: OperationDefinition(name: "OpPop", operandsWidth: []),
         .add: OperationDefinition(name: "OpAdd", operandsWidth: [])
     ]
 }

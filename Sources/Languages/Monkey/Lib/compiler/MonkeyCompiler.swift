@@ -27,11 +27,12 @@ public struct MonkeyC: Compiler {
         switch node {
         case let expresion as ExpressionStatement:
             try self.compile(expresion.expression)
+            self.emit(.pop)
         case let infix as InfixExpression:
             try self.compile(infix.lhs)
             try self.compile(infix.rhs)
             let operatorCode = try opCode(forOperator: infix.operatorSymbol)
-            self.emit(operatorCode, operands: [])
+            self.emit(operatorCode)
         case let integer as IntegerLiteral:
             let value = Integer(integer.value)
             self.emit(.constant, operands: [self.addConstant(value)])
@@ -64,7 +65,7 @@ public struct MonkeyC: Compiler {
     ///   - operands: The operands values
     /// - Returns: The starting index of this instruction bytes
     @discardableResult
-    mutating func emit(_ operation: OpCodes, operands: [Int32]) -> Int {
+    mutating func emit(_ operation: OpCodes, operands: [Int32] = []) -> Int {
         let instruction = Bytecode.make(operation, operands: operands)
         return addInstruction(instruction)
     }

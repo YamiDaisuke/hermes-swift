@@ -26,6 +26,8 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         return stack[stackPointer - 1]
     }
 
+    public var lastPoped: BaseType?
+
     /// Init a new VM with a set of bytecode to run
     /// - Parameters:
     ///   - bytcode: The compiled bytecode
@@ -53,6 +55,8 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 }
                 index += 2
                 try self.push(self.constants[Int(constIndex)])
+            case .pop:
+                self.pop()
             case .add:
                 let rhs = self.pop()
                 let lhs = self.pop()
@@ -65,6 +69,10 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         }
     }
 
+    /// Push a new element in the stack
+    /// - Parameter object: The element to push
+    /// - Throws: `StackOverflow` if the stack is at full capacity.
+    ///           The available capacity is defined by the constant: `kStackSize`
     mutating func push(_ object: BaseType?) throws {
         guard let object = object else { return }
         guard self.stackPointer < kStackSize else { throw StackOverflow() }
@@ -73,12 +81,17 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         self.stackPointer += 1
     }
 
+    /// Pop the element at top of the stack
+    /// - Returns: The poped element
+    @discardableResult
     mutating func pop() -> BaseType? {
         guard !self.stack.isEmpty else {
+            self.lastPoped = nil
             return nil
         }
 
         let value = self.stack[self.stackPointer - 1]
+        self.lastPoped = value
         self.stackPointer -= 1
         return value
     }

@@ -17,6 +17,12 @@ public var stackTop: BaseType?
 
 Returns the current value sitting a top of the stack if the stack is empty returns `nil`
 
+### `lastPoped`
+
+```swift
+public var lastPoped: BaseType?
+```
+
 ## Methods
 ### `init(_:operations:)`
 

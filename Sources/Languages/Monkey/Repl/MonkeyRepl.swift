@@ -98,7 +98,7 @@ struct MonkeyRepl: Repl {
                         try compiler.compile(program)
                         var vm = VM(compiler.bytecode, operations: MonkeyVMOperations())
                         try vm.run()
-                        let top = vm.stackTop
+                        let top = vm.lastPoped
                         controller.write(top?.description ?? "", inColor: .green)
                         controller.endLine()
                     }

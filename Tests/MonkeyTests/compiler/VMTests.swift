@@ -33,7 +33,7 @@ class VMTests: XCTestCase {
             var vm = VM(bytecode, operations: MonkeyVMOperations())
             try vm.run()
 
-            let element = vm.stackTop
+            let element = vm.lastPoped
             XCTAssert(element?.isEquals(other: test.expected) ?? false)
         }
     }
