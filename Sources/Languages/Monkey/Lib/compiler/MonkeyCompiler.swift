@@ -78,6 +78,12 @@ public struct MonkeyC: Compiler {
         switch operatorStr {
         case "+":
             return .add
+        case "-":
+            return .sub
+        case "*":
+            return .mul
+        case "/":
+            return .div
         default:
             throw UnknownOperator(operatorStr)
         }

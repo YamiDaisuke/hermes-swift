@@ -8,7 +8,7 @@
 import Foundation
 import Rosetta
 
-struct UnknownOperator: EvaluatorError, CompilerError {
+struct UnknownOperator: EvaluatorError, CompilerError, VMError {
     var message: String
     var line: Int?
     var column: Int?

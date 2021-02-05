@@ -47,7 +47,9 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     public mutating func run() throws {
         var index = 0
         while index < self.instructions.count {
-            let opCode = OpCodes(rawValue: instructions[index])
+            guard let opCode = OpCodes(rawValue: instructions[index]) else {
+                throw UnknownOpCode(instructions[index])
+            }
             switch opCode {
             case .constant:
                 guard let constIndex = instructions.readInt(bytes: 2, startIndex: index + 1) else {
@@ -57,13 +59,11 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 try self.push(self.constants[Int(constIndex)])
             case .pop:
                 self.pop()
-            case .add:
+            case .add, .sub, .mul, .div:
                 let rhs = self.pop()
                 let lhs = self.pop()
-                let value = try operations.add(lhs: lhs, rhs: rhs)
+                let value = try operations.binaryOperation(lhs: lhs, rhs: rhs, operation: opCode)
                 try self.push(value)
-            default:
-                index += 1
             }
             index += 1
         }
@@ -108,4 +108,15 @@ public struct StackOverflow: VMError {
     public var line: Int?
     public var column: Int?
     public var file: String?
+}
+
+public struct UnknownOpCode: VMError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
+
+    public init(_ code: OpCode) {
+        self.message = String(format: "Unknown op code: %02X", code)
+    }
 }

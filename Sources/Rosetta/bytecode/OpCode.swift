@@ -80,6 +80,12 @@ public enum OpCodes: OpCode {
     case pop
     /// Adds the top two values in the stack 
     case add
+    /// Subsctract the top two values in the stack
+    case sub
+    /// Multiply the top two values in the stack
+    case mul
+    /// Divide the top two values in the stack one by the other
+    case div
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed
@@ -97,6 +103,9 @@ public struct OperationDefinition {
     private static let definitions: [OpCodes: OperationDefinition] = [
         .constant: OperationDefinition(name: "OpConstant", operandsWidth: [2]),
         .pop: OperationDefinition(name: "OpPop", operandsWidth: []),
-        .add: OperationDefinition(name: "OpAdd", operandsWidth: [])
+        .add: OperationDefinition(name: "OpAdd", operandsWidth: []),
+        .sub: OperationDefinition(name: "OpSub", operandsWidth: []),
+        .mul: OperationDefinition(name: "OpMul", operandsWidth: []),
+        .div: OperationDefinition(name: "OpDiv", operandsWidth: [])
     ]
 }

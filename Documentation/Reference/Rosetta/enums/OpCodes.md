@@ -32,3 +32,27 @@ case add
 ```
 
 Adds the top two values in the stack
+
+### `sub`
+
+```swift
+case sub
+```
+
+Subsctract the top two values in the stack
+
+### `mul`
+
+```swift
+case mul
+```
+
+Multiply the top two values in the stack
+
+### `div`
+
+```swift
+case div
+```
+
+Divide the top two values in the stack one by the other

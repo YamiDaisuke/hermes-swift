@@ -15,6 +15,16 @@ class MonkeyCompilerTests: XCTestCase {
     func testIntegerArithmetic() throws {
         let tests: [TestCase] = [
             (
+                "1; 2;",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.pop, operands: []),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.pop, operands: [])
+                ]
+            ),
+            (
                 "1 + 2",
                 [Integer(1), Integer(2)],
                 [
@@ -25,12 +35,32 @@ class MonkeyCompilerTests: XCTestCase {
                 ]
             ),
             (
-                "1; 2;",
+                "1 - 2",
                 [Integer(1), Integer(2)],
                 [
                     Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.pop, operands: []),
                     Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.sub, operands: []),
+                    Bytecode.make(.pop, operands: [])
+                ]
+            ),
+            (
+                "1 * 2",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.mul, operands: []),
+                    Bytecode.make(.pop, operands: [])
+                ]
+            ),
+            (
+                "1 / 2",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.div, operands: []),
                     Bytecode.make(.pop, operands: [])
                 ]
             )

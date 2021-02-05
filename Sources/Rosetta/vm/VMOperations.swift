@@ -9,5 +9,5 @@ import Foundation
 
 public protocol VMOperations {
     associatedtype BaseType
-    func add<BaseType>(lhs: BaseType, rhs: BaseType) throws -> BaseType
+    func binaryOperation<BaseType>(lhs: BaseType, rhs: BaseType, operation: OpCodes) throws -> BaseType
 }
