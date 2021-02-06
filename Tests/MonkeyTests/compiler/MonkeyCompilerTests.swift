@@ -69,6 +69,29 @@ class MonkeyCompilerTests: XCTestCase {
         try runCompilerTests(tests)
     }
 
+    func testBooleanExpressions() throws {
+        let tests: [TestCase] = [
+            (
+                "true",
+                [],
+                [
+                    Bytecode.make(.true, operands: []),
+                    Bytecode.make(.pop, operands: [])
+                ]
+            ),
+            (
+                "false",
+                [],
+                [
+                    Bytecode.make(.false, operands: []),
+                    Bytecode.make(.pop, operands: [])
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
     // MARK: Utils
 
     func runCompilerTests(_ tests: [TestCase], file: StaticString = #file, line: UInt = #line) throws {

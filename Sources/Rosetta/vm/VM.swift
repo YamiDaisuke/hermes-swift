@@ -64,6 +64,10 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 let lhs = self.pop()
                 let value = try operations.binaryOperation(lhs: lhs, rhs: rhs, operation: opCode)
                 try self.push(value)
+            case .true, .false:
+                try self.push(self.operations.getLangBool(for: opCode == .true))
+            default:
+                break
             }
             index += 1
         }

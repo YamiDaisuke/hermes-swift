@@ -19,7 +19,7 @@ public init()
 public func binaryOperation<BaseType>(lhs: BaseType, rhs: BaseType, operation: OpCodes) throws -> BaseType
 ```
 
-Maps binary operation to the right Monkey operation
+Maps and applies binary operation to the right Monkey operation
 
 Supported variations are:
 ```
@@ -42,3 +42,22 @@ Integer / Integer
 | ---- | ----------- |
 | lhs | The left hand operand |
 | rhs | The right hand operand |
+
+### `getLangBool(for:)`
+
+```swift
+public func getLangBool(for bool: Bool) -> BaseType
+```
+
+Gets the language specific representation of a VM boolean value
+
+We could simple use native `Bool` from swift but in this way we keep all
+the values independent of the swift language.
+- Parameter bool: The swift `Bool` value to wrap
+- Returns: A representation of swift `Bool` in Monkey language which will be `Boolean`
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| bool | The swift `Bool` value to wrap |

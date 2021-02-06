@@ -36,6 +36,8 @@ public struct MonkeyC: Compiler {
         case let integer as IntegerLiteral:
             let value = Integer(integer.value)
             self.emit(.constant, operands: [self.addConstant(value)])
+        case let boolean as BooleanLiteral:
+            self.emit(boolean.value ? .true : .false)
         default:
             break
         }

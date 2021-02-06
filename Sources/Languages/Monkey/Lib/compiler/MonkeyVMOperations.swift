@@ -14,7 +14,7 @@ public struct MonkeyVMOperations: VMOperations {
 
     public init() { }
 
-    /// Maps binary operation to the right Monkey operation
+    /// Maps and applies binary operation to the right Monkey operation
     ///
     /// Supported variations are:
     /// ```
@@ -48,5 +48,16 @@ public struct MonkeyVMOperations: VMOperations {
         }
 
         return try MonkeyOperations.evalInfix(lhs: lhs, operatorSymbol: symbol, rhs: rhs) as! BaseType
+    }
+
+
+    /// Gets the language specific representation of a VM boolean value
+    ///
+    /// We could simple use native `Bool` from swift but in this way we keep all
+    /// the values independent of the swift language.
+    /// - Parameter bool: The swift `Bool` value to wrap
+    /// - Returns: A representation of swift `Bool` in Monkey language which will be `Boolean`
+    public func getLangBool(for bool: Bool) -> BaseType {
+        Boolean(bool)
     }
 }

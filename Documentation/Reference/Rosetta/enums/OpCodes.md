@@ -56,3 +56,19 @@ case div
 ```
 
 Divide the top two values in the stack one by the other
+
+### `true`
+
+```swift
+case `true`
+```
+
+Push `true` into the stack
+
+### `false`
+
+```swift
+case `false`
+```
+
+Push `false` into the stack

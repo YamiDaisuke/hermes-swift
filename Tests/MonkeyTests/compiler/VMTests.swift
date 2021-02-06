@@ -31,6 +31,15 @@ class VMTests: XCTestCase {
         try self.runVMTests(tests)
     }
 
+    func testBooleanExpressions() throws {
+        let tests: [TestCase] = [
+            ("true", Boolean.true),
+            ("false", Boolean.false)
+        ]
+
+        try self.runVMTests(tests)
+    }
+
     // MARK: Utils
 
     func runVMTests(_ tests: [TestCase], file: StaticString = #file, line: UInt = #line) throws {

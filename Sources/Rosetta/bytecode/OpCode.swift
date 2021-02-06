@@ -86,6 +86,10 @@ public enum OpCodes: OpCode {
     case mul
     /// Divide the top two values in the stack one by the other
     case div
+    /// Push `true` into the stack
+    case `true`
+    /// Push `false` into the stack
+    case `false`
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed
@@ -106,6 +110,8 @@ public struct OperationDefinition {
         .add: OperationDefinition(name: "OpAdd", operandsWidth: []),
         .sub: OperationDefinition(name: "OpSub", operandsWidth: []),
         .mul: OperationDefinition(name: "OpMul", operandsWidth: []),
-        .div: OperationDefinition(name: "OpDiv", operandsWidth: [])
+        .div: OperationDefinition(name: "OpDiv", operandsWidth: []),
+        .true: OperationDefinition(name: "OpTrue", operandsWidth: []),
+        .false: OperationDefinition(name: "OpFalse", operandsWidth: [])
     ]
 }

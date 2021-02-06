@@ -44,6 +44,7 @@ extension MonkeyCompilerTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__MonkeyCompilerTests = [
+        ("testBooleanExpressions", testBooleanExpressions),
         ("testIntegerArithmetic", testIntegerArithmetic),
     ]
 }
@@ -139,6 +140,7 @@ extension VMTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__VMTests = [
+        ("testBooleanExpressions", testBooleanExpressions),
         ("testIntegerArithmetic", testIntegerArithmetic),
     ]
 }
