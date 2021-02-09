@@ -72,3 +72,35 @@ case `false`
 ```
 
 Push `false` into the stack
+
+### `equal`
+
+```swift
+case equal
+```
+
+Performs an equality check
+
+### `notEqual`
+
+```swift
+case notEqual
+```
+
+Performs an inequality check
+
+### `gt`
+
+```swift
+case gt
+```
+
+Performs an greater than operation
+
+### `gte`
+
+```swift
+case gte
+```
+
+Performs an greater than or equal operation

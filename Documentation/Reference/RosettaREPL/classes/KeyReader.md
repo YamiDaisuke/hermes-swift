@@ -22,10 +22,10 @@ public func abort()
 Call this  function when you want to abort the current reading session
 and restore the terminal raw mode
 
-### `subscribe(subscriber:)`
+### `subscribe(subscriber:raw:)`
 
 ```swift
-public func subscribe(subscriber: @escaping (KeyEvent) -> Void)
+public func subscribe(subscriber: @escaping (KeyEvent) -> Void, raw: ((UInt8) -> Void)? = nil)
 ```
 
 Subscribes to key events. It blocks the thread until an exit or enter event is delivered.

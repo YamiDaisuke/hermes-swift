@@ -10,7 +10,7 @@ public enum Bytecode
 ### `make(_:operands:)`
 
 ```swift
-public static func make(_ op: OpCodes, operands: [Int32]) -> Instructions
+public static func make(_ op: OpCodes, operands: [Int32] = []) -> Instructions
 ```
 
 Converts abstract representation into Rosetta VM bytecode instructions

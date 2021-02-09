@@ -34,7 +34,32 @@ class VMTests: XCTestCase {
     func testBooleanExpressions() throws {
         let tests: [TestCase] = [
             ("true", Boolean.true),
-            ("false", Boolean.false)
+            ("false", Boolean.false),
+            ("1 < 2", Boolean.true),
+            ("1 > 2", Boolean.false),
+            ("1 >= 2", Boolean.false),
+            ("1 <= 2", Boolean.true),
+            ("1 < 1", Boolean.false),
+            ("1 <= 1", Boolean.true),
+            ("1 > 1", Boolean.false),
+            ("1 >= 1", Boolean.true),
+            ("1 == 1", Boolean.true),
+            ("1 != 1", Boolean.false),
+            ("1 == 2", Boolean.false),
+            ("1 != 2", Boolean.true),
+            ("true == true", Boolean.true),
+            ("false == false", Boolean.true),
+            ("true == false", Boolean.false),
+            ("true != false", Boolean.true),
+            ("false != true", Boolean.true),
+            ("(1 < 2) == true", Boolean.true),
+            ("(1 < 2) == false", Boolean.false),
+            ("(1 > 2) == true", Boolean.false),
+            ("(1 > 2) == false", Boolean.true),
+            ("(1 <= 2) == true", Boolean.true),
+            ("(1 <= 2) == false", Boolean.false),
+            ("(1 >= 2) == true", Boolean.false),
+            ("(1 >= 2) == false", Boolean.true)
         ]
 
         try self.runVMTests(tests)

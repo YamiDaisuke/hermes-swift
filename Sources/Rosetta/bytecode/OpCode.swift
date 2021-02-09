@@ -90,6 +90,14 @@ public enum OpCodes: OpCode {
     case `true`
     /// Push `false` into the stack
     case `false`
+    /// Performs an equality check
+    case equal
+    /// Performs an inequality check
+    case notEqual
+    /// Performs an greater than operation
+    case gt
+    /// Performs an greater than or equal operation
+    case gte
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed
@@ -112,6 +120,10 @@ public struct OperationDefinition {
         .mul: OperationDefinition(name: "OpMul", operandsWidth: []),
         .div: OperationDefinition(name: "OpDiv", operandsWidth: []),
         .true: OperationDefinition(name: "OpTrue", operandsWidth: []),
-        .false: OperationDefinition(name: "OpFalse", operandsWidth: [])
+        .false: OperationDefinition(name: "OpFalse", operandsWidth: []),
+        .equal: OperationDefinition(name: "OpEqual", operandsWidth: []),
+        .notEqual: OperationDefinition(name: "OpNotEq", operandsWidth: []),
+        .gt: OperationDefinition(name: "OpGT", operandsWidth: []),
+        .gte: OperationDefinition(name: "OpGTE", operandsWidth: [])
     ]
 }

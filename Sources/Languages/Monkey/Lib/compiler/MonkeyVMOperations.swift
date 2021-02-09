@@ -43,6 +43,14 @@ public struct MonkeyVMOperations: VMOperations {
             symbol = "*"
         case .div:
             symbol = "/"
+        case .equal:
+            symbol = "=="
+        case .notEqual:
+            symbol = "!="
+        case .gt:
+            symbol = ">"
+        case .gte:
+            symbol = ">="
         default:
             throw UnknownOperator(String(format: "%02X", operation.rawValue))
         }

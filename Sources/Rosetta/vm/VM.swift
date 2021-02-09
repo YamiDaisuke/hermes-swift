@@ -59,7 +59,7 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 try self.push(self.constants[Int(constIndex)])
             case .pop:
                 self.pop()
-            case .add, .sub, .mul, .div:
+            case .add, .sub, .mul, .div, .equal, .notEqual, .gt, .gte:
                 let rhs = self.pop()
                 let lhs = self.pop()
                 let value = try operations.binaryOperation(lhs: lhs, rhs: rhs, operation: opCode)

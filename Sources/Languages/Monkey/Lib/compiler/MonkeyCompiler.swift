@@ -29,9 +29,16 @@ public struct MonkeyC: Compiler {
             try self.compile(expresion.expression)
             self.emit(.pop)
         case let infix as InfixExpression:
-            try self.compile(infix.lhs)
-            try self.compile(infix.rhs)
             let operatorCode = try opCode(forOperator: infix.operatorSymbol)
+
+            if infix.operatorSymbol == "<=" || infix.operatorSymbol == "<" {
+                try self.compile(infix.rhs)
+                try self.compile(infix.lhs)
+            } else {
+                try self.compile(infix.lhs)
+                try self.compile(infix.rhs)
+            }
+
             self.emit(operatorCode)
         case let integer as IntegerLiteral:
             let value = Integer(integer.value)
@@ -86,6 +93,14 @@ public struct MonkeyC: Compiler {
             return .mul
         case "/":
             return .div
+        case ">", "<":
+            return .gt
+        case ">=", "<=":
+            return .gte
+        case "==":
+            return .equal
+        case "!=":
+            return .notEqual
         default:
             throw UnknownOperator(operatorStr)
         }

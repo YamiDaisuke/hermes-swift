@@ -19,9 +19,9 @@ class MonkeyCompilerTests: XCTestCase {
                 [Integer(1), Integer(2)],
                 [
                     Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.pop, operands: []),
+                    Bytecode.make(.pop),
                     Bytecode.make(.constant, operands: [1]),
-                    Bytecode.make(.pop, operands: [])
+                    Bytecode.make(.pop)
                 ]
             ),
             (
@@ -30,8 +30,8 @@ class MonkeyCompilerTests: XCTestCase {
                 [
                     Bytecode.make(.constant, operands: [0]),
                     Bytecode.make(.constant, operands: [1]),
-                    Bytecode.make(.add, operands: []),
-                    Bytecode.make(.pop, operands: [])
+                    Bytecode.make(.add),
+                    Bytecode.make(.pop)
                 ]
             ),
             (
@@ -40,8 +40,8 @@ class MonkeyCompilerTests: XCTestCase {
                 [
                     Bytecode.make(.constant, operands: [0]),
                     Bytecode.make(.constant, operands: [1]),
-                    Bytecode.make(.sub, operands: []),
-                    Bytecode.make(.pop, operands: [])
+                    Bytecode.make(.sub),
+                    Bytecode.make(.pop)
                 ]
             ),
             (
@@ -50,8 +50,8 @@ class MonkeyCompilerTests: XCTestCase {
                 [
                     Bytecode.make(.constant, operands: [0]),
                     Bytecode.make(.constant, operands: [1]),
-                    Bytecode.make(.mul, operands: []),
-                    Bytecode.make(.pop, operands: [])
+                    Bytecode.make(.mul),
+                    Bytecode.make(.pop)
                 ]
             ),
             (
@@ -60,8 +60,8 @@ class MonkeyCompilerTests: XCTestCase {
                 [
                     Bytecode.make(.constant, operands: [0]),
                     Bytecode.make(.constant, operands: [1]),
-                    Bytecode.make(.div, operands: []),
-                    Bytecode.make(.pop, operands: [])
+                    Bytecode.make(.div),
+                    Bytecode.make(.pop)
                 ]
             )
         ]
@@ -75,16 +75,96 @@ class MonkeyCompilerTests: XCTestCase {
                 "true",
                 [],
                 [
-                    Bytecode.make(.true, operands: []),
-                    Bytecode.make(.pop, operands: [])
+                    Bytecode.make(.true),
+                    Bytecode.make(.pop)
                 ]
             ),
             (
                 "false",
                 [],
                 [
-                    Bytecode.make(.false, operands: []),
-                    Bytecode.make(.pop, operands: [])
+                    Bytecode.make(.false),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "1 > 2",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.gt),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "1 < 2",
+                [Integer(2), Integer(1)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.gt),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "1 >= 2",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.gte),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "1 <= 2",
+                [Integer(2), Integer(1)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.gte),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "1 == 2",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.equal),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "1 != 2",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.notEqual),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "true == false",
+                [],
+                [
+                    Bytecode.make(.true),
+                    Bytecode.make(.false),
+                    Bytecode.make(.equal),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "true != false",
+                [],
+                [
+                    Bytecode.make(.true),
+                    Bytecode.make(.false),
+                    Bytecode.make(.notEqual),
+                    Bytecode.make(.pop)
                 ]
             )
         ]
