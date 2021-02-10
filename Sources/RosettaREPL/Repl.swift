@@ -62,50 +62,49 @@ public extension Repl {
             buffer = []
             controller.write("\(prompt) ", inColor: .cyan, bold: true)
             var cursor = 0
-            var reading = true
             var clear = false
-            while reading {
-                keyReader.subscribe { event in
-                    switch event {
-                    case .down:
-                        guard !stack.isEmpty else { return }
-                        stackPointer = (stackPointer - 1) %% stack.count
-                        controller.write("\(Specials.clearLine)\r\(prompt) ", inColor: .cyan, bold: true)
-                        controller.write(stack[stack.count - stackPointer - 1])
-                        buffer = Array(stack[stack.count - stackPointer - 1])
-                        cursor = buffer.count
-                    case .up:
-                        guard !stack.isEmpty else { return }
-                        stackPointer = (stackPointer + 1) %% stack.count
-                        controller.write("\(Specials.clearLine)\r\(prompt) ", inColor: .cyan, bold: true)
-                        controller.write(stack[stack.count - stackPointer - 1])
-                        buffer = Array(stack[stack.count - stackPointer - 1])
-                        cursor = buffer.count
-                    case .left:
-                        guard cursor > 0 else { return }
-                        controller.moveLeft()
-                        cursor = min(max(0, cursor - 1), buffer.count - 1)
-                    case .right:
-                        guard cursor < buffer.count else { return }
-                        controller.moveRight()
-                        cursor = min(max(0, cursor + 1), buffer.count)
-                    case .ascii(let char):
-                        handleAscii(char, cursor: &cursor, buffer: &buffer, controller: controller)
-                    case .enter:
-                        reading = false
-                    case .backspace:
-                        handleBackspace(cursor: &cursor, buffer: &buffer, controller: controller)
-                    case .delete:
-                        handleDelete(cursor: &cursor, buffer: &buffer, controller: controller)
-                    case .clear:
-                        controller.clear()
-                        reading = false
-                        clear = true
-                    case .unknow:
-                        controller.write("")
-                        reading = false
-                    }
+            keyReader.subscribe { event in
+                switch event {
+                case .down:
+                    guard !stack.isEmpty else { return true }
+                    stackPointer = (stackPointer - 1) %% stack.count
+                    controller.write("\(Specials.clearLine)\r\(prompt) ", inColor: .cyan, bold: true)
+                    controller.write(stack[stack.count - stackPointer - 1])
+                    buffer = Array(stack[stack.count - stackPointer - 1])
+                    cursor = buffer.count
+                case .up:
+                    guard !stack.isEmpty else { return true }
+                    stackPointer = (stackPointer + 1) %% stack.count
+                    controller.write("\(Specials.clearLine)\r\(prompt) ", inColor: .cyan, bold: true)
+                    controller.write(stack[stack.count - stackPointer - 1])
+                    buffer = Array(stack[stack.count - stackPointer - 1])
+                    cursor = buffer.count
+                case .left:
+                    guard cursor > 0 else { return true }
+                    controller.moveLeft()
+                    cursor = min(max(0, cursor - 1), buffer.count - 1)
+                case .right:
+                    guard cursor < buffer.count else { return true }
+                    controller.moveRight()
+                    cursor = min(max(0, cursor + 1), buffer.count)
+                case .ascii(let char):
+                    handleAscii(char, cursor: &cursor, buffer: &buffer, controller: controller)
+                case .enter:
+                    return false
+                case .backspace:
+                    handleBackspace(cursor: &cursor, buffer: &buffer, controller: controller)
+                case .delete:
+                    handleDelete(cursor: &cursor, buffer: &buffer, controller: controller)
+                case .clear:
+                    controller.clear()
+                    clear = true
+                    return false
+                case .unknow:
+                    controller.write("")
+                    return false
                 }
+
+                return true
             }
 
             if clear { continue }
@@ -154,7 +153,8 @@ public extension Repl {
     private func handleSIGINT(keyReader: KeyReader) {
         DispatchQueue.global().async {
             guard sigintSrc == nil else { return }
-            signal(SIGINT, SIG_IGN) // Make sure the signal does not terminate the application.
+            // Make sure the signal does not terminate the application.
+            signal(SIGINT, SIG_IGN)
             sigintSrc = DispatchSource.makeSignalSource(signal: SIGINT)
             sigintSrc?.setEventHandler {
                 print()
