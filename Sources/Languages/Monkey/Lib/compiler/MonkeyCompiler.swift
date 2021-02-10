@@ -28,8 +28,12 @@ public struct MonkeyC: Compiler {
         case let expresion as ExpressionStatement:
             try self.compile(expresion.expression)
             self.emit(.pop)
+        case let prefix as PrefixExpression:
+            let operatorCode = try opCode(forPrefixOperator: prefix.operatorSymbol)
+            try self.compile(prefix.rhs)
+            self.emit(operatorCode)
         case let infix as InfixExpression:
-            let operatorCode = try opCode(forOperator: infix.operatorSymbol)
+            let operatorCode = try opCode(forInfixOperator: infix.operatorSymbol)
 
             if infix.operatorSymbol == "<=" || infix.operatorSymbol == "<" {
                 try self.compile(infix.rhs)
@@ -79,11 +83,11 @@ public struct MonkeyC: Compiler {
         return addInstruction(instruction)
     }
 
-    /// Converts an operator string representation to the corresponding `OpCode`
+    /// Converts an infix operator string representation to the corresponding `OpCode`
     /// - Parameter operatorStr: The operator string
     /// - Throws: `UnknownOperator` if the string does not match any `OpCode`
     /// - Returns: The `OpCode`
-    func opCode(forOperator operatorStr: String) throws -> OpCodes {
+    func opCode(forInfixOperator operatorStr: String) throws -> OpCodes {
         switch operatorStr {
         case "+":
             return .add
@@ -101,6 +105,21 @@ public struct MonkeyC: Compiler {
             return .equal
         case "!=":
             return .notEqual
+        default:
+            throw UnknownOperator(operatorStr)
+        }
+    }
+
+    /// Converts an prefix operator string representation to the corresponding `OpCode`
+    /// - Parameter operatorStr: The operator string
+    /// - Throws: `UnknownOperator` if the string does not match any `OpCode`
+    /// - Returns: The `OpCode`
+    func opCode(forPrefixOperator operatorStr: String) throws -> OpCodes {
+        switch operatorStr {
+        case "-":
+            return .minus
+        case "!":
+            return .bang
         default:
             throw UnknownOperator(operatorStr)
         }

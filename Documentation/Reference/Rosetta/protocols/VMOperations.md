@@ -27,6 +27,24 @@ Maps and applies binary operation on the implementing language
 | lhs | The left hand operand |
 | rhs | The right hand operand |
 
+### `unaryOperation(rhs:operation:)`
+
+```swift
+func unaryOperation<BaseType>(rhs: BaseType, operation: OpCodes) throws -> BaseType
+```
+
+Maps and applies unary operation on the implementing language
+- Parameters:
+  - rhs: The right hand operand
+- Throws: A language specific error if the values or the operator is not recognized
+- Returns: The result of the operation depending on the operand
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| rhs | The right hand operand |
+
 ### `getLangBool(for:)`
 
 ```swift

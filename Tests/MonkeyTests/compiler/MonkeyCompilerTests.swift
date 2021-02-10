@@ -63,6 +63,15 @@ class MonkeyCompilerTests: XCTestCase {
                     Bytecode.make(.div),
                     Bytecode.make(.pop)
                 ]
+            ),
+            (
+                "-1",
+                [Integer(1)],
+                [
+                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.minus),
+                    Bytecode.make(.pop)
+                ]
             )
         ]
 
@@ -164,6 +173,15 @@ class MonkeyCompilerTests: XCTestCase {
                     Bytecode.make(.true),
                     Bytecode.make(.false),
                     Bytecode.make(.notEqual),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "!true",
+                [],
+                [
+                    Bytecode.make(.true),
+                    Bytecode.make(.bang),
                     Bytecode.make(.pop)
                 ]
             )

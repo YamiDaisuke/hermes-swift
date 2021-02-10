@@ -43,6 +43,31 @@ Integer / Integer
 | lhs | The left hand operand |
 | rhs | The right hand operand |
 
+### `unaryOperation(rhs:operation:)`
+
+```swift
+public func unaryOperation<BaseType>(rhs: BaseType, operation: OpCodes) throws -> BaseType
+```
+
+Maps and applies unary operation to the right Monkey operation
+
+Supported variations are:
+```
+!Object
+-Integer
+```
+- Parameters:
+  - rhs: The right hand operand
+- Throws: `InvalidPrefixExpression` if any of the operands is not supported.
+          `UnknownOperator` if the bytecode operator doesn't match a monkey operation
+- Returns: The result of the operation depending on the operands
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| rhs | The right hand operand |
+
 ### `getLangBool(for:)`
 
 ```swift

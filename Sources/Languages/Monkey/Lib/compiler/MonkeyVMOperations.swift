@@ -58,6 +58,33 @@ public struct MonkeyVMOperations: VMOperations {
         return try MonkeyOperations.evalInfix(lhs: lhs, operatorSymbol: symbol, rhs: rhs) as! BaseType
     }
 
+    /// Maps and applies unary operation to the right Monkey operation
+    ///
+    /// Supported variations are:
+    /// ```
+    /// !Object
+    /// -Integer
+    /// ```
+    /// - Parameters:
+    ///   - rhs: The right hand operand
+    /// - Throws: `InvalidPrefixExpression` if any of the operands is not supported.
+    ///           `UnknownOperator` if the bytecode operator doesn't match a monkey operation
+    /// - Returns: The result of the operation depending on the operands
+    public func unaryOperation<BaseType>(rhs: BaseType, operation: OpCodes) throws -> BaseType {
+        let rhs = rhs as! Object
+        var symbol = ""
+        switch operation {
+        case .minus:
+            symbol = "-"
+        case .bang:
+            symbol = "!"
+        default:
+            throw UnknownOperator(String(format: "%02X", operation.rawValue))
+        }
+
+        return try MonkeyOperations.evalPrefix(operator: symbol, rhs: rhs) as! BaseType
+    }
+
 
     /// Gets the language specific representation of a VM boolean value
     ///

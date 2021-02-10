@@ -104,3 +104,19 @@ case gte
 ```
 
 Performs an greater than or equal operation
+
+### `minus`
+
+```swift
+case minus
+```
+
+Performs an unary minus operation, E.G.: `-1, -10`
+
+### `bang`
+
+```swift
+case bang
+```
+
+Performs a negation operation. E.G: `!true = false`

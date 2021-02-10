@@ -25,7 +25,11 @@ class VMTests: XCTestCase {
             ("2 * 2 * 2 * 2 * 2", Integer(32)),
             ("5 * 2 + 10", Integer(20)),
             ("5 + 2 * 10", Integer(25)),
-            ("5 * (2 + 10)", Integer(60))
+            ("5 * (2 + 10)", Integer(60)),
+            ("-5", Integer(-5)),
+            ("-10", Integer(-10)),
+            ("-50 + 100 + -50", Integer(0)),
+            ("(5 + 10 * 2 + 15 / 3) * 2 + -10", Integer(50))
         ]
 
         try self.runVMTests(tests)
@@ -59,7 +63,13 @@ class VMTests: XCTestCase {
             ("(1 <= 2) == true", Boolean.true),
             ("(1 <= 2) == false", Boolean.false),
             ("(1 >= 2) == true", Boolean.false),
-            ("(1 >= 2) == false", Boolean.true)
+            ("(1 >= 2) == false", Boolean.true),
+            ("!true", Boolean.false),
+            ("!false", Boolean.true),
+            ("!5", Boolean.false),
+            ("!!true", Boolean.true),
+            ("!!false", Boolean.false),
+            ("!!5", Boolean.true)
         ]
 
         try self.runVMTests(tests)

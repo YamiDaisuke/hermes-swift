@@ -98,6 +98,10 @@ public enum OpCodes: OpCode {
     case gt
     /// Performs an greater than or equal operation
     case gte
+    /// Performs an unary minus operation, E.G.: `-1, -10`
+    case minus
+    /// Performs a negation operation. E.G: `!true = false`
+    case bang
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed
@@ -124,6 +128,8 @@ public struct OperationDefinition {
         .equal: OperationDefinition(name: "OpEqual", operandsWidth: []),
         .notEqual: OperationDefinition(name: "OpNotEq", operandsWidth: []),
         .gt: OperationDefinition(name: "OpGT", operandsWidth: []),
-        .gte: OperationDefinition(name: "OpGTE", operandsWidth: [])
+        .gte: OperationDefinition(name: "OpGTE", operandsWidth: []),
+        .minus: OperationDefinition(name: "OpMinus", operandsWidth: []),
+        .bang: OperationDefinition(name: "OpBang", operandsWidth: [])
     ]
 }
