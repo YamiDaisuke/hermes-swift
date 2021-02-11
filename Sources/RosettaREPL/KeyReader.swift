@@ -28,16 +28,7 @@ public extension UInt8 {
     }
 }
 
-/// Protocol that defines the interface for subscribing
-/// to key events
-public protocol KeyReading {
-    /// Subscribes to key events. It blocks the thread until an exit or enter event is delivered.
-    ///
-    /// - Parameter subscriber: Function to notify new key events through.
-    func subscribe(subscriber: @escaping (KeyEvent) -> Void)
-}
-
-public class KeyReader: KeyReading {
+public class KeyReader {
     var fileHandle: FileHandle?
     var currentTerminal: termios?
 
@@ -57,10 +48,11 @@ public class KeyReader: KeyReading {
         restoreRawMode(fileHandle: handle, originalTerm: terminal)
     }
 
-    /// Subscribes to key events. It blocks the thread until an exit or enter event is delivered.
+    /// Subscribes to key events. It blocks the thread the subscriber tells the reader to stop
     ///
-    /// - Parameter subscriber: Function to notify new key events through.
-    public func subscribe(subscriber: @escaping (KeyEvent) -> Void) {
+    /// - Parameter subscriber: Function to notify new key events through. Should return `false` to stop the
+    ///                         reading loop
+    public func subscribe(subscriber: @escaping (KeyEvent) -> Bool) {
         let fileHandle = FileHandle.standardInput
         let originalTerm = enableRawMode(fileHandle: fileHandle)
 
@@ -73,29 +65,24 @@ public class KeyReader: KeyReading {
             restoreRawMode(fileHandle: fileHandle, originalTerm: originalTerm)
         }
 
-        while read(fileHandle.fileDescriptor, &char, 1) == 1 {
+        var continueReading = true
+        while continueReading && read(fileHandle.fileDescriptor, &char, 1) == 1 {
             if char == 0x1B {
                 guard read(fileHandle.fileDescriptor, &char, 1) == 1 else { break }
                 if char == 0x5B {
                     guard read(fileHandle.fileDescriptor, &char, 1) == 1 else { break }
-                    subscriber(mapArrowKeys(char))
-                    break
+                    continueReading = subscriber(mapArrowKeys(char))
                 }
             } else if char == 0x0A {
-                subscriber(.enter)
-                break
+                continueReading = subscriber(.enter)
             } else if char == 0x7F {
-                subscriber(.backspace)
-                break
+                continueReading = subscriber(.backspace)
             } else if char == 0x04 {
-                subscriber(.delete)
-                break
+                continueReading = subscriber(.delete)
             } else if char == 0x0C {
-                subscriber(.clear)
-                break
+                continueReading = subscriber(.clear)
             } else {
-                subscriber(.ascii(char: char.character))
-                break
+                continueReading = subscriber(.ascii(char: char.character))
             }
         }
     }

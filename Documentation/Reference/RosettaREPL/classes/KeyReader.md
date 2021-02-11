@@ -3,7 +3,7 @@
 # `KeyReader`
 
 ```swift
-public class KeyReader: KeyReading
+public class KeyReader
 ```
 
 ## Methods
@@ -22,18 +22,19 @@ public func abort()
 Call this  function when you want to abort the current reading session
 and restore the terminal raw mode
 
-### `subscribe(subscriber:raw:)`
+### `subscribe(subscriber:)`
 
 ```swift
-public func subscribe(subscriber: @escaping (KeyEvent) -> Void, raw: ((UInt8) -> Void)? = nil)
+public func subscribe(subscriber: @escaping (KeyEvent) -> Bool)
 ```
 
-Subscribes to key events. It blocks the thread until an exit or enter event is delivered.
+Subscribes to key events. It blocks the thread the subscriber tells the reader to stop
 
-- Parameter subscriber: Function to notify new key events through.
+- Parameter subscriber: Function to notify new key events through. Should return `false` to stop the
+                        reading loop
 
 #### Parameters
 
 | Name | Description |
 | ---- | ----------- |
-| subscriber | Function to notify new key events through. |
+| subscriber | Function to notify new key events through. Should return `false` to stop the reading loop |
