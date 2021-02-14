@@ -10,6 +10,9 @@ import Foundation
 public protocol VMOperations {
     associatedtype BaseType
 
+    /// Gets the empty value representation for the implementing language
+    var null: BaseType { get }
+
     /// Maps and applies binary operation on the implementing language
     /// - Parameters:
     ///   - lhs: The left hand operand
@@ -32,4 +35,10 @@ public protocol VMOperations {
     /// - Parameter bool: The swift `Bool` value to wrap
     /// - Returns: A representation of swift `Bool` in the implementing language
     func getLangBool(for bool: Bool) -> BaseType
+
+
+    /// Check if a value of the implemeting language is considered an equivalent of `true`
+    /// - Parameter value: The value to check
+    /// - Returns: `true` if the given value is considered truthy in the implementing language
+    func isTruthy(_ value: BaseType?) -> Bool
 }

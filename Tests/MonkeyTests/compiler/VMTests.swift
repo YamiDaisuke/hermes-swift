@@ -69,7 +69,25 @@ class VMTests: XCTestCase {
             ("!5", Boolean.false),
             ("!!true", Boolean.true),
             ("!!false", Boolean.false),
-            ("!!5", Boolean.true)
+            ("!!5", Boolean.true),
+            ("!(if (false) { 5; })", Boolean.true)
+        ]
+
+        try self.runVMTests(tests)
+    }
+
+    func testConditionals() throws {
+        let tests: [TestCase] = [
+            ("if (true) { 10 }", Integer(10)),
+            ("if (true) { 10 } else { 20 }", Integer(10)),
+            ("if (false) { 10 } else { 20 }", Integer(20)),
+            ("if (1) { 10 }", Integer(10)),
+            ("if (1 < 2) { 10 }", Integer(10)),
+            ("if (1 < 2) { 10 } else { 20 }", Integer(10)),
+            ("if (1 > 2) { 10 } else { 20 }", Integer(20)),
+            ("if (1 > 2) { 10 }", Null.null),
+            ("if (false) { 10 }", Null.null),
+            ("if ((if (false) { 10 })) { 10 } else { 20 }", Integer(20))
         ]
 
         try self.runVMTests(tests)

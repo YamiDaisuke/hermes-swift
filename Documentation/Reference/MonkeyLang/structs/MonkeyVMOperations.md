@@ -6,6 +6,15 @@
 public struct MonkeyVMOperations: VMOperations
 ```
 
+## Properties
+### `null`
+
+```swift
+public var null: BaseType
+```
+
+Gets the empty value representation for the implementing language
+
 ## Methods
 ### `init()`
 
@@ -86,3 +95,19 @@ the values independent of the swift language.
 | Name | Description |
 | ---- | ----------- |
 | bool | The swift `Bool` value to wrap |
+
+### `isTruthy(_:)`
+
+```swift
+public func isTruthy(_ value: BaseType?) -> Bool
+```
+
+Check if an `Object` is considered truthy
+- Parameter value: The value to check
+- Returns: `true` if the given value is considered truthy
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| value | The value to check |

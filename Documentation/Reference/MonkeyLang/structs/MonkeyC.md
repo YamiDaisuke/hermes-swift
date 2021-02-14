@@ -15,6 +15,18 @@ Monkey Lang compiler for the Rosetta VM
 public var instructions: Instructions = []
 ```
 
+### `lastInstruction`
+
+```swift
+public var lastInstruction: EmittedInstruction?
+```
+
+### `prevInstruction`
+
+```swift
+public var prevInstruction: EmittedInstruction?
+```
+
 ### `constants`
 
 ```swift

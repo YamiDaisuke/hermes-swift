@@ -33,11 +33,12 @@ public extension Instructions {
 
             let read = Bytecode.readOperands(def, instructions: Array(self[(index + 1)...]))
             let operandsString = read.values.map { $0.description }.joined(separator: ",")
+            let opName = operandsString.isEmpty ? def.name : def.name.padding(toLength: 12, withPad: " ", startingAt: 0)
             output += String(
                 format: "%04d %@%@",
                 index,
-                def.name,
-                operandsString.isEmpty ? operandsString : " " + operandsString
+                opName,
+                operandsString
             )
             index += 1 + read.count
 
@@ -102,6 +103,12 @@ public enum OpCodes: OpCode {
     case minus
     /// Performs a negation operation. E.G: `!true = false`
     case bang
+    /// Jumps if the next value in the stack is `false`
+    case jumpf
+    /// Unconditional jump
+    case jump
+    /// Push the empty value representation into the stack
+    case null
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed
@@ -130,6 +137,9 @@ public struct OperationDefinition {
         .gt: OperationDefinition(name: "OpGT", operandsWidth: []),
         .gte: OperationDefinition(name: "OpGTE", operandsWidth: []),
         .minus: OperationDefinition(name: "OpMinus", operandsWidth: []),
-        .bang: OperationDefinition(name: "OpBang", operandsWidth: [])
+        .bang: OperationDefinition(name: "OpBang", operandsWidth: []),
+        .jumpf: OperationDefinition(name: "OpJumpFalse", operandsWidth: [2]),
+        .jump: OperationDefinition(name: "OpJump", operandsWidth: [2]),
+        .null: OperationDefinition(name: "OpNull", operandsWidth: [])
     ]
 }

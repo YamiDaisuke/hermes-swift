@@ -190,6 +190,57 @@ class MonkeyCompilerTests: XCTestCase {
         try runCompilerTests(tests)
     }
 
+    func testConditionals() throws {
+        let tests: [TestCase] = [
+            (
+                "if (true) { 10 }; 3333;",
+                [Integer(10), Integer(3333)],
+                [
+                    // 0000
+                    Bytecode.make(.true),
+                    // 0001
+                    Bytecode.make(.jumpf, operands: [10]),
+                    // 0004
+                    Bytecode.make(.constant, operands: [0]),
+                    // 0007
+                    Bytecode.make(.jump, operands: [11]),
+                    // 0010
+                    Bytecode.make(.null),
+                    // 0011
+                    Bytecode.make(.pop),
+                    // 0012
+                    Bytecode.make(.constant, operands: [1]),
+                    // 0015
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "if (true) { 10 } else { 20 }; 3333;",
+                [Integer(10), Integer(20), Integer(3333)],
+                [
+                    // 0000
+                    Bytecode.make(.true),
+                    // 0001
+                    Bytecode.make(.jumpf, operands: [10]),
+                    // 0004
+                    Bytecode.make(.constant, operands: [0]),
+                    // 0007
+                    Bytecode.make(.jump, operands: [13]),
+                    // 0010
+                    Bytecode.make(.constant, operands: [1]),
+                    // 0013
+                    Bytecode.make(.pop),
+                    // 0014
+                    Bytecode.make(.constant, operands: [2]),
+                    // 0017
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
     // MARK: Utils
 
     func runCompilerTests(_ tests: [TestCase], file: StaticString = #file, line: UInt = #line) throws {

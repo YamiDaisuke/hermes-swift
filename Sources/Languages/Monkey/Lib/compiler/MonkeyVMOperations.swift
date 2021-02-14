@@ -12,6 +12,11 @@ import Rosetta
 public struct MonkeyVMOperations: VMOperations {
     public typealias BaseType = Object
 
+    /// Gets the empty value representation for the implementing language
+    public var null: BaseType {
+        Null.null
+    }
+
     public init() { }
 
     /// Maps and applies binary operation to the right Monkey operation
@@ -94,5 +99,13 @@ public struct MonkeyVMOperations: VMOperations {
     /// - Returns: A representation of swift `Bool` in Monkey language which will be `Boolean`
     public func getLangBool(for bool: Bool) -> BaseType {
         Boolean(bool)
+    }
+
+
+    /// Check if an `Object` is considered truthy
+    /// - Parameter value: The value to check
+    /// - Returns: `true` if the given value is considered truthy
+    public func isTruthy(_ value: BaseType?) -> Bool {
+        return ((value ?? Boolean.false) == Boolean.true).value
     }
 }

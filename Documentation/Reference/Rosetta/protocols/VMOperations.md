@@ -6,6 +6,15 @@
 public protocol VMOperations
 ```
 
+## Properties
+### `null`
+
+```swift
+var null: BaseType
+```
+
+Gets the empty value representation for the implementing language
+
 ## Methods
 ### `binaryOperation(lhs:rhs:operation:)`
 
@@ -63,3 +72,19 @@ the values independent of the swift language.
 | Name | Description |
 | ---- | ----------- |
 | bool | The swift `Bool` value to wrap |
+
+### `isTruthy(_:)`
+
+```swift
+func isTruthy(_ value: BaseType?) -> Bool
+```
+
+Check if a value of the implemeting language is considered an equivalent of `true`
+- Parameter value: The value to check
+- Returns: `true` if the given value is considered truthy in the implementing language
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| value | The value to check |

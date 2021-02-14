@@ -120,3 +120,27 @@ case bang
 ```
 
 Performs a negation operation. E.G: `!true = false`
+
+### `jumpf`
+
+```swift
+case jumpf
+```
+
+Jumps if the next value in the stack is `false`
+
+### `jump`
+
+```swift
+case jump
+```
+
+Unconditional jump
+
+### `null`
+
+```swift
+case null
+```
+
+Push the empty value representation into the stack

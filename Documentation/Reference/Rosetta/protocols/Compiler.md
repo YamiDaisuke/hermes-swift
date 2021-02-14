@@ -17,6 +17,22 @@ var instructions: Instructions
 
 Holds all the compiled instructions bytes
 
+### `lastInstruction`
+
+```swift
+var lastInstruction: EmittedInstruction?
+```
+
+Holds the last emitted instruction
+
+### `prevInstruction`
+
+```swift
+var prevInstruction: EmittedInstruction?
+```
+
+Holds the previous emitted instruction
+
 ### `constants`
 
 ```swift

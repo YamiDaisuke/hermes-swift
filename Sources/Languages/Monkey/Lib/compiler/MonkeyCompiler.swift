@@ -13,6 +13,8 @@ public struct MonkeyC: Compiler {
     public typealias BaseType = Object
 
     public var instructions: Instructions = []
+    public var lastInstruction: EmittedInstruction?
+    public var prevInstruction: EmittedInstruction?
     public var constants: [Object] = []
 
     public init() { }
@@ -44,6 +46,30 @@ public struct MonkeyC: Compiler {
             }
 
             self.emit(operatorCode)
+        case let condition as IfExpression:
+            try self.compile(condition.condition)
+            let jumpFPosition = self.emit(.jumpf, operands: [9999])
+
+            try self.compile(condition.consequence)
+            self.removeLast { $0.code == .pop }
+
+            let jumpPosition = self.emit(.jump, operands: [9999])
+            let afterConsequence = self.instructions.count
+            self.replaceOperands(operands: [Int32(afterConsequence)], at: jumpFPosition)
+
+            if let alternative = condition.alternative {
+                try self.compile(alternative)
+                self.removeLast { $0.code == .pop }
+            } else {
+                self.emit(.null)
+            }
+
+            let afterAlternative = self.instructions.count
+            self.replaceOperands(operands: [Int32(afterAlternative)], at: jumpPosition)
+        case let block as BlockStatement:
+            for stmt in block.statements {
+                try self.compile(stmt)
+            }
         case let integer as IntegerLiteral:
             let value = Integer(integer.value)
             self.emit(.constant, operands: [self.addConstant(value)])
@@ -52,35 +78,6 @@ public struct MonkeyC: Compiler {
         default:
             break
         }
-    }
-
-    /// Saves a constant value into the constants pool
-    /// - Parameter value: The value to store
-    /// - Returns: The index corresponding to the stored value
-    mutating func addConstant(_ value: Object) -> Int32 {
-        self.constants.append(value)
-        return Int32(self.constants.count - 1)
-    }
-
-
-    /// Stores a compiled instruction
-    /// - Parameter instruction: The instruction to store
-    /// - Returns: The starting index of this instruction bytes
-    mutating func addInstruction(_ instruction: Instructions) -> Int {
-        let position = self.instructions.count
-        self.instructions.append(contentsOf: instruction)
-        return position
-    }
-
-    /// Converts an operation and operands into bytecode and store it
-    /// - Parameters:
-    ///   - operation: The operation code
-    ///   - operands: The operands values
-    /// - Returns: The starting index of this instruction bytes
-    @discardableResult
-    mutating func emit(_ operation: OpCodes, operands: [Int32] = []) -> Int {
-        let instruction = Bytecode.make(operation, operands: operands)
-        return addInstruction(instruction)
     }
 
     /// Converts an infix operator string representation to the corresponding `OpCode`

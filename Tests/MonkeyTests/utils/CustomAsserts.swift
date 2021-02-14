@@ -70,6 +70,11 @@ func MKAssertInstructions(
     line: UInt = #line
 ) {
     let expectedConcat = Instructions(expected.joined())
+    print("--- Compiled ---")
+    print(instructions.description)
+    print("--- Expected ---")
+    print(expectedConcat.description)
+    print("------ End -----")
     XCTAssertEqual(instructions.count, expectedConcat.count, file: file, line: line)
     XCTAssertEqual(instructions, expectedConcat, file: file, line: line)
 }

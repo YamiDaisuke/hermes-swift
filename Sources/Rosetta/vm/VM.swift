@@ -45,17 +45,17 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     /// Runs the VM against the assigned bytecode
     /// - Throws: `VMError` if anything fails while interpreting the bytecode
     public mutating func run() throws {
-        var index = 0
-        while index < self.instructions.count {
-            guard let opCode = OpCodes(rawValue: instructions[index]) else {
-                throw UnknownOpCode(instructions[index])
+        var instructionPointer = 0
+        while instructionPointer < self.instructions.count {
+            guard let opCode = OpCodes(rawValue: instructions[instructionPointer]) else {
+                throw UnknownOpCode(instructions[instructionPointer])
             }
             switch opCode {
             case .constant:
-                guard let constIndex = instructions.readInt(bytes: 2, startIndex: index + 1) else {
+                guard let constIndex = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
                     continue
                 }
-                index += 2
+                instructionPointer += 2
                 try self.push(self.constants[Int(constIndex)])
             case .pop:
                 self.pop()
@@ -70,10 +70,27 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 try self.push(value)
             case .true, .false:
                 try self.push(self.operations.getLangBool(for: opCode == .true))
+            case .null:
+                try self.push(self.operations.null)
+            case .jumpf:
+                guard let destination = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                    continue
+                }
+                instructionPointer += 2
+                let condition = self.pop()
+                if !operations.isTruthy(condition) {
+                    instructionPointer = Int(destination) - 1
+                }
+            case .jump:
+                guard let destination = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                    continue
+                }
+                instructionPointer += 2
+                instructionPointer = Int(destination) - 1
             default:
                 break
             }
-            index += 1
+            instructionPointer += 1
         }
     }
 
