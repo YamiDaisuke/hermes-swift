@@ -122,7 +122,25 @@ public struct MonkeyLexer: Lexer {
         case "*":
             token = Token(type: .asterisk, literal: String(char))
         case "/":
-            token = Token(type: .slash, literal: String(char))
+            if next == "/" {
+                self.readChar()
+                self.readChar()
+                let comment = self.readComment()
+                token = Token(
+                    type: .comment,
+                    literal: comment.trimmingCharacters(in: .whitespacesAndNewlines)
+                )
+            } else if next == "*" {
+                self.readChar()
+                self.readChar()
+                let comment = self.readMultilineComment()
+                token = Token(
+                    type: .comment,
+                    literal: comment.trimmingCharacters(in: .whitespacesAndNewlines)
+                )
+            } else {
+                token = Token(type: .slash, literal: String(char))
+            }
         case "<":
             if next == "=" {
                 token = Token(type: .lte, literal: String(char) + next)
@@ -198,6 +216,46 @@ public struct MonkeyLexer: Lexer {
     mutating func readNumber() -> String {
         // TODO: Support floating points
         return self.read { $0.isNumber }
+    }
+
+    mutating func readComment() -> String {
+        var output = ""
+        repeat {
+            guard let current = self.readingChars?.current else {
+                break
+            }
+
+            output += String(current)
+            guard self.readingChars?.next != "\n" else {
+                return output
+            }
+
+            self.readChar()
+        } while self.readingChars?.current != nil && self.readingChars?.current != "\""
+
+        return output
+    }
+
+    mutating func readMultilineComment() -> String {
+        var output = ""
+        repeat {
+            guard let current = self.readingChars?.current else {
+                break
+            }
+
+            if current == "*" && self.readingChars?.next == "/" {
+                self.readChar()
+                return output
+            }
+
+            output += String(current)
+            if self.readingChars?.next == "\n" {
+                output += "\n"
+            }
+            self.readChar()
+        } while self.readingChars?.current != nil && self.readingChars?.current != "\""
+
+        return output
     }
 
     mutating func readString() throws -> String {

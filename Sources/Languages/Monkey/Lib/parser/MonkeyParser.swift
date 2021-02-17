@@ -99,16 +99,18 @@ public struct MonkeyParser: Parser {
         }
 
         switch token.type {
-        case Token.Kind.let, Token.Kind.var:
+        case .let, .var:
             return try parseDeclareStatement()
-        case Token.Kind.return:
+        case .return:
             return try parseReturnStatement()
-        case Token.Kind.identifier:
+        case .identifier:
             if self.nextToken?.type == .assign {
                 return try parseAssignStatement()
             } else {
                 return try parseExpressionStatement()
             }
+        case .comment:
+            return CommentStatement(token: token, text: token.literal)
         default:
             return try parseExpressionStatement()
         }

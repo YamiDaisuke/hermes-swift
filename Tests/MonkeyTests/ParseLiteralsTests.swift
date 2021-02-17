@@ -10,6 +10,54 @@ import XCTest
 @testable import MonkeyLang
 
 class ParseLiteralsTests: XCTestCase {
+    func testComments() throws {
+        let input = """
+        5; // Inline comment
+        // Full line comment
+        // Comment with code: let y = 100;
+        100;
+        /* multiline with code
+        let a = 100;
+        */
+        let b = 20;
+        """
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertEqual(program?.statements.count, 7)
+
+        var expressionStmt = program?.statements[0] as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        MKAssertIntegerLiteral(expression: expressionStmt?.expression, expected: 5)
+
+        var commentStmt = program?.statements[1] as? CommentStatement
+        XCTAssertNotNil(commentStmt)
+        XCTAssertEqual(commentStmt?.text, "Inline comment")
+
+        commentStmt = program?.statements[2] as? CommentStatement
+        XCTAssertNotNil(commentStmt)
+        XCTAssertEqual(commentStmt?.text, "Full line comment")
+
+        commentStmt = program?.statements[3] as? CommentStatement
+        XCTAssertNotNil(commentStmt)
+        XCTAssertEqual(commentStmt?.text, "Comment with code: let y = 100;")
+
+        expressionStmt = program?.statements[4] as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        MKAssertIntegerLiteral(expression: expressionStmt?.expression, expected: 100)
+
+        commentStmt = program?.statements[5] as? CommentStatement
+        XCTAssertNotNil(commentStmt)
+        XCTAssertEqual(commentStmt?.text, "multiline with code\nlet a = 100;")
+
+        let letStmt = program?.statements[6] as? DeclareStatement
+        XCTAssertNotNil(letStmt)
+        XCTAssertEqual(letStmt?.name.value, "b")
+        MKAssertIntegerLiteral(expression: letStmt?.value, expected: 20)
+    }
+
     func testIntLiteralExpression() throws {
         let input = """
         5;

@@ -23,7 +23,7 @@ class MonkeyLexerTests: XCTestCase {
         };
 
         let result = add(five, ten);
-        !-/*5;
+        ! - / * 5;
         5 < 10 > 5;
         if (5 < 10) {
                return true;
@@ -39,7 +39,12 @@ class MonkeyLexerTests: XCTestCase {
         [1, 2];
         {"foo": "bar"}
         a = 42;
-        var x = 10;
+        var x = 10; // This is an inline comment
+        // This is a comment
+        /*
+        multiline
+        comment
+        */
         """
         // swiftlint:enable indentation_width
         let tokens: [Token] = [
@@ -146,6 +151,9 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .assign, literal: "="),
             Token(type: .int, literal: "10"),
             Token(type: .semicolon, literal: ";"),
+            Token(type: .comment, literal: "This is an inline comment"),
+            Token(type: .comment, literal: "This is a comment"),
+            Token(type: .comment, literal: "multiline\ncomment"),
             Token(type: .eof, literal: "")
         ]
 
@@ -164,8 +172,12 @@ class MonkeyLexerTests: XCTestCase {
 
         let add = fn(x, y) {
              x + y;
-        };
-
+        }; // This is an inline comment
+        //  This is a comment
+        /*
+        multiline
+        comment
+        */
         """
         // swiftlint:enable indentation_width
         let tokens: [Token] = [
@@ -195,7 +207,10 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .semicolon, literal: ";", line: 5, column: 10),
             Token(type: .rbrace, literal: "}", line: 6, column: 0),
             Token(type: .semicolon, literal: ";", line: 6, column: 1),
-            Token(type: .eof, literal: "", line: 7, column: 0)
+            Token(type: .comment, literal: "This is an inline comment", line: 6, column: 3),
+            Token(type: .comment, literal: "This is a comment", line: 7, column: 0),
+            Token(type: .comment, literal: "multiline\ncomment", line: 8, column: 0),
+            Token(type: .eof, literal: "", line: 11, column: 2)
         ]
 
         var lexer = MonkeyLexer(withString: input)
@@ -215,8 +230,12 @@ class MonkeyLexerTests: XCTestCase {
 
         let add = fn(x, y) {
              x + y;
-        };
-
+        }; // This is an inline comment
+        //  This is a comment
+        /*
+        multiline
+        comment
+        */
         """
 
         // swiftlint:enable indentation_width
@@ -247,7 +266,10 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .semicolon, literal: ";", line: 5, column: 10),
             Token(type: .rbrace, literal: "}", line: 6, column: 0),
             Token(type: .semicolon, literal: ";", line: 6, column: 1),
-            Token(type: .eof, literal: "", line: 7, column: 0)
+            Token(type: .comment, literal: "This is an inline comment", line: 6, column: 3),
+            Token(type: .comment, literal: "This is a comment", line: 7, column: 0),
+            Token(type: .comment, literal: "multiline\ncomment", line: 8, column: 0),
+            Token(type: .eof, literal: "", line: 11, column: 2)
         ]
 
         let file = writeToFile(input, file: "testNextTokenFromFile")
@@ -255,6 +277,7 @@ class MonkeyLexerTests: XCTestCase {
         for token in tokens {
             let next = lexer.nextToken()
             XCTAssertEqual(next, token)
+            print(next.literal)
             XCTAssertEqual(next.line, token.line)
             XCTAssertEqual(next.column, token.column)
             XCTAssertEqual(next.file, file.absoluteString.replacingOccurrences(of: "file://", with: ""))

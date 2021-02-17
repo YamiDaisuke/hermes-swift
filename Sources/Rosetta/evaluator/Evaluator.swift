@@ -34,10 +34,11 @@ public extension Evaluator {
     static func eval(program: Program, environment: Environment<BaseType>) throws -> BaseType? {
         var result: BaseType?
         for statement in program.statements {
-            result = try Self.eval(node: statement, environment: environment)
-
-            if let result = result as? ControlTransfer {
-                return try handleControlTransfer(result, environment: environment)
+            if let next = try Self.eval(node: statement, environment: environment) {
+                result = next
+                if let result = result as? ControlTransfer {
+                    return try handleControlTransfer(result, environment: environment)
+                }
             }
         }
 

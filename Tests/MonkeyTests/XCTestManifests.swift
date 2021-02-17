@@ -49,6 +49,7 @@ extension MonkeyEvaluatorTests {
         ("testAssignStatement", testAssignStatement),
         ("testClousure", testClousure),
         ("testDeclareStatement", testDeclareStatement),
+        ("testEvalComments", testEvalComments),
         ("testEvalStrings", testEvalStrings),
         ("testEvaluatorErrors", testEvaluatorErrors),
         ("testFunctionCall", testFunctionCall),
@@ -119,6 +120,7 @@ extension ParseLiteralsTests {
     static let __allTests__ParseLiteralsTests = [
         ("testArrayLiteral", testArrayLiteral),
         ("testBooleanLiteralExpression", testBooleanLiteralExpression),
+        ("testComments", testComments),
         ("testFunctionLiteral", testFunctionLiteral),
         ("testIntLiteralExpression", testIntLiteralExpression),
         ("testStringLiteralExpression", testStringLiteralExpression),

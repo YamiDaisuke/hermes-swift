@@ -9,14 +9,19 @@ import Foundation
 import Rosetta
 
 // Identifiers and literals
-extension Token.Kind {
+public extension Token.Kind {
+    static let comment = Token.Kind("comment")
     static let identifier = Token.Kind("identifier")
     static let int = Token.Kind("int")
     static let string = Token.Kind("string")
+
+    static var literals: Set<Token.Kind> {
+        [.int, .string]
+    }
 }
 
 // Operators
-extension Token.Kind {
+public extension Token.Kind {
     static let assign = Token.Kind("=")
     static let equals = Token.Kind("==")
     static let plus = Token.Kind("+")
@@ -29,10 +34,27 @@ extension Token.Kind {
     static let lte = Token.Kind("<=")
     static let gt = Token.Kind(">")
     static let gte = Token.Kind(">=")
+
+    static var operators: Set<Token.Kind> {
+        [
+            .assign,
+            .equals,
+            .plus,
+            .minus,
+            .bang,
+            .notEquals,
+            .asterisk,
+            .slash,
+            .lt,
+            .lte,
+            .gt,
+            .gte
+        ]
+    }
 }
 
 // Delimiters
-extension Token.Kind {
+public extension Token.Kind {
     static let comma = Token.Kind(",")
     static let semicolon = Token.Kind(";")
     static let colon = Token.Kind(":")
@@ -43,10 +65,24 @@ extension Token.Kind {
     static let rbrace = Token.Kind("}")
     static let lbracket = Token.Kind("[")
     static let rbracket = Token.Kind("]")
+
+    static var delimiters: Set<Token.Kind> {
+        [
+            .comma,
+            .semicolon,
+            .colon,
+            .lparen,
+            .rparen,
+            .lbrace,
+            .rbrace,
+            .lbracket,
+            .rbracket
+        ]
+    }
 }
 
 // Keywords
-extension Token.Kind {
+public extension Token.Kind {
     static let function = Token.Kind("fn")
     static let `let` = Token.Kind("let")
     static let `var` = Token.Kind("var")
