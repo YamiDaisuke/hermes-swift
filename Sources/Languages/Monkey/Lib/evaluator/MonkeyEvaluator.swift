@@ -15,6 +15,8 @@ public struct MonkeyEvaluator: Evaluator {
     public static func eval(node: Node, environment: Environment<Object>) throws -> Object? {
         do {
             switch node {
+            case _ as CommentStatement:
+                return nil
             case let expression as ExpressionStatement:
                 return try eval(node: expression.expression, environment: environment)
             case let prefix as PrefixExpression:

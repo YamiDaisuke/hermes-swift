@@ -11,6 +11,23 @@ import XCTest
 
 // swiftlint:disable type_body_length
 class MonkeyEvaluatorTests: XCTestCase {
+    func testEvalComments() throws {
+        let input = """
+        var x = 100; // Inline
+        // Fullline
+        // with code x = 200;
+        /*multi*/
+        x * 10; /*and here*/
+        // 200;
+        /* with code:
+        42;
+        */
+        """
+        let evaluated = try Utils.testEval(input: input, environment: Environment())
+        XCTAssertNotNil(evaluated)
+        MKAssertInteger(object: evaluated, expected: 1000)
+    }
+
     func testEvalStrings() throws {
         let input = "\"Hello World!\""
         let evaluated = try Utils.testEval(input: input, environment: Environment())
