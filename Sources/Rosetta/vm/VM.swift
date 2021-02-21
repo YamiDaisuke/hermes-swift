@@ -8,17 +8,21 @@
 import Foundation
 
 /// Max number of elements in the stack
-let kStackSize = 2048
+public let kStackSize = 2048
+/// Max number of global elements
+public let kGlobalsSize = 65536
 
 /// Rosetta VM implementation
 public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType == BaseType {
-    var constants: [BaseType]
+    public internal(set) var constants: [BaseType]
     var instructions: Instructions
 
     var operations: Operations
 
     var stack: [BaseType]
     var stackPointer: Int
+
+    public internal(set) var globals: [BaseType?]
 
     /// Returns the current value sitting a top of the stack if the stack is empty returns `nil`
     public var stackTop: BaseType? {
@@ -28,18 +32,46 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
 
     public var lastPoped: BaseType?
 
+    /// Creates a VM instance with an existing constants and global lists
+    /// - Parameters:
+    ///   - bytcode: The bytecode to run
+    ///   - operations: An implementation of `VMOperations` in charge of applying the language
+    ///                 specific operations for this VM
+    ///   - constants: A list of existing constants
+    ///   - globals: A list of existing globals 
+    public init(
+        _ bytcode: BytecodeProgram<BaseType>,
+        operations: Operations,
+        constants: inout [BaseType],
+        globals: inout [BaseType?]
+    ) {
+        self.constants = constants
+        self.instructions = bytcode.instructions
+        self.operations = operations
+        self.constants = constants
+        self.globals = globals
+
+        self.stack = []
+        stack.reserveCapacity(kStackSize)
+        stackPointer = 0
+    }
+
     /// Init a new VM with a set of bytecode to run
     /// - Parameters:
     ///   - bytcode: The compiled bytecode
     ///   - operations: An implementation of `VMOperations` in charge of applying the language
     ///                 specific operations for this VM
     public init(_ bytcode: BytecodeProgram<BaseType>, operations: Operations) {
-        self.constants = bytcode.constants
-        self.instructions = bytcode.instructions
-        self.operations = operations
-        stack = []
-        stack.reserveCapacity(kStackSize)
-        stackPointer = 0
+        var constants = bytcode.constants
+        var globals: [BaseType?] = []
+        globals.reserveCapacity(kGlobalsSize)
+        globals.append(contentsOf: Array(repeating: nil, count: kGlobalsSize))
+        self.init(
+            bytcode,
+            operations: operations,
+            constants: &constants,
+            globals: &globals
+        )
     }
 
     /// Runs the VM against the assigned bytecode
@@ -87,6 +119,22 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 }
                 instructionPointer += 2
                 instructionPointer = Int(destination) - 1
+            case .setGlobal:
+                guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                    continue
+                }
+                instructionPointer += 2
+                if let value = self.pop() {
+                    self.globals[Int(index)] = value
+                }
+            case .getGlobal:
+                guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                    continue
+                }
+                instructionPointer += 2
+                if let value = self.globals[Int(index)] {
+                    try self.push(value)
+                }
             default:
                 break
             }

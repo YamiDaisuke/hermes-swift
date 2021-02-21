@@ -16,8 +16,15 @@ public struct MonkeyC: Compiler {
     public var lastInstruction: EmittedInstruction?
     public var prevInstruction: EmittedInstruction?
     public var constants: [Object] = []
+    public var symbolTable = SymbolTable()
 
     public init() { }
+
+    /// Creates a compiler instance with an existing `SymbolTable`
+    /// - Parameter table: The existing table
+    public init(withSymbolTable table: SymbolTable) {
+        self.symbolTable = table
+    }
 
     public mutating func compile(_ program: Program) throws {
         for node in program.statements {
@@ -48,12 +55,12 @@ public struct MonkeyC: Compiler {
             self.emit(operatorCode)
         case let condition as IfExpression:
             try self.compile(condition.condition)
-            let jumpFPosition = self.emit(.jumpf, operands: [9999])
+            let jumpFPosition = self.emit(.jumpf, 9999)
 
             try self.compile(condition.consequence)
             self.removeLast { $0.code == .pop }
 
-            let jumpPosition = self.emit(.jump, operands: [9999])
+            let jumpPosition = self.emit(.jump, 9999)
             let afterConsequence = self.instructions.count
             self.replaceOperands(operands: [Int32(afterConsequence)], at: jumpFPosition)
 
@@ -72,9 +79,16 @@ public struct MonkeyC: Compiler {
             }
         case let integer as IntegerLiteral:
             let value = Integer(integer.value)
-            self.emit(.constant, operands: [self.addConstant(value)])
+            self.emit(.constant, self.addConstant(value))
         case let boolean as BooleanLiteral:
             self.emit(boolean.value ? .true : .false)
+        case let declareStatement as DeclareStatement:
+            try compile(declareStatement.value)
+            let symbol = symbolTable.define(declareStatement.name.value)
+            self.emit(.setGlobal, Int32(symbol.index))
+        case let identifier as Identifier:
+            let symbol = try self.symbolTable.resolve(identifier.value)
+            self.emit(.getGlobal, Int32(symbol.index))
         default:
             break
         }

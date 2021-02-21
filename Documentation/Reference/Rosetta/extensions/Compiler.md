@@ -47,10 +47,10 @@ Stores a compiled instruction
 | ---- | ----------- |
 | instruction | The instruction to store |
 
-### `emit(_:operands:)`
+### `emit(_:_:)`
 
 ```swift
-mutating func emit(_ operation: OpCodes, operands: [Int32] = []) -> Int
+mutating func emit(_ operation: OpCodes, _ operands: Int32...) -> Int
 ```
 
 Converts an operation and operands into bytecode and store it

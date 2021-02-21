@@ -33,12 +33,33 @@ public var prevInstruction: EmittedInstruction?
 public var constants: [Object] = []
 ```
 
+### `symbolTable`
+
+```swift
+public var symbolTable = SymbolTable()
+```
+
 ## Methods
 ### `init()`
 
 ```swift
 public init()
 ```
+
+### `init(withSymbolTable:)`
+
+```swift
+public init(withSymbolTable table: SymbolTable)
+```
+
+Creates a compiler instance with an existing `SymbolTable`
+- Parameter table: The existing table
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| table | The existing table |
 
 ### `compile(_:)`
 

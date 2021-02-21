@@ -76,6 +76,11 @@ struct MonkeyRepl: Repl {
             return
         }
 
+        var constants: [Object] = []
+        var globals: [Object?] = []
+        globals.reserveCapacity(kGlobalsSize)
+        globals.append(contentsOf: Array(repeating: nil, count: kGlobalsSize))
+        var symbolTable = SymbolTable()
         while true {
             let input = self.readInput()
 
@@ -94,13 +99,23 @@ struct MonkeyRepl: Repl {
                         controller.write(result?.description ?? "", inColor: .green)
                         controller.endLine()
                     case .compiled:
-                        var compiler = MonkeyC()
+                        var compiler = MonkeyC(withSymbolTable: symbolTable)
                         try compiler.compile(program)
-                        var vm = VM(compiler.bytecode, operations: MonkeyVMOperations())
+                        constants = compiler.bytecode.constants
+                        var vm = VM(
+                            compiler.bytecode,
+                            operations: MonkeyVMOperations(),
+                            constants: &constants,
+                            globals: &globals
+                        )
                         try vm.run()
                         let top = vm.lastPoped
                         controller.write(top?.description ?? "", inColor: .green)
                         controller.endLine()
+
+                        constants = vm.constants
+                        globals = vm.globals
+                        symbolTable = compiler.symbolTable
                     }
                 } else {
                     throw "Program not parsed"

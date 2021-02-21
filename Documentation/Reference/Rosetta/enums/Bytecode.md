@@ -7,6 +7,25 @@ public enum Bytecode
 ```
 
 ## Methods
+### `make(_:_:)`
+
+```swift
+public static func make(_ op: OpCodes, _ operands: Int32...) -> Instructions
+```
+
+Converts abstract representation into Rosetta VM bytecode instructions
+- Parameters:
+  - op: The instruction `OpCode`
+  - operands: The operands values
+- Returns: The instruction bytes
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| op | The instruction `OpCode` |
+| operands | The operands values |
+
 ### `make(_:operands:)`
 
 ```swift

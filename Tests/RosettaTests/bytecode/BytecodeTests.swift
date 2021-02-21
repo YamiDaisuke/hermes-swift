@@ -28,10 +28,10 @@ class BytecodeTests: XCTestCase {
 
     func testInstructionsDescription() {
         var instructions: Instructions = []
-        instructions.append(contentsOf: Bytecode.make(.constant, operands: [1]))
-        instructions.append(contentsOf: Bytecode.make(.constant, operands: [2]))
-        instructions.append(contentsOf: Bytecode.make(.constant, operands: [65535]))
-        instructions.append(contentsOf: Bytecode.make(.add, operands: []))
+        instructions.append(contentsOf: Bytecode.make(.constant, 1))
+        instructions.append(contentsOf: Bytecode.make(.constant, 2))
+        instructions.append(contentsOf: Bytecode.make(.constant, 65535))
+        instructions.append(contentsOf: Bytecode.make(.add))
 
         let expected = """
         0000 OpConstant  1

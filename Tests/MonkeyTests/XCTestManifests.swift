@@ -46,6 +46,7 @@ extension MonkeyCompilerTests {
     static let __allTests__MonkeyCompilerTests = [
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
+        ("testGlobalLetStatements", testGlobalLetStatements),
         ("testIntegerArithmetic", testIntegerArithmetic),
     ]
 }
@@ -145,6 +146,7 @@ extension VMTests {
     static let __allTests__VMTests = [
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
+        ("testGlobalLetStatements", testGlobalLetStatements),
         ("testIntegerArithmetic", testIntegerArithmetic),
     ]
 }

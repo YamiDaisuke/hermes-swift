@@ -18,9 +18,9 @@ class MonkeyCompilerTests: XCTestCase {
                 "1; 2;",
                 [Integer(1), Integer(2)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, 0),
                     Bytecode.make(.pop),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -28,8 +28,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 + 2",
                 [Integer(1), Integer(2)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.add),
                     Bytecode.make(.pop)
                 ]
@@ -38,8 +38,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 - 2",
                 [Integer(1), Integer(2)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.sub),
                     Bytecode.make(.pop)
                 ]
@@ -48,8 +48,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 * 2",
                 [Integer(1), Integer(2)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.mul),
                     Bytecode.make(.pop)
                 ]
@@ -58,8 +58,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 / 2",
                 [Integer(1), Integer(2)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.div),
                     Bytecode.make(.pop)
                 ]
@@ -68,7 +68,7 @@ class MonkeyCompilerTests: XCTestCase {
                 "-1",
                 [Integer(1)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, 0),
                     Bytecode.make(.minus),
                     Bytecode.make(.pop)
                 ]
@@ -100,8 +100,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 > 2",
                 [Integer(1), Integer(2)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.gt),
                     Bytecode.make(.pop)
                 ]
@@ -110,8 +110,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 < 2",
                 [Integer(2), Integer(1)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.gt),
                     Bytecode.make(.pop)
                 ]
@@ -120,8 +120,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 >= 2",
                 [Integer(1), Integer(2)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.gte),
                     Bytecode.make(.pop)
                 ]
@@ -130,8 +130,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 <= 2",
                 [Integer(2), Integer(1)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.gte),
                     Bytecode.make(.pop)
                 ]
@@ -140,8 +140,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 == 2",
                 [Integer(1), Integer(2)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.equal),
                     Bytecode.make(.pop)
                 ]
@@ -150,8 +150,8 @@ class MonkeyCompilerTests: XCTestCase {
                 "1 != 2",
                 [Integer(1), Integer(2)],
                 [
-                    Bytecode.make(.constant, operands: [0]),
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
                     Bytecode.make(.notEqual),
                     Bytecode.make(.pop)
                 ]
@@ -199,17 +199,17 @@ class MonkeyCompilerTests: XCTestCase {
                     // 0000
                     Bytecode.make(.true),
                     // 0001
-                    Bytecode.make(.jumpf, operands: [10]),
+                    Bytecode.make(.jumpf, 10),
                     // 0004
-                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, 0),
                     // 0007
-                    Bytecode.make(.jump, operands: [11]),
+                    Bytecode.make(.jump, 11),
                     // 0010
                     Bytecode.make(.null),
                     // 0011
                     Bytecode.make(.pop),
                     // 0012
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 1),
                     // 0015
                     Bytecode.make(.pop)
                 ]
@@ -221,18 +221,57 @@ class MonkeyCompilerTests: XCTestCase {
                     // 0000
                     Bytecode.make(.true),
                     // 0001
-                    Bytecode.make(.jumpf, operands: [10]),
+                    Bytecode.make(.jumpf, 10),
                     // 0004
-                    Bytecode.make(.constant, operands: [0]),
+                    Bytecode.make(.constant, 0),
                     // 0007
-                    Bytecode.make(.jump, operands: [13]),
+                    Bytecode.make(.jump, 13),
                     // 0010
-                    Bytecode.make(.constant, operands: [1]),
+                    Bytecode.make(.constant, 1),
                     // 0013
                     Bytecode.make(.pop),
                     // 0014
-                    Bytecode.make(.constant, operands: [2]),
+                    Bytecode.make(.constant, 2),
                     // 0017
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
+    func testGlobalLetStatements() throws {
+        let tests: [TestCase] = [
+            (
+                "let one = 1; let two = 2;",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.setGlobal, 1)
+                ]
+            ),
+            (
+                "let one = 1; one;",
+                [Integer(1)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.getGlobal, 0),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "let one = 1; let two = one; two",
+                [Integer(1)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.getGlobal, 0),
+                    Bytecode.make(.setGlobal, 1),
+                    Bytecode.make(.getGlobal, 1),
                     Bytecode.make(.pop)
                 ]
             )

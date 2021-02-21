@@ -109,6 +109,10 @@ public enum OpCodes: OpCode {
     case jump
     /// Push the empty value representation into the stack
     case null
+    /// Assign a global bound to a value
+    case setGlobal
+    /// Get the value assigned to a global id
+    case getGlobal
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed
@@ -140,6 +144,8 @@ public struct OperationDefinition {
         .bang: OperationDefinition(name: "OpBang", operandsWidth: []),
         .jumpf: OperationDefinition(name: "OpJumpFalse", operandsWidth: [2]),
         .jump: OperationDefinition(name: "OpJump", operandsWidth: [2]),
-        .null: OperationDefinition(name: "OpNull", operandsWidth: [])
+        .null: OperationDefinition(name: "OpNull", operandsWidth: []),
+        .setGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [2]),
+        .getGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [2])
     ]
 }

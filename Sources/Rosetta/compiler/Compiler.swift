@@ -35,6 +35,8 @@ public protocol Compiler {
 
     /// A pool of the compiled constant values
     var constants: [BaseType] { get set }
+    /// The compiled `SymbolTable`
+    var symbolTable: SymbolTable { get }
 
     /// Puts all the compiled values into a single `BytecodeProgram`
     var bytecode: BytecodeProgram<BaseType> { get }
@@ -78,7 +80,7 @@ public extension Compiler {
     ///   - operands: The operands values
     /// - Returns: The starting index of this instruction bytes
     @discardableResult
-    mutating func emit(_ operation: OpCodes, operands: [Int32] = []) -> Int {
+    mutating func emit(_ operation: OpCodes, _ operands: Int32...) -> Int {
         self.prevInstruction = self.lastInstruction
         let instruction = Bytecode.make(operation, operands: operands)
         let position = addInstruction(instruction)

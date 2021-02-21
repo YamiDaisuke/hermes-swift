@@ -41,6 +41,14 @@ var constants: [BaseType]
 
 A pool of the compiled constant values
 
+### `symbolTable`
+
+```swift
+var symbolTable: SymbolTable
+```
+
+The compiled `SymbolTable`
+
 ### `bytecode`
 
 ```swift

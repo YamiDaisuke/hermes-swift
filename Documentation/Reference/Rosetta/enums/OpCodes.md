@@ -144,3 +144,19 @@ case null
 ```
 
 Push the empty value representation into the stack
+
+### `setGlobal`
+
+```swift
+case setGlobal
+```
+
+Assign a global bound to a value
+
+### `getGlobal`
+
+```swift
+case getGlobal
+```
+
+Get the value assigned to a global id

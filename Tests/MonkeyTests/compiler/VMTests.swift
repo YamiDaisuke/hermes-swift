@@ -93,6 +93,16 @@ class VMTests: XCTestCase {
         try self.runVMTests(tests)
     }
 
+    func testGlobalLetStatements() throws {
+        let tests: [TestCase] = [
+            ("let one = 1; one;", Integer(1)),
+            ("let one = 1; let two = 2; one + two", Integer(3)),
+            ("let one = 1; let two = one + one; one + two", Integer(3))
+        ]
+
+        try self.runVMTests(tests)
+    }
+
     // MARK: Utils
 
     func runVMTests(_ tests: [TestCase], file: StaticString = #file, line: UInt = #line) throws {

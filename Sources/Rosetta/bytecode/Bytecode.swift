@@ -13,6 +13,15 @@ public enum Bytecode {
     ///   - op: The instruction `OpCode`
     ///   - operands: The operands values
     /// - Returns: The instruction bytes
+    public static func make(_ op: OpCodes, _ operands: Int32...) -> Instructions {
+        return Bytecode.make(op, operands: operands)
+    }
+
+    /// Converts abstract representation into Rosetta VM bytecode instructions
+    /// - Parameters:
+    ///   - op: The instruction `OpCode`
+    ///   - operands: The operands values
+    /// - Returns: The instruction bytes
     public static func make(_ op: OpCodes, operands: [Int32] = []) -> Instructions {
         guard let defintion = OperationDefinition[op] else {
             return []

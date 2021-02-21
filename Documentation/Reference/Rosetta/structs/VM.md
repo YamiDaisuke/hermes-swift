@@ -9,6 +9,18 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
 Rosetta VM implementation
 
 ## Properties
+### `constants`
+
+```swift
+public internal(set) var constants: [BaseType]
+```
+
+### `globals`
+
+```swift
+public internal(set) var globals: [BaseType?]
+```
+
 ### `stackTop`
 
 ```swift
@@ -24,6 +36,34 @@ public var lastPoped: BaseType?
 ```
 
 ## Methods
+### `init(_:operations:constants:globals:)`
+
+```swift
+public init(
+    _ bytcode: BytecodeProgram<BaseType>,
+    operations: Operations,
+    constants: inout [BaseType],
+    globals: inout [BaseType?]
+)
+```
+
+Creates a VM instance with an existing constants and global lists
+- Parameters:
+  - bytcode: The bytecode to run
+  - operations: An implementation of `VMOperations` in charge of applying the language
+                specific operations for this VM
+  - constants: A list of existing constants
+  - globals: A list of existing globals
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| bytcode | The bytecode to run |
+| operations | An implementation of `VMOperations` in charge of applying the language specific operations for this VM |
+| constants | A list of existing constants |
+| globals | A list of existing globals |
+
 ### `init(_:operations:)`
 
 ```swift
