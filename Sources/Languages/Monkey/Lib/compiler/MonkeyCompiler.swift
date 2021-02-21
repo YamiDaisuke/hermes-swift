@@ -80,6 +80,9 @@ public struct MonkeyC: Compiler {
         case let integer as IntegerLiteral:
             let value = Integer(integer.value)
             self.emit(.constant, self.addConstant(value))
+        case let string as StringLiteral:
+            let value = MString(string.value)
+            self.emit(.constant, self.addConstant(value))
         case let boolean as BooleanLiteral:
             self.emit(boolean.value ? .true : .false)
         case let declareStatement as DeclareStatement:

@@ -192,6 +192,31 @@ class MonkeyCompilerTests: XCTestCase {
         try runCompilerTests(tests)
     }
 
+    func testStringExpressions() throws {
+        let tests: [TestCase] = [
+            (
+                "\"monkey\"",
+                [MString("monkey")],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "\"mon\" + \"key\"",
+                [MString("mon"), MString("key")],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.add),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
     func testConditionals() throws {
         let tests: [TestCase] = [
             (

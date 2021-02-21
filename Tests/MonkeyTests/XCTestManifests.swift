@@ -49,6 +49,7 @@ extension MonkeyCompilerTests {
         ("testGlobalLetStatements", testGlobalLetStatements),
         ("testGlobalVarStatements", testGlobalVarStatements),
         ("testIntegerArithmetic", testIntegerArithmetic),
+        ("testStringExpressions", testStringExpressions),
     ]
 }
 
@@ -150,6 +151,7 @@ extension VMTests {
         ("testGlobalLetStatements", testGlobalLetStatements),
         ("testGlobalVarStatements", testGlobalVarStatements),
         ("testIntegerArithmetic", testIntegerArithmetic),
+        ("testStringExpressions", testStringExpressions),
     ]
 }
 

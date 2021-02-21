@@ -76,6 +76,17 @@ class VMTests: XCTestCase {
         try self.runVMTests(tests)
     }
 
+    func testStringExpressions() throws {
+        let tests: [TestCase] = [
+            ("\"monkey\"", MString("monkey")),
+            ("\"mon\" + \"key\"", MString("monkey")),
+            ("\"mon\" + \"key\" + \"banana\"", MString("monkeybanana")),
+            ("\"mon\" + \"key\" + 2", MString("monkey2"))
+        ]
+
+        try self.runVMTests(tests)
+    }
+
     func testConditionals() throws {
         let tests: [TestCase] = [
             ("if (true) { 10 }", Integer(10)),
