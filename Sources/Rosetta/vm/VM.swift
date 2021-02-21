@@ -145,11 +145,33 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 if let value = self.globals[Int(index)] {
                     try self.push(value)
                 }
+            case .array:
+                guard let count = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                    continue
+                }
+                instructionPointer += 2
+                let array = buildArray(from: self.stackPointer - Int(count), to: self.stackPointer)
+                self.stackPointer -= Int(count)
+
+                try self.push(self.operations.buildLangArray(from: array))
             default:
                 break
             }
             instructionPointer += 1
         }
+    }
+
+    /// Builds an array from the stack
+    /// - Parameters:
+    ///   - startIndex: Initial index in the stack
+    ///   - endIndex: End index in the stack
+    /// - Returns: An array of the elements in the stack from start to end index
+    func buildArray(from startIndex: Int, to endIndex: Int) -> [BaseType] {
+        var array: [BaseType] = []
+        for pointer in startIndex..<endIndex {
+            array.append(self.stack[pointer])
+        }
+        return array
     }
 
     /// Push a new element in the stack

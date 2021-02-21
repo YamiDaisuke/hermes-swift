@@ -27,7 +27,7 @@ public enum Bytecode {
             return []
         }
 
-        let instructionLen = 1 + defintion.operandsWidth.reduce(0, +)
+        let instructionLen = 1 + defintion.operandsWidth.reduce(0) { $0 + $1.rawValue }
         var output: Instructions = []
         output.reserveCapacity(instructionLen)
         output.append(op.rawValue)
@@ -35,7 +35,7 @@ public enum Bytecode {
         for index in 0..<operands.count {
             let operand = operands[index]
             let width = defintion.operandsWidth[index]
-            output.append(contentsOf: withUnsafeBytes(of: operand.bigEndian, Array.init).suffix(width))
+            output.append(contentsOf: withUnsafeBytes(of: operand.bigEndian, Array.init).suffix(width.rawValue))
         }
 
         return output
@@ -51,11 +51,11 @@ public enum Bytecode {
         operands.reserveCapacity(defintion.operandsWidth.count)
         var offset = 0
         for width in defintion.operandsWidth {
-            guard let int = instructions.readInt(bytes: width, startIndex: offset) else {
+            guard let int = instructions.readInt(bytes: width.rawValue, startIndex: offset) else {
                 continue
             }
             operands.append(int)
-            offset += width
+            offset += width.rawValue
         }
         return (operands, offset)
     }

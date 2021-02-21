@@ -44,6 +44,7 @@ extension MonkeyCompilerTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__MonkeyCompilerTests = [
+        ("testArrayLiterals", testArrayLiterals),
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
         ("testGlobalLetStatements", testGlobalLetStatements),
@@ -146,6 +147,7 @@ extension VMTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__VMTests = [
+        ("testArrayLiterals", testArrayLiterals),
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
         ("testGlobalLetStatements", testGlobalLetStatements),

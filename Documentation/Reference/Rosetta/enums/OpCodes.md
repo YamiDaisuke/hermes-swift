@@ -168,3 +168,11 @@ case getGlobal
 ```
 
 Get the value assigned to a global id
+
+### `array`
+
+```swift
+case array
+```
+
+Creates an Array from the first "N" elements in the stack

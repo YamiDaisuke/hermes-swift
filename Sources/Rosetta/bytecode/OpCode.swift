@@ -115,6 +115,16 @@ public enum OpCodes: OpCode {
     case assignGlobal
     /// Get the value assigned to a global id
     case getGlobal
+    /// Creates an Array from the first "N" elements in the stack
+    case array
+}
+
+/// For a clear control on the operands byte sizes
+public enum Sizes: Int {
+    case byte = 1 // 8 bits
+    case word = 2 // 16 bits
+    case dword = 4 // 32 bits
+    case qword = 8 // 64 bits
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed
@@ -122,7 +132,7 @@ public struct OperationDefinition {
     /// The human readable name of the operation
     public var name: String
     /// The size in bytes of each operand this operation requires
-    public var operandsWidth: [Int]
+    public var operandsWidth: [Sizes]
 
     /// Returns the defintion associated to a given `OpCodes`
     public static subscript(_ code: OpCodes) -> OperationDefinition? {
@@ -130,7 +140,7 @@ public struct OperationDefinition {
     }
 
     private static let definitions: [OpCodes: OperationDefinition] = [
-        .constant: OperationDefinition(name: "OpConstant", operandsWidth: [2]),
+        .constant: OperationDefinition(name: "OpConstant", operandsWidth: [.word]),
         .pop: OperationDefinition(name: "OpPop", operandsWidth: []),
         .add: OperationDefinition(name: "OpAdd", operandsWidth: []),
         .sub: OperationDefinition(name: "OpSub", operandsWidth: []),
@@ -144,11 +154,12 @@ public struct OperationDefinition {
         .gte: OperationDefinition(name: "OpGTE", operandsWidth: []),
         .minus: OperationDefinition(name: "OpMinus", operandsWidth: []),
         .bang: OperationDefinition(name: "OpBang", operandsWidth: []),
-        .jumpf: OperationDefinition(name: "OpJumpFalse", operandsWidth: [2]),
-        .jump: OperationDefinition(name: "OpJump", operandsWidth: [2]),
+        .jumpf: OperationDefinition(name: "OpJumpFalse", operandsWidth: [.word]),
+        .jump: OperationDefinition(name: "OpJump", operandsWidth: [.word]),
         .null: OperationDefinition(name: "OpNull", operandsWidth: []),
-        .setGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [2]),
-        .assignGlobal: OperationDefinition(name: "OpAssignGlobal", operandsWidth: [2]),
-        .getGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [2])
+        .setGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [.word]),
+        .assignGlobal: OperationDefinition(name: "OpAssignGlobal", operandsWidth: [.word]),
+        .getGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [.word]),
+        .array: OperationDefinition(name: "OpArray", operandsWidth: [.word])
     ]
 }

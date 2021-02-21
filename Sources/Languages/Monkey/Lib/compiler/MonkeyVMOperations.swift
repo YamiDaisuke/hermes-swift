@@ -108,4 +108,10 @@ public struct MonkeyVMOperations: VMOperations {
     public func isTruthy(_ value: BaseType?) -> Bool {
         return ((value ?? Boolean.false) == Boolean.true).value
     }
+
+    /// Takes a native Swift array of the lang base type and converts it to the lang equivalent
+    /// - Parameter array: An swift Array 
+    public func buildLangArray(from array: [Object]) -> Object {
+        return MArray(elements: array)
+    }
 }

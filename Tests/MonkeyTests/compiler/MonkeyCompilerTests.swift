@@ -10,6 +10,7 @@ import XCTest
 @testable import MonkeyLang
 
 // This tests are quite long so we can't met the body length restriction
+// swiftlint:disable file_length
 // swiftlint:disable type_body_length
 class MonkeyCompilerTests: XCTestCase {
     typealias TestCase = (input: String, constants: [Object], instructions: [Instructions])
@@ -209,6 +210,49 @@ class MonkeyCompilerTests: XCTestCase {
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.constant, 1),
                     Bytecode.make(.add),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
+    func testArrayLiterals() throws {
+        let tests: [TestCase] = [
+            (
+                "[]",
+                [],
+                [
+                    Bytecode.make(.array, 0),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "[1, 2, 3]",
+                [Integer(1), Integer(2), Integer(3)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.array, 3),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "[1 + 2, 3 - 4, 5 * 6]",
+                [Integer(1), Integer(2), Integer(3), Integer(4), Integer(5), Integer(6)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.add),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.sub),
+                    Bytecode.make(.constant, 4),
+                    Bytecode.make(.constant, 5),
+                    Bytecode.make(.mul),
+                    Bytecode.make(.array, 3),
                     Bytecode.make(.pop)
                 ]
             )

@@ -85,6 +85,12 @@ public struct MonkeyC: Compiler {
             self.emit(.constant, self.addConstant(value))
         case let boolean as BooleanLiteral:
             self.emit(boolean.value ? .true : .false)
+        case let array as ArrayLiteral:
+            for element in array.elements {
+                try self.compile(element)
+            }
+
+            self.emit(.array, Int32(array.elements.count))
         case let declareStatement as DeclareStatement:
             try compile(declareStatement.value)
             let type: VariableType = declareStatement.token.type == .let ? .let : .var

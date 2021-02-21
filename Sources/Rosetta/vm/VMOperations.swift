@@ -41,4 +41,8 @@ public protocol VMOperations {
     /// - Parameter value: The value to check
     /// - Returns: `true` if the given value is considered truthy in the implementing language
     func isTruthy(_ value: BaseType?) -> Bool
+
+    /// Takes a native Swift array of the lang base type and converts it to the lang equivalent
+    /// - Parameter array: An swift Array 
+    func buildLangArray(from array: [BaseType]) -> BaseType
 }

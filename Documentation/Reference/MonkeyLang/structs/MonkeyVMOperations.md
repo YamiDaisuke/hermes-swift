@@ -111,3 +111,18 @@ Check if an `Object` is considered truthy
 | Name | Description |
 | ---- | ----------- |
 | value | The value to check |
+
+### `buildLangArray(from:)`
+
+```swift
+public func buildLangArray(from array: [Object]) -> Object
+```
+
+Takes a native Swift array of the lang base type and converts it to the lang equivalent
+- Parameter array: An swift Array
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| array | An swift Array |

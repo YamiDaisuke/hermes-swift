@@ -88,3 +88,18 @@ Check if a value of the implemeting language is considered an equivalent of `tru
 | Name | Description |
 | ---- | ----------- |
 | value | The value to check |
+
+### `buildLangArray(from:)`
+
+```swift
+func buildLangArray(from array: [BaseType]) -> BaseType
+```
+
+Takes a native Swift array of the lang base type and converts it to the lang equivalent
+- Parameter array: An swift Array
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| array | An swift Array |

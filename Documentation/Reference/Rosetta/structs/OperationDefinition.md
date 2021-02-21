@@ -20,7 +20,7 @@ The human readable name of the operation
 ### `operandsWidth`
 
 ```swift
-public var operandsWidth: [Int]
+public var operandsWidth: [Sizes]
 ```
 
 The size in bytes of each operand this operation requires

@@ -87,6 +87,16 @@ class VMTests: XCTestCase {
         try self.runVMTests(tests)
     }
 
+    func testArrayLiterals() throws {
+        let tests: [TestCase] = [
+            ("[]", MArray(elements: [])),
+            ("[1, 2, 3]", MArray(elements: [Integer(1), Integer(2), Integer(3)])),
+            ("[1 + 2, 3 * 4, 5 + 6]", MArray(elements: [Integer(3), Integer(12), Integer(11)]))
+        ]
+
+        try self.runVMTests(tests)
+    }
+
     func testConditionals() throws {
         let tests: [TestCase] = [
             ("if (true) { 10 }", Integer(10)),
