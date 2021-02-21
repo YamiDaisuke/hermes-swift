@@ -84,8 +84,18 @@ public struct MonkeyC: Compiler {
             self.emit(boolean.value ? .true : .false)
         case let declareStatement as DeclareStatement:
             try compile(declareStatement.value)
-            let symbol = symbolTable.define(declareStatement.name.value)
+            let type: VariableType = declareStatement.token.type == .let ? .let : .var
+            let symbol = try symbolTable.define(declareStatement.name.value, type: type)
             self.emit(.setGlobal, Int32(symbol.index))
+        case let assignStatement as AssignStatement:
+            try compile(assignStatement.value)
+            let symbol = try symbolTable.resolve(assignStatement.name.value)
+
+            guard symbol.type == .var else {
+                throw AssignConstantError(assignStatement.name.value)
+            }
+
+            self.emit(.assignGlobal, Int32(symbol.index))
         case let identifier as Identifier:
             let symbol = try self.symbolTable.resolve(identifier.value)
             self.emit(.getGlobal, Int32(symbol.index))

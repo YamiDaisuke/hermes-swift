@@ -28,11 +28,14 @@ public struct Symbol {
     public var scope: Scope
     /// The index of the symbol inside the value table
     public var index: Int
+    /// Wheter this symbol is a `let` or a `var`
+    public var type: VariableType
 
-    public init(name: String, scope: Scope, index: Int) {
+    public init(name: String, scope: Scope, index: Int, type: VariableType = .let) {
         self.name = name
         self.scope = scope
         self.index = index
+        self.type = type
     }
 }
 
@@ -50,13 +53,19 @@ public struct SymbolTable: CustomStringConvertible {
 
     public init() { }
 
-
     /// Defines a new symbol with the given name
-    /// - Parameter name: The name/identifier of the symbol
+    /// - Parameters:
+    ///     - name: The name/identifier of the symbol
+    ///     - type: Define if this symbol is a constant or a variable
+    /// - Throws: `RedeclarationError` if `name` is not already in this table
     /// - Returns: The newly created symbol
     @discardableResult
-    public mutating func define(_ name: String) -> Symbol {
-        let symbol = Symbol(name: name, scope: .global, index: self.totalDefinitions)
+    public mutating func define(_ name: String, type: VariableType = .let) throws -> Symbol {
+        guard self.store[name] == nil else {
+            throw RedeclarationError(name)
+        }
+
+        let symbol = Symbol(name: name, scope: .global, index: self.totalDefinitions, type: type)
         self.store[name] = symbol
         return symbol
     }

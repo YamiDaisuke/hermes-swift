@@ -97,7 +97,32 @@ class VMTests: XCTestCase {
         let tests: [TestCase] = [
             ("let one = 1; one;", Integer(1)),
             ("let one = 1; let two = 2; one + two", Integer(3)),
-            ("let one = 1; let two = one + one; one + two", Integer(3))
+            ("let one = 1; let two = one + one; one + two", Integer(3)),
+            // This should fail because we are trying to assing a let value
+            ("let fail = 1; fail = 10;", Null.null),
+            // This should fail because we are trying to create a new global with the same name
+            ("let fail = 1; let fail = 10;", Null.null)
+        ]
+
+        do {
+            try self.runVMTests(tests)
+        } catch let error as AssignConstantError {
+            // How awesome it is that we catch the error at compile time!!
+            XCTAssertEqual(error.message, "Cannot assign to value: \"fail\" is a constant")
+        } catch let error as RedeclarationError {
+            // How awesome it is that we catch the error at compile time!!
+            XCTAssertEqual(error.message, "Cannot redeclare: \"fail\" it already exists")
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+    }
+
+    func testGlobalVarStatements() throws {
+        let tests: [TestCase] = [
+            ("var one = 1; one;", Integer(1)),
+            ("var one = 1; var two = 2; one + two", Integer(3)),
+            ("var one = 1; var two = one + one; one + two", Integer(3)),
+            ("var one = 1; one = 3; one", Integer(3))
         ]
 
         try self.runVMTests(tests)

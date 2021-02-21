@@ -34,9 +34,17 @@ public var index: Int
 
 The index of the symbol inside the value table
 
-## Methods
-### `init(name:scope:index:)`
+### `type`
 
 ```swift
-public init(name: String, scope: Scope, index: Int)
+public var type: VariableType
+```
+
+Wheter this symbol is a `let` or a `var`
+
+## Methods
+### `init(name:scope:index:type:)`
+
+```swift
+public init(name: String, scope: Scope, index: Int, type: VariableType = .let)
 ```

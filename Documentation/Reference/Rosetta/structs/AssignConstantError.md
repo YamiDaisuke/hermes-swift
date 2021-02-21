@@ -3,7 +3,7 @@
 # `AssignConstantError`
 
 ```swift
-public struct AssignConstantError: EvaluatorError
+public struct AssignConstantError: EvaluatorError, CompilerError
 ```
 
 Thrown by default `Environment` implementation contained by this package

@@ -33,7 +33,7 @@ public extension Instructions {
 
             let read = Bytecode.readOperands(def, instructions: Array(self[(index + 1)...]))
             let operandsString = read.values.map { $0.description }.joined(separator: ",")
-            let opName = operandsString.isEmpty ? def.name : def.name.padding(toLength: 12, withPad: " ", startingAt: 0)
+            let opName = operandsString.isEmpty ? def.name : def.name.padding(toLength: 16, withPad: " ", startingAt: 0)
             output += String(
                 format: "%04d %@%@",
                 index,
@@ -109,8 +109,10 @@ public enum OpCodes: OpCode {
     case jump
     /// Push the empty value representation into the stack
     case null
-    /// Assign a global bound to a value
+    /// Creates a global bound to a value
     case setGlobal
+    /// Assigns a global bound to a value
+    case assignGlobal
     /// Get the value assigned to a global id
     case getGlobal
 }
@@ -146,6 +148,7 @@ public struct OperationDefinition {
         .jump: OperationDefinition(name: "OpJump", operandsWidth: [2]),
         .null: OperationDefinition(name: "OpNull", operandsWidth: []),
         .setGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [2]),
+        .assignGlobal: OperationDefinition(name: "OpAssignGlobal", operandsWidth: [2]),
         .getGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [2])
     ]
 }

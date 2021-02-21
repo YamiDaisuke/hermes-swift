@@ -3,7 +3,7 @@
 # `RedeclarationError`
 
 ```swift
-public struct RedeclarationError: EvaluatorError
+public struct RedeclarationError: EvaluatorError, CompilerError
 ```
 
 Thrown by default `Environment` implementation contained by this package

@@ -9,6 +9,8 @@ import XCTest
 @testable import Rosetta
 @testable import MonkeyLang
 
+// This tests are quite long so we can't met the body length restriction
+// swiftlint:disable type_body_length
 class MonkeyCompilerTests: XCTestCase {
     typealias TestCase = (input: String, constants: [Object], instructions: [Instructions])
 
@@ -272,6 +274,77 @@ class MonkeyCompilerTests: XCTestCase {
                     Bytecode.make(.getGlobal, 0),
                     Bytecode.make(.setGlobal, 1),
                     Bytecode.make(.getGlobal, 1),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            // This should fail because we are trying to assing a let value
+            (
+                "let fail = 1; fail = 2;",
+                [Integer(1)],
+                []
+            ),
+            // This should fail because we are trying to create a new global with the same name
+            (
+                "let fail = 1; let fail = 2;",
+                [Integer(1)],
+                []
+            )
+        ]
+
+        do {
+            try runCompilerTests(tests)
+        } catch let error as AssignConstantError {
+            XCTAssertEqual(error.description, "Cannot assign to value: \"fail\" is a constant")
+        } catch let error as RedeclarationError {
+            XCTAssertEqual(error.description, "Cannot redeclare: \"fail\" it already exists")
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+    }
+
+    func testGlobalVarStatements() throws {
+        let tests: [TestCase] = [
+            (
+                "var one = 1; var two = 2;",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.setGlobal, 1)
+                ]
+            ),
+            (
+                "var one = 1; one;",
+                [Integer(1)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.getGlobal, 0),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "var one = 1; var two = one; two",
+                [Integer(1)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.getGlobal, 0),
+                    Bytecode.make(.setGlobal, 1),
+                    Bytecode.make(.getGlobal, 1),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "var one = 1; one = 2; one",
+                [Integer(1), Integer(2)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.assignGlobal, 0),
+                    Bytecode.make(.getGlobal, 0),
                     Bytecode.make(.pop)
                 ]
             )

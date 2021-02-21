@@ -151,7 +151,15 @@ Push the empty value representation into the stack
 case setGlobal
 ```
 
-Assign a global bound to a value
+Creates a global bound to a value
+
+### `assignGlobal`
+
+```swift
+case assignGlobal
+```
+
+Assigns a global bound to a value
 
 ### `getGlobal`
 

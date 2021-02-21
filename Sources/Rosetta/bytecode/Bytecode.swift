@@ -41,7 +41,6 @@ public enum Bytecode {
         return output
     }
 
-
     /// Decodes bytecode instructions operands into `Int32` representation
     /// - Parameters:
     ///   - defintion: The expected `OperationDefinition`

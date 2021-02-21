@@ -34,12 +34,13 @@ class BytecodeTests: XCTestCase {
         instructions.append(contentsOf: Bytecode.make(.add))
 
         let expected = """
-        0000 OpConstant  1
-        0003 OpConstant  2
-        0006 OpConstant  65535
+        0000 OpConstant      1
+        0003 OpConstant      2
+        0006 OpConstant      65535
         0009 OpAdd
         """
 
+        print(instructions.description)
         XCTAssertEqual(instructions.description, expected)
     }
 

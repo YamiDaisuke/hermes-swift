@@ -15,9 +15,9 @@ class SymbolTableTests: XCTestCase {
             "b": Symbol(name: "b", scope: .global, index: 1)
         ]
         var global = SymbolTable()
-        let a = global.define("a")
+        let a = try global.define("a")
         XCTAssertEqual(expected["a"], a)
-        let b = global.define("b")
+        let b = try global.define("b")
         XCTAssertEqual(expected["b"], b)
     }
 
@@ -28,8 +28,8 @@ class SymbolTableTests: XCTestCase {
         ]
 
         var global = SymbolTable()
-        global.define("a")
-        global.define("b")
+        try global.define("a")
+        try global.define("b")
 
         for symbol in expected {
             let result = try global.resolve(symbol.name)

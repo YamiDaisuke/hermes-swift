@@ -47,6 +47,7 @@ extension MonkeyCompilerTests {
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
         ("testGlobalLetStatements", testGlobalLetStatements),
+        ("testGlobalVarStatements", testGlobalVarStatements),
         ("testIntegerArithmetic", testIntegerArithmetic),
     ]
 }
@@ -147,6 +148,7 @@ extension VMTests {
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
         ("testGlobalLetStatements", testGlobalLetStatements),
+        ("testGlobalVarStatements", testGlobalVarStatements),
         ("testIntegerArithmetic", testIntegerArithmetic),
     ]
 }

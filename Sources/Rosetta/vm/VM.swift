@@ -124,6 +124,16 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                     continue
                 }
                 instructionPointer += 2
+
+                if let value = self.pop() {
+                    self.globals[Int(index)] = value
+                }
+            case .assignGlobal:
+                guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                    continue
+                }
+                instructionPointer += 2
+
                 if let value = self.pop() {
                     self.globals[Int(index)] = value
                 }
