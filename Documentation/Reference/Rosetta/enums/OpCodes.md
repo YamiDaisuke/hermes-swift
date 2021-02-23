@@ -175,4 +175,12 @@ Get the value assigned to a global id
 case array
 ```
 
-Creates an Array from the first "N" elements in the stack
+Creates an Array from the first "n" elements in the stack
+
+### `hash`
+
+```swift
+case hash
+```
+
+Creates a HashMap from the first "n" elements in the stack

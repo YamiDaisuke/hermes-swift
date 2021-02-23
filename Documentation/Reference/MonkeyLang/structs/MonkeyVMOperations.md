@@ -126,3 +126,18 @@ Takes a native Swift array of the lang base type and converts it to the lang equ
 | Name | Description |
 | ---- | ----------- |
 | array | An swift Array |
+
+### `buildLangHash(from:)`
+
+```swift
+public func buildLangHash(from dictionary: [AnyHashable: Object]) -> Object
+```
+
+Takes a native Swift dictionary of the lang base type as both key and value, and converts it to the lang equivalent
+- Parameter array: An swift dictionary
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| array | An swift dictionary |

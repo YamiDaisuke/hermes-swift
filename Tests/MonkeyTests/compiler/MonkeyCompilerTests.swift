@@ -261,6 +261,51 @@ class MonkeyCompilerTests: XCTestCase {
         try runCompilerTests(tests)
     }
 
+    func testHashLiterals() throws {
+        let tests: [TestCase] = [
+            (
+                "{}",
+                [],
+                [
+                    Bytecode.make(.hash, 0),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "{1: 2, 3: 4, 5: 6}",
+                [Integer(1), Integer(2), Integer(3), Integer(4), Integer(5), Integer(6)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.constant, 4),
+                    Bytecode.make(.constant, 5),
+                    Bytecode.make(.hash, 6),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "{1: 2 + 3, 4: 5 * 6}",
+                [Integer(1), Integer(2), Integer(3), Integer(4), Integer(5), Integer(6)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.add),
+                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.constant, 4),
+                    Bytecode.make(.constant, 5),
+                    Bytecode.make(.mul),
+                    Bytecode.make(.hash, 4),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
     func testConditionals() throws {
         let tests: [TestCase] = [
             (

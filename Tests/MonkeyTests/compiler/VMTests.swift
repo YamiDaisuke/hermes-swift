@@ -97,6 +97,22 @@ class VMTests: XCTestCase {
         try self.runVMTests(tests)
     }
 
+    func testHashLiterals() throws {
+        let tests: [TestCase] = [
+            ("{}", Hash(pairs: [:])),
+            ("{1: 2, 2: 3}", Hash(pairs: [
+                Integer(1): Integer(2),
+                Integer(2): Integer(3)
+            ])),
+            ("{1 + 1: 2 * 2, 3 + 3: 4 * 4}", Hash(pairs: [
+                Integer(2): Integer(4),
+                Integer(6): Integer(16)
+            ]))
+        ]
+
+        try self.runVMTests(tests)
+    }
+
     func testConditionals() throws {
         let tests: [TestCase] = [
             ("if (true) { 10 }", Integer(10)),

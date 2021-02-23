@@ -114,4 +114,10 @@ public struct MonkeyVMOperations: VMOperations {
     public func buildLangArray(from array: [Object]) -> Object {
         return MArray(elements: array)
     }
+
+    /// Takes a native Swift dictionary of the lang base type as both key and value, and converts it to the lang equivalent
+    /// - Parameter array: An swift dictionary
+    public func buildLangHash(from dictionary: [AnyHashable: Object]) -> Object {
+        return Hash(pairs: dictionary)
+    }
 }

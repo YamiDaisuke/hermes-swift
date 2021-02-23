@@ -49,6 +49,7 @@ extension MonkeyCompilerTests {
         ("testConditionals", testConditionals),
         ("testGlobalLetStatements", testGlobalLetStatements),
         ("testGlobalVarStatements", testGlobalVarStatements),
+        ("testHashLiterals", testHashLiterals),
         ("testIntegerArithmetic", testIntegerArithmetic),
         ("testStringExpressions", testStringExpressions),
     ]
@@ -152,6 +153,7 @@ extension VMTests {
         ("testConditionals", testConditionals),
         ("testGlobalLetStatements", testGlobalLetStatements),
         ("testGlobalVarStatements", testGlobalVarStatements),
+        ("testHashLiterals", testHashLiterals),
         ("testIntegerArithmetic", testIntegerArithmetic),
         ("testStringExpressions", testStringExpressions),
     ]

@@ -154,6 +154,15 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 self.stackPointer -= Int(count)
 
                 try self.push(self.operations.buildLangArray(from: array))
+            case .hash:
+                guard let count = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                    continue
+                }
+                instructionPointer += 2
+                let hash = try buildHash(from: self.stackPointer - Int(count), to: self.stackPointer)
+                self.stackPointer -= Int(count)
+
+                try self.push(self.operations.buildLangHash(from: hash))
             default:
                 break
             }
@@ -172,6 +181,27 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
             array.append(self.stack[pointer])
         }
         return array
+    }
+
+    /// Builds an hashtable from the stack
+    /// - Parameters:
+    ///   - startIndex: Initial index in the stack
+    ///   - endIndex: End index in the stack
+    /// - Throws: .....
+    /// - Returns: An hashtable of the elements in the stack from start to end index
+    func buildHash(from startIndex: Int, to endIndex: Int) throws -> [AnyHashable: BaseType] {
+        var output: [AnyHashable: BaseType] = [:]
+
+        for pointer in stride(from: startIndex, to: endIndex, by: 2) {
+            guard let key = self.stack[pointer] as? AnyHashable else {
+                throw InvalidHashKey(self.stack[pointer])
+            }
+
+            let value = self.stack[pointer + 1]
+            output[key] = value
+        }
+
+        return output
     }
 
     /// Push a new element in the stack
@@ -215,6 +245,8 @@ public struct StackOverflow: VMError {
     public var file: String?
 }
 
+/// Throw this error when a instruction byte code doesn't match with on
+/// of the VM supported operations
 public struct UnknownOpCode: VMError {
     public var message: String
     public var line: Int?
@@ -223,5 +255,17 @@ public struct UnknownOpCode: VMError {
 
     public init(_ code: OpCode) {
         self.message = String(format: "Unknown op code: %02X", code)
+    }
+}
+
+/// Throw this when a value from the base lang is not usable as Hash key
+public struct InvalidHashKey<BaseType>: VMError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
+
+    public init(_ key: BaseType) {
+        self.message = "Value: \(key) cannot be used as hash key"
     }
 }

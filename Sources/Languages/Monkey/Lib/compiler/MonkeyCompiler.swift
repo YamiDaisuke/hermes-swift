@@ -91,6 +91,15 @@ public struct MonkeyC: Compiler {
             }
 
             self.emit(.array, Int32(array.elements.count))
+        case let hash as HashLiteral:
+            let pairs = hash.pairs.sorted { $0.key.description < $1.key.description }
+
+            for pair in pairs {
+                try self.compile(pair.key)
+                try self.compile(pair.value)
+            }
+
+            self.emit(.hash, Int32(pairs.count * 2))
         case let declareStatement as DeclareStatement:
             try compile(declareStatement.value)
             let type: VariableType = declareStatement.token.type == .let ? .let : .var

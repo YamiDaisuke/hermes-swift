@@ -1,13 +1,12 @@
 **STRUCT**
 
-# `UnknownOpCode`
+# `InvalidHashKey`
 
 ```swift
-public struct UnknownOpCode: VMError
+public struct InvalidHashKey<BaseType>: VMError
 ```
 
-Throw this error when a instruction byte code doesn't match with on
-of the VM supported operations
+Throw this when a value from the base lang is not usable as Hash key
 
 ## Properties
 ### `message`
@@ -38,5 +37,5 @@ public var file: String?
 ### `init(_:)`
 
 ```swift
-public init(_ code: OpCode)
+public init(_ key: BaseType)
 ```

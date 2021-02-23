@@ -115,8 +115,10 @@ public enum OpCodes: OpCode {
     case assignGlobal
     /// Get the value assigned to a global id
     case getGlobal
-    /// Creates an Array from the first "N" elements in the stack
+    /// Creates an Array from the first "n" elements in the stack
     case array
+    /// Creates a HashMap from the first "n" elements in the stack
+    case hash
 }
 
 /// For a clear control on the operands byte sizes
@@ -160,6 +162,7 @@ public struct OperationDefinition {
         .setGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [.word]),
         .assignGlobal: OperationDefinition(name: "OpAssignGlobal", operandsWidth: [.word]),
         .getGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [.word]),
-        .array: OperationDefinition(name: "OpArray", operandsWidth: [.word])
+        .array: OperationDefinition(name: "OpArray", operandsWidth: [.word]),
+        .hash: OperationDefinition(name: "OpArray", operandsWidth: [.word])
     ]
 }
