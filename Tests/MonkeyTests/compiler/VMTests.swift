@@ -113,6 +113,23 @@ class VMTests: XCTestCase {
         try self.runVMTests(tests)
     }
 
+    func testIndexExpressions() throws {
+        let tests: [TestCase] = [
+            ("[1, 2, 3][1]", Integer(2)),
+            ("[1, 2, 3][0 + 2]", Integer(3)),
+            ("[[1, 1, 1]][0][0]", Integer(1)),
+            ("[][0]", Null.null),
+            ("[1, 2, 3][99]", Null.null),
+            ("[1][-1]", Null.null),
+            ("{1: 1, 2: 2}[1]", Integer(1)),
+            ("{1: 1, 2: 2}[2]", Integer(2)),
+            ("{1: 1}[0]", Null.null),
+            ("{}[0]", Null.null)
+        ]
+
+        try self.runVMTests(tests)
+    }
+
     func testConditionals() throws {
         let tests: [TestCase] = [
             ("if (true) { 10 }", Integer(10)),

@@ -141,3 +141,30 @@ Takes a native Swift dictionary of the lang base type as both key and value, and
 | Name | Description |
 | ---- | ----------- |
 | array | An swift dictionary |
+
+### `executeIndexExpression(_:index:)`
+
+```swift
+public func executeIndexExpression(_ lhs: BaseType, index: BaseType) throws -> BaseType
+```
+
+Performs an language index (A.K.A subscript) operation in the form of: `<expression>[<expression>]`
+
+Supported options are:
+```
+<Array>[<Integer>]
+<Hash>[<Integer|String>]
+```
+- Parameters:
+  - lhs: An `MArray`  or `Hash`
+  - index: The value to use as index
+- Throws: `IndexNotSupported` if `lhs` is not the right type.
+          `InvalidArrayIndex` or `InvalidHashKey` if  `index` can't be applied to `lhs`
+- Returns: The value associated wiith the `index` or `null`
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| lhs | An `MArray`  or `Hash` |
+| index | The value to use as index |

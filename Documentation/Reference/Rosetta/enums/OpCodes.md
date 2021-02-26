@@ -184,3 +184,11 @@ case hash
 ```
 
 Creates a HashMap from the first "n" elements in the stack
+
+### `index`
+
+```swift
+case index
+```
+
+Performs an index operation (subscript in Swift) E.G.: `<expression>[<expression>]`

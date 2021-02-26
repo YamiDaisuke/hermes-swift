@@ -163,6 +163,12 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 self.stackPointer -= Int(count)
 
                 try self.push(self.operations.buildLangHash(from: hash))
+            case .index:
+                guard let index = self.pop() else { continue }
+                guard let lhs = self.pop() else { continue }
+
+                let value = try self.operations.executeIndexExpression(lhs, index: index)
+                try self.push(value)
             default:
                 break
             }
@@ -267,5 +273,29 @@ public struct InvalidHashKey<BaseType>: VMError {
 
     public init(_ key: BaseType) {
         self.message = "Value: \(key) cannot be used as hash key"
+    }
+}
+
+/// Throw this when a value from the base lang is not usable as index for arrays
+public struct InvalidArrayIndex<BaseType>: VMError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
+
+    public init(_ index: BaseType) {
+        self.message = "Index \(index) can't be applied to type Array"
+    }
+}
+
+/// Throw this when tryng to apply an index expression to a non-indexable value
+public struct IndexNotSupported<BaseType>: VMError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
+
+    public init(_ value: BaseType) {
+        self.message = "Can't apply index to: \(value)"
     }
 }

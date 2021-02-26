@@ -119,6 +119,8 @@ public enum OpCodes: OpCode {
     case array
     /// Creates a HashMap from the first "n" elements in the stack
     case hash
+    /// Performs an index operation (subscript in Swift) E.G.: `<expression>[<expression>]`
+    case index
 }
 
 /// For a clear control on the operands byte sizes
@@ -163,6 +165,7 @@ public struct OperationDefinition {
         .assignGlobal: OperationDefinition(name: "OpAssignGlobal", operandsWidth: [.word]),
         .getGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [.word]),
         .array: OperationDefinition(name: "OpArray", operandsWidth: [.word]),
-        .hash: OperationDefinition(name: "OpArray", operandsWidth: [.word])
+        .hash: OperationDefinition(name: "OpArray", operandsWidth: [.word]),
+        .index: OperationDefinition(name: "OpIndex", operandsWidth: [])
     ]
 }

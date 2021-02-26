@@ -120,4 +120,40 @@ public struct MonkeyVMOperations: VMOperations {
     public func buildLangHash(from dictionary: [AnyHashable: Object]) -> Object {
         return Hash(pairs: dictionary)
     }
+
+    /// Performs an language index (A.K.A subscript) operation in the form of: `<expression>[<expression>]`
+    ///
+    /// Supported options are:
+    /// ```
+    /// <Array>[<Integer>]
+    /// <Hash>[<Integer|String>]
+    /// ```
+    /// - Parameters:
+    ///   - lhs: An `MArray`  or `Hash`
+    ///   - index: The value to use as index
+    /// - Throws: `IndexNotSupported` if `lhs` is not the right type.
+    ///           `InvalidArrayIndex` or `InvalidHashKey` if  `index` can't be applied to `lhs`
+    /// - Returns: The value associated wiith the `index` or `null`
+    public func executeIndexExpression(_ lhs: BaseType, index: BaseType) throws -> BaseType {
+        switch lhs {
+        case let array as MArray:
+            return try executeArrayIndexExpression(array, index: index)
+        case let hash as Hash:
+            return try executeHashIndexExpression(hash, index: index)
+        default:
+            throw IndexNotSupported(lhs)
+        }
+    }
+
+    func executeArrayIndexExpression(_ lhs: MArray, index: BaseType) throws -> BaseType {
+        guard let integer = index as? Integer else {
+            throw InvalidArrayIndex(index)
+        }
+
+        return lhs[integer]
+    }
+
+    func executeHashIndexExpression(_ lhs: Hash, index: BaseType) throws -> BaseType {
+        return try lhs.get(index) ?? Null.null
+    }
 }

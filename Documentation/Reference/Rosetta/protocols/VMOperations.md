@@ -118,3 +118,21 @@ Takes a native Swift dictionary of the lang base type as both key and value, and
 | Name | Description |
 | ---- | ----------- |
 | array | An swift dictionary |
+
+### `executeIndexExpression(_:index:)`
+
+```swift
+func executeIndexExpression(_ lhs: BaseType, index: BaseType) throws -> BaseType
+```
+
+Performs an language index (A.K.A subscript) operation in the form of: `<expression>[<expression>]`
+- Parameters:
+  - lhs: The value to be indexed
+  - index: The index to apply
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| lhs | The value to be indexed |
+| index | The index to apply |

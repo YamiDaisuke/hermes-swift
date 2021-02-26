@@ -306,6 +306,42 @@ class MonkeyCompilerTests: XCTestCase {
         try runCompilerTests(tests)
     }
 
+    func testIndexExpressions() throws {
+        let tests: [TestCase] = [
+            (
+                "[1, 2, 3][1 + 1]",
+                [Integer(1), Integer(2), Integer(3), Integer(1), Integer(1)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.array, 3),
+                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.constant, 4),
+                    Bytecode.make(.add),
+                    Bytecode.make(.index),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "{1: 2}[2 - 1]",
+                [Integer(1), Integer(2), Integer(2), Integer(1)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.hash, 2),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.sub),
+                    Bytecode.make(.index),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
     func testConditionals() throws {
         let tests: [TestCase] = [
             (

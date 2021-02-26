@@ -112,7 +112,7 @@ struct InvalidArgumentType: EvaluatorError {
     }
 }
 
-struct InvalidHashKey: EvaluatorError {
+struct InvalidHashKey: EvaluatorError, VMError {
     var message: String
     var line: Int?
     var column: Int?

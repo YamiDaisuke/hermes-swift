@@ -100,6 +100,11 @@ public struct MonkeyC: Compiler {
             }
 
             self.emit(.hash, Int32(pairs.count * 2))
+        case let index as IndexExpression:
+            try compile(index.lhs)
+            try compile(index.index)
+
+            self.emit(.index)
         case let declareStatement as DeclareStatement:
             try compile(declareStatement.value)
             let type: VariableType = declareStatement.token.type == .let ? .let : .var
