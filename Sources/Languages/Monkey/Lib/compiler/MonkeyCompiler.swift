@@ -42,37 +42,9 @@ public struct MonkeyC: Compiler {
             try self.compile(prefix.rhs)
             self.emit(operatorCode)
         case let infix as InfixExpression:
-            let operatorCode = try opCode(forInfixOperator: infix.operatorSymbol)
-
-            if infix.operatorSymbol == "<=" || infix.operatorSymbol == "<" {
-                try self.compile(infix.rhs)
-                try self.compile(infix.lhs)
-            } else {
-                try self.compile(infix.lhs)
-                try self.compile(infix.rhs)
-            }
-
-            self.emit(operatorCode)
+            try self.handleInfixExpression(infix)
         case let condition as IfExpression:
-            try self.compile(condition.condition)
-            let jumpFPosition = self.emit(.jumpf, 9999)
-
-            try self.compile(condition.consequence)
-            self.removeLast { $0.code == .pop }
-
-            let jumpPosition = self.emit(.jump, 9999)
-            let afterConsequence = self.instructions.count
-            self.replaceOperands(operands: [Int32(afterConsequence)], at: jumpFPosition)
-
-            if let alternative = condition.alternative {
-                try self.compile(alternative)
-                self.removeLast { $0.code == .pop }
-            } else {
-                self.emit(.null)
-            }
-
-            let afterAlternative = self.instructions.count
-            self.replaceOperands(operands: [Int32(afterAlternative)], at: jumpPosition)
+            try self.handleIfExpression(condition)
         case let block as BlockStatement:
             for stmt in block.statements {
                 try self.compile(stmt)
@@ -167,5 +139,45 @@ public struct MonkeyC: Compiler {
         default:
             throw UnknownOperator(operatorStr)
         }
+    }
+
+    // MARK: Helper Methods
+
+    /// Handles the compilation of `InfixExpression`
+    mutating func handleInfixExpression(_ expression: InfixExpression) throws {
+        let operatorCode = try opCode(forInfixOperator: expression.operatorSymbol)
+
+        if expression.operatorSymbol == "<=" || expression.operatorSymbol == "<" {
+            try self.compile(expression.rhs)
+            try self.compile(expression.lhs)
+        } else {
+            try self.compile(expression.lhs)
+            try self.compile(expression.rhs)
+        }
+
+        self.emit(operatorCode)
+    }
+
+    /// Handles the compilation of `IfExpression`
+    mutating func handleIfExpression(_ expression: IfExpression) throws {
+        try self.compile(expression.condition)
+        let jumpFPosition = self.emit(.jumpf, 9999)
+
+        try self.compile(expression.consequence)
+        self.removeLast { $0.code == .pop }
+
+        let jumpPosition = self.emit(.jump, 9999)
+        let afterConsequence = self.instructions.count
+        self.replaceOperands(operands: [Int32(afterConsequence)], at: jumpFPosition)
+
+        if let alternative = expression.alternative {
+            try self.compile(alternative)
+            self.removeLast { $0.code == .pop }
+        } else {
+            self.emit(.null)
+        }
+
+        let afterAlternative = self.instructions.count
+        self.replaceOperands(operands: [Int32(afterAlternative)], at: jumpPosition)
     }
 }

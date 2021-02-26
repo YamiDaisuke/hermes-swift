@@ -78,10 +78,12 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     /// - Throws: `VMError` if anything fails while interpreting the bytecode
     public mutating func run() throws {
         var instructionPointer = 0
+
         while instructionPointer < self.instructions.count {
             guard let opCode = OpCodes(rawValue: instructions[instructionPointer]) else {
                 throw UnknownOpCode(instructions[instructionPointer])
             }
+
             switch opCode {
             case .constant:
                 guard let constIndex = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
@@ -104,65 +106,14 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 try self.push(self.operations.getLangBool(for: opCode == .true))
             case .null:
                 try self.push(self.operations.null)
-            case .jumpf:
-                guard let destination = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
-                    continue
-                }
-                instructionPointer += 2
-                let condition = self.pop()
-                if !operations.isTruthy(condition) {
-                    instructionPointer = Int(destination) - 1
-                }
-            case .jump:
-                guard let destination = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
-                    continue
-                }
-                instructionPointer += 2
-                instructionPointer = Int(destination) - 1
-            case .setGlobal:
-                guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
-                    continue
-                }
-                instructionPointer += 2
-
-                if let value = self.pop() {
-                    self.globals[Int(index)] = value
-                }
-            case .assignGlobal:
-                guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
-                    continue
-                }
-                instructionPointer += 2
-
-                if let value = self.pop() {
-                    self.globals[Int(index)] = value
-                }
-            case .getGlobal:
-                guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
-                    continue
-                }
-                instructionPointer += 2
-                if let value = self.globals[Int(index)] {
-                    try self.push(value)
-                }
+            case .jumpf, .jump:
+                instructionPointer = self.handleJumps(opCode, ip: instructionPointer)
+            case .setGlobal, .assignGlobal, .getGlobal:
+                instructionPointer = try self.handleVariables(opCode, ip: instructionPointer)
             case .array:
-                guard let count = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
-                    continue
-                }
-                instructionPointer += 2
-                let array = buildArray(from: self.stackPointer - Int(count), to: self.stackPointer)
-                self.stackPointer -= Int(count)
-
-                try self.push(self.operations.buildLangArray(from: array))
+                instructionPointer = try self.handleArrays(instructionPointer)
             case .hash:
-                guard let count = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
-                    continue
-                }
-                instructionPointer += 2
-                let hash = try buildHash(from: self.stackPointer - Int(count), to: self.stackPointer)
-                self.stackPointer -= Int(count)
-
-                try self.push(self.operations.buildLangHash(from: hash))
+                instructionPointer = try self.handleHashes(instructionPointer)
             case .index:
                 guard let index = self.pop() else { continue }
                 guard let lhs = self.pop() else { continue }
@@ -174,6 +125,105 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
             }
             instructionPointer += 1
         }
+    }
+
+    /// Executes both VM supported jump operations: `OpJump`, `OpJumpFalse`
+    /// - Parameters:
+    ///   - code: The code, which must be one of the supported jumps codes
+    ///   - instructionPointer: The current instruction pointer position
+    /// - Returns: The new instruction pointer after the jump is executed
+    mutating func handleJumps(_ code: OpCodes, ip instructionPointer: Int) -> Int {
+        var instructionPointer = instructionPointer
+        switch code {
+        case .jumpf:
+            guard let destination = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                break
+            }
+            instructionPointer += 2
+            let condition = self.pop()
+            if !operations.isTruthy(condition) {
+                instructionPointer = Int(destination) - 1
+            }
+        case .jump:
+            guard let destination = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                break
+            }
+            instructionPointer += 2
+            instructionPointer = Int(destination) - 1
+        default:
+            break
+        }
+
+        return instructionPointer
+    }
+
+    /// Executes an array creation expression
+    /// - Parameter instructionPointer: The current instruction pointer position
+    /// - Throws: An error if the resulting Array can't be pushed into the stack
+    /// - Returns: The new instruction pointer after the array  is created
+    mutating func handleArrays(_ instructionPointer: Int) throws -> Int {
+        var instructionPointer = instructionPointer
+        guard let count = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+            return instructionPointer
+        }
+        instructionPointer += 2
+        let array = buildArray(from: self.stackPointer - Int(count), to: self.stackPointer)
+        self.stackPointer -= Int(count)
+
+        try self.push(self.operations.buildLangArray(from: array))
+
+        return instructionPointer
+    }
+
+    /// Executes an hash (map) creation expression
+    /// - Parameter instructionPointer: The current instruction pointer position
+    /// - Throws: An error if the resulting Hash can't be pushed into the stack
+    /// - Returns: The new instruction pointer after the hash  is created
+    mutating func handleHashes(_ instructionPointer: Int) throws -> Int {
+        var instructionPointer = instructionPointer
+        guard let count = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+            return instructionPointer
+        }
+        instructionPointer += 2
+        let hash = try buildHash(from: self.stackPointer - Int(count), to: self.stackPointer)
+        self.stackPointer -= Int(count)
+
+        try self.push(self.operations.buildLangHash(from: hash))
+
+        return instructionPointer
+    }
+
+    /// Executes the declaration, assignation and reading of variable and constants
+    /// - Parameters:
+    ///   - opCode: One of: `OpGetGlobal`, `OpAssignglobal` or  `OpGetGlobal`
+    ///   - instructionPointer: The current instruction pointer position
+    /// - Throws: An error if the `OpGetGlobal` operation fails to push the value into the stack
+    /// - Returns: The new instruction pointer after the operation is executed
+    mutating func handleVariables(_ opCode: OpCodes, ip instructionPointer: Int) throws -> Int {
+        var instructionPointer = instructionPointer
+        switch opCode {
+        case .setGlobal, .assignGlobal:
+            guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                break
+            }
+            instructionPointer += 2
+
+            if let value = self.pop() {
+                self.globals[Int(index)] = value
+            }
+        case .getGlobal:
+            guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                break
+            }
+            instructionPointer += 2
+            if let value = self.globals[Int(index)] {
+                try self.push(value)
+            }
+        default:
+            break
+        }
+
+        return instructionPointer
     }
 
     /// Builds an array from the stack
