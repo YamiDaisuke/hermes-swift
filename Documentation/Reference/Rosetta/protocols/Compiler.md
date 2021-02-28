@@ -9,29 +9,37 @@ public protocol Compiler
 Base Compiler structure for Rosetta VM
 
 ## Properties
-### `instructions`
+### `scopes`
 
 ```swift
-var instructions: Instructions
+var scopes: [CompilationScope]
 ```
 
-Holds all the compiled instructions bytes
+Keeps the compiled scopes
 
-### `lastInstruction`
+### `scopeIndex`
 
 ```swift
-var lastInstruction: EmittedInstruction?
+var scopeIndex: Int
 ```
 
-Holds the last emitted instruction
+Marks the current scope being compiled
 
-### `prevInstruction`
+### `currentScope`
 
 ```swift
-var prevInstruction: EmittedInstruction?
+var currentScope: CompilationScope
 ```
 
-Holds the previous emitted instruction
+Returns the current active scope
+
+### `currentInstructions`
+
+```swift
+var currentInstructions: Instructions
+```
+
+Returns the instructions compiled inside the current scope
 
 ### `constants`
 
@@ -87,3 +95,19 @@ Traverse a parsed AST an creates the corresponding Bytecode
 | Name | Description |
 | ---- | ----------- |
 | program | The program |
+
+### `enterScope()`
+
+```swift
+mutating func enterScope()
+```
+
+Activates a new compilation scopes
+
+### `leaveScope()`
+
+```swift
+mutating func leaveScope() -> Instructions
+```
+
+Closes the current compilation scope and returns the compiled instructions

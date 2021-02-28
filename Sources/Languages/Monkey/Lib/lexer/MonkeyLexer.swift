@@ -75,7 +75,6 @@ public struct MonkeyLexer: Lexer {
             column: self.currentColumn
         )
 
-        // TODO: Reduce body size
         guard !self.input.isEmpty || self.streamReader != nil else {
             return token
         }

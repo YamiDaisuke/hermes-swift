@@ -503,6 +503,57 @@ class MonkeyCompilerTests: XCTestCase {
         try runCompilerTests(tests)
     }
 
+    func testFunctions() throws {
+        let tests: [TestCase] = [
+            (
+                "fn() { return 5 + 10; }",
+                [
+                    Integer(5),
+                    Integer(10),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 0),
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.add),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "fn() { 1; 2 }",
+                [
+                    Integer(1),
+                    Integer(2),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 0),
+                        Bytecode.make(.pop),
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "fn() { }",
+                [
+                    CompiledFunction(instructions: Bytecode.make(.return))
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
     // MARK: Utils
 
     func runCompilerTests(_ tests: [TestCase], file: StaticString = #file, line: UInt = #line) throws {

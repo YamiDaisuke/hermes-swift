@@ -10,11 +10,11 @@ import Rosetta
 
 /// Monkey Lang compiler for the Rosetta VM
 public struct MonkeyC: Compiler {
+    public var scopes = [CompilationScope()]
+    public var scopeIndex: Int = 0
+
     public typealias BaseType = Object
 
-    public var instructions: Instructions = []
-    public var lastInstruction: EmittedInstruction?
-    public var prevInstruction: EmittedInstruction?
     public var constants: [Object] = []
     public var symbolTable = SymbolTable()
 
@@ -94,9 +94,29 @@ public struct MonkeyC: Compiler {
         case let identifier as Identifier:
             let symbol = try self.symbolTable.resolve(identifier.value)
             self.emit(.getGlobal, Int32(symbol.index))
+        case let function as FunctionLiteral:
+            try self.handleFunctionLiterals(function)
+        case let returnStmt as ReturnStatement:
+            try self.compile(returnStmt.value)
+            self.emit(.returnVal)
         default:
             break
         }
+    }
+
+    /// Replace the last instruction if it is a OpPop operation
+    /// - Parameter code: The replacement operation
+    func replaceLastPopWith(_ code: OpCodes) {
+        guard self.lastInstructionIs(.pop) else {
+            return
+        }
+        
+        guard let last = self.currentScope.lastInstruction?.position else {
+            return
+        }
+
+        self.currentScope.replaceInstructionAt(last, with: Bytecode.make(code))
+        self.currentScope.lastInstruction?.code = code
     }
 
     /// Converts an infix operator string representation to the corresponding `OpCode`
@@ -164,20 +184,39 @@ public struct MonkeyC: Compiler {
         let jumpFPosition = self.emit(.jumpf, 9999)
 
         try self.compile(expression.consequence)
-        self.removeLast { $0.code == .pop }
+        self.currentScope.removeLast { $0.code == .pop }
 
         let jumpPosition = self.emit(.jump, 9999)
-        let afterConsequence = self.instructions.count
+        let afterConsequence = self.currentInstructions.count
         self.replaceOperands(operands: [Int32(afterConsequence)], at: jumpFPosition)
 
         if let alternative = expression.alternative {
             try self.compile(alternative)
-            self.removeLast { $0.code == .pop }
+            self.currentScope.removeLast { $0.code == .pop }
         } else {
             self.emit(.null)
         }
 
-        let afterAlternative = self.instructions.count
+        let afterAlternative = self.currentInstructions.count
         self.replaceOperands(operands: [Int32(afterAlternative)], at: jumpPosition)
+    }
+
+    /// Turns function literals into compiled functions
+    mutating func handleFunctionLiterals(_ expression: FunctionLiteral) throws {
+        self.enterScope()
+        try self.compile(expression.body)
+
+
+        if self.lastInstructionIs(.pop) {
+            self.replaceLastPopWith(.returnVal)
+        }
+
+        if !self.lastInstructionIs(.returnVal) {
+            self.emit(.return)
+        }
+
+        let instructions = self.leaveScope()
+        let compiledFunction = CompiledFunction(instructions: instructions)
+        self.emit(.constant, self.addConstant(compiledFunction))
     }
 }

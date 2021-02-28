@@ -9,22 +9,16 @@ public struct MonkeyC: Compiler
 Monkey Lang compiler for the Rosetta VM
 
 ## Properties
-### `instructions`
+### `scopes`
 
 ```swift
-public var instructions: Instructions = []
+public var scopes = [CompilationScope()]
 ```
 
-### `lastInstruction`
+### `scopeIndex`
 
 ```swift
-public var lastInstruction: EmittedInstruction?
-```
-
-### `prevInstruction`
-
-```swift
-public var prevInstruction: EmittedInstruction?
+public var scopeIndex: Int = 0
 ```
 
 ### `constants`

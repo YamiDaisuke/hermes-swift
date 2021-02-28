@@ -192,3 +192,27 @@ case index
 ```
 
 Performs an index operation (subscript in Swift) E.G.: `<expression>[<expression>]`
+
+### `call`
+
+```swift
+case call
+```
+
+Calls/Execute a function
+
+### `returnVal`
+
+```swift
+case returnVal
+```
+
+Returns a value from a function
+
+### `return`
+
+```swift
+case `return`
+```
+
+Returns an empty value from a function

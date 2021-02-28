@@ -80,13 +80,13 @@ func MKAssertInstructions(
 }
 
 func MKAssertConstants(
-    _ instructions: [Object],
+    _ emitted: [Object],
     _ expected: [Object],
     file: StaticString = #file,
     line: UInt = #line
 ) {
-    XCTAssertEqual(instructions.count, expected.count, file: file, line: line)
-    for index in 0..<instructions.count {
-        XCTAssert(instructions[index].isEquals(other: expected[index]), file: file, line: line)
+    XCTAssertEqual(emitted.count, expected.count, file: file, line: line)
+    for index in 0..<emitted.count {
+        XCTAssert(emitted[index].isEquals(other: expected[index]), file: file, line: line)
     }
 }

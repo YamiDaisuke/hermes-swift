@@ -47,6 +47,7 @@ extension MonkeyCompilerTests {
         ("testArrayLiterals", testArrayLiterals),
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
+        ("testFunctions", testFunctions),
         ("testGlobalLetStatements", testGlobalLetStatements),
         ("testGlobalVarStatements", testGlobalVarStatements),
         ("testHashLiterals", testHashLiterals),

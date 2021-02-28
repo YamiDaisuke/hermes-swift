@@ -28,3 +28,22 @@ public struct Function: Object {
         return otherFn.description == self.description
     }
 }
+
+/// Same as `Function` but represented with compiled bytecode instructions
+public struct CompiledFunction: Object {
+    public var type: ObjectType { "compiledFunction" }
+
+    public var instructions: Instructions
+
+    public var description: String {
+        "CompiledFunction:\n\(instructions.description)"
+    }
+
+    public func isEquals(other: Object) -> Bool {
+        guard let otherFn = other as? CompiledFunction else { return false }
+        // Keep this for easier debuging
+        print("==== Self\n\(self.instructions.description)\n====")
+        print("==== Other\n\(otherFn.instructions.description)\n====")
+        return otherFn.instructions == self.instructions
+    }
+}

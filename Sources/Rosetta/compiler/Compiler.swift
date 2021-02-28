@@ -20,18 +20,66 @@ public struct EmittedInstruction {
     }
 }
 
+/// Holds an list of compiled instructions for one scope like a function or a closure
+public class CompilationScope {
+    /// Holds all the compiled instructions bytes
+    var instructions: Instructions
+    /// Holds the last emitted instruction
+    public var lastInstruction: EmittedInstruction?
+    /// Holds the previous emitted instruction
+    public var prevInstruction: EmittedInstruction?
+
+    public init() {
+        instructions = []
+        lastInstruction = nil
+        prevInstruction = nil
+    }
+
+    /// Stores a compiled instruction
+    /// - Parameter instruction: The instruction to store
+    /// - Returns: The starting index of this instruction bytes
+    public func addInstruction(_ instruction: Instructions) -> Int {
+        let position = self.instructions.count
+        self.instructions.append(contentsOf: instruction)
+        return position
+    }
+
+    /// Removes the las instruction from the emmited instruction with an optional predicate
+    /// - Parameter predicate: An optional predicate to choose whether or not to remove the last instruction
+    ///                        if no predicate is supplied the instruction is removed
+    public func removeLast(if predicate: ((EmittedInstruction) -> Bool)? = nil) {
+        guard let last = self.lastInstruction else { return }
+        if predicate?(last) ?? true {
+            self.instructions.removeLast(1)
+            self.lastInstruction = self.prevInstruction
+        }
+    }
+
+    /// Replace instruction bytes starting at `position` with `newInstruction`
+    /// - Parameters:
+    ///   - position: The starting position to replace
+    ///   - newInstruction: The new instruction bytes
+    public func replaceInstructionAt(_ position: Int, with newInstruction: Instructions) {
+        for index in 0..<newInstruction.count {
+            self.instructions[position + index] = newInstruction[index]
+        }
+    }
+}
+
 /// Base Compiler structure for Rosetta VM
 public protocol Compiler {
     /// The basic value type for the implementing language
     /// E.G.: In `Swift` this will be `Any`, in `C#` is `object`
     associatedtype BaseType
 
-    /// Holds all the compiled instructions bytes
-    var instructions: Instructions { get set }
-    /// Holds the last emitted instruction
-    var lastInstruction: EmittedInstruction? { get set }
-    /// Holds the previous emitted instruction
-    var prevInstruction: EmittedInstruction? { get set }
+    /// Keeps the compiled scopes
+    var scopes: [CompilationScope] { get set }
+    /// Marks the current scope being compiled
+    var scopeIndex: Int { get set }
+    /// Returns the current active scope
+    var currentScope: CompilationScope { get }
+    /// Returns the instructions compiled inside the current scope
+    var currentInstructions: Instructions { get }
 
     /// A pool of the compiled constant values
     var constants: [BaseType] { get set }
@@ -48,12 +96,44 @@ public protocol Compiler {
     /// Traverse a parsed AST an creates the corresponding Bytecode
     /// - Parameter program: The program
     mutating func compile(_ node: Node) throws
+
+    /// Activates a new compilation scopes
+    mutating func enterScope()
+
+    /// Closes the current compilation scope and returns the compiled instructions
+    mutating func leaveScope() -> Instructions
 }
 
 public extension Compiler {
+    /// Gets the current `CompilationScope`
+    var currentScope: CompilationScope {
+        self.scopes[self.scopeIndex]
+    }
+
+    /// Returns the instructions from the current compilation scope
+    var currentInstructions: Instructions {
+        self.currentScope.instructions
+    }
+
     /// Returns the `BytecodeProgram` with all the compiled instructions 
     var bytecode: BytecodeProgram<Self.BaseType> {
-        BytecodeProgram(instructions: self.instructions, constants: self.constants)
+        BytecodeProgram(instructions: self.currentInstructions, constants: self.constants)
+    }
+
+    /// Activates a new compilation scopes
+    mutating func enterScope() {
+        let newScope = CompilationScope()
+        self.scopes.append(newScope)
+        self.scopeIndex += 1
+    }
+
+    /// Closes the current compilation scope and returns the compiled instructions
+    @discardableResult
+    mutating func leaveScope() -> Instructions {
+        let instructions = self.currentInstructions
+        _ = self.scopes.popLast()
+        self.scopeIndex -= 1
+        return instructions
     }
 
     /// Saves a constant value into the constants pool
@@ -64,16 +144,6 @@ public extension Compiler {
         return Int32(self.constants.count - 1)
     }
 
-
-    /// Stores a compiled instruction
-    /// - Parameter instruction: The instruction to store
-    /// - Returns: The starting index of this instruction bytes
-    mutating func addInstruction(_ instruction: Instructions) -> Int {
-        let position = self.instructions.count
-        self.instructions.append(contentsOf: instruction)
-        return position
-    }
-
     /// Converts an operation and operands into bytecode and store it
     /// - Parameters:
     ///   - operation: The operation code
@@ -81,42 +151,32 @@ public extension Compiler {
     /// - Returns: The starting index of this instruction bytes
     @discardableResult
     mutating func emit(_ operation: OpCodes, _ operands: Int32...) -> Int {
-        self.prevInstruction = self.lastInstruction
+        self.currentScope.prevInstruction = self.currentScope.lastInstruction
         let instruction = Bytecode.make(operation, operands: operands)
-        let position = addInstruction(instruction)
-        self.lastInstruction = EmittedInstruction(operation, position: position)
+        let position = self.currentScope.addInstruction(instruction)
+        self.currentScope.lastInstruction = EmittedInstruction(operation, position: position)
         return position
     }
 
-    /// Removes the las instruction from the emmited instruction with an optional predicate
-    /// - Parameter predicate: An optional predicate to choose whether or not to remove the last instruction
-    ///                        if no predicate is supplied the instruction is removed 
-    mutating func removeLast(if predicate: ((EmittedInstruction) -> Bool)? = nil) {
-        guard let last = self.lastInstruction else { return }
-        if predicate?(last) ?? true {
-            self.instructions.removeLast(1)
-            self.lastInstruction = self.prevInstruction
-        }
-    }
-
-    /// Replace instruction bytes starting at `position` with `newInstruction`
+    /// Replace a list operands starting a given position
     /// - Parameters:
-    ///   - position: The starting position to replace
-    ///   - newInstruction: The new instruction bytes  
-    mutating func replaceInstructionAt(_ position: Int, with newInstruction: Instructions) {
-        for index in 0..<newInstruction.count {
-            self.instructions[position + index] = newInstruction[index]
-        }
-    }
-
+    ///   - operands: The operands to replace
+    ///   - position: The position where to insert
     mutating func replaceOperands(operands: [Int32], at position: Int) {
-        guard let op = OpCodes(rawValue: self.instructions[position]) else {
+        guard let op = OpCodes(rawValue: self.currentInstructions[position]) else {
             // TODO: Throw error
             return
         }
 
         let new = Bytecode.make(op, operands: operands)
-        self.replaceInstructionAt(position, with: new)
+        self.currentScope.replaceInstructionAt(position, with: new)
+    }
+
+    /// Checks if the last emited instructions matches a given code
+    /// - Parameter code: The code to look for
+    /// - Returns: `true` if the last emitted code is equals to `code`
+    func lastInstructionIs(_ code: OpCodes) -> Bool {
+        return self.currentScope.lastInstruction?.code == code
     }
 }
 

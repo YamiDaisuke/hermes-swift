@@ -34,6 +34,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		F88A051325E9B17D001470C0 /* CompilerScopesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88A051225E9B17D001470C0 /* CompilerScopesTests.swift */; };
 		F8EB17CB25E1AB5D00CD9147 /* SymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB17CA25E1AB5D00CD9147 /* SymbolTable.swift */; };
 		F8EB17DB25E1AC7800CD9147 /* SymbolTableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB17DA25E1AC7800CD9147 /* SymbolTableTests.swift */; };
 		OBJ_240 /* MonkeyRepl.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* MonkeyRepl.swift */; };
@@ -405,6 +406,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F88A051225E9B17D001470C0 /* CompilerScopesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerScopesTests.swift; sourceTree = "<group>"; };
 		F8EB17CA25E1AB5D00CD9147 /* SymbolTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTable.swift; sourceTree = "<group>"; };
 		F8EB17DA25E1AC7800CD9147 /* SymbolTableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTableTests.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -696,6 +698,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F88A051125E9B162001470C0 /* compiler */ = {
+			isa = PBXGroup;
+			children = (
+				F88A051225E9B17D001470C0 /* CompilerScopesTests.swift */,
+			);
+			path = compiler;
+			sourceTree = "<group>";
+		};
 		OBJ_104 /* utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -708,6 +718,7 @@
 		OBJ_107 /* RosettaTests */ = {
 			isa = PBXGroup;
 			children = (
+				F88A051125E9B162001470C0 /* compiler */,
 				OBJ_108 /* LexerTests.swift */,
 				OBJ_109 /* ReadFileTests.swift */,
 				OBJ_110 /* StringExtensionsTests.swift */,
@@ -1605,6 +1616,7 @@
 				OBJ_390 /* ReadFileTests.swift in Sources */,
 				OBJ_391 /* StringExtensionsTests.swift in Sources */,
 				OBJ_392 /* XCTestManifests.swift in Sources */,
+				F88A051325E9B17D001470C0 /* CompilerScopesTests.swift in Sources */,
 				F8EB17DB25E1AC7800CD9147 /* SymbolTableTests.swift in Sources */,
 				OBJ_393 /* BytecodeTests.swift in Sources */,
 			);

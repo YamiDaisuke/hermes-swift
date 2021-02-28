@@ -121,6 +121,12 @@ public enum OpCodes: OpCode {
     case hash
     /// Performs an index operation (subscript in Swift) E.G.: `<expression>[<expression>]`
     case index
+    /// Calls/Execute a function
+    case call
+    /// Returns a value from a function
+    case returnVal
+    /// Returns an empty value from a function
+    case `return`
 }
 
 /// For a clear control on the operands byte sizes
@@ -165,7 +171,10 @@ public struct OperationDefinition {
         .assignGlobal: OperationDefinition(name: "OpAssignGlobal", operandsWidth: [.word]),
         .getGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [.word]),
         .array: OperationDefinition(name: "OpArray", operandsWidth: [.word]),
-        .hash: OperationDefinition(name: "OpArray", operandsWidth: [.word]),
-        .index: OperationDefinition(name: "OpIndex", operandsWidth: [])
+        .hash: OperationDefinition(name: "OpHash", operandsWidth: [.word]),
+        .index: OperationDefinition(name: "OpIndex", operandsWidth: []),
+        .call: OperationDefinition(name: "OpCall", operandsWidth: []),
+        .returnVal: OperationDefinition(name: "OpReturnVal", operandsWidth: []),
+        .return: OperationDefinition(name: "OpReturn", operandsWidth: [])
     ]
 }
