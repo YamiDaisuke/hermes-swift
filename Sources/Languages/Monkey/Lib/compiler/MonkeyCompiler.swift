@@ -83,19 +83,15 @@ public struct MonkeyC: Compiler {
             let symbol = try symbolTable.define(declareStatement.name.value, type: type)
             self.emit(.setGlobal, Int32(symbol.index))
         case let assignStatement as AssignStatement:
-            try compile(assignStatement.value)
-            let symbol = try symbolTable.resolve(assignStatement.name.value)
-
-            guard symbol.type == .var else {
-                throw AssignConstantError(assignStatement.name.value)
-            }
-
-            self.emit(.assignGlobal, Int32(symbol.index))
+            try handleAssignStatement(assignStatement)
         case let identifier as Identifier:
             let symbol = try self.symbolTable.resolve(identifier.value)
             self.emit(.getGlobal, Int32(symbol.index))
         case let function as FunctionLiteral:
             try self.handleFunctionLiterals(function)
+        case let callExpression as CallExpression:
+            try self.compile(callExpression.function)
+            self.emit(.call)
         case let returnStmt as ReturnStatement:
             try self.compile(returnStmt.value)
             self.emit(.returnVal)
@@ -110,7 +106,7 @@ public struct MonkeyC: Compiler {
         guard self.lastInstructionIs(.pop) else {
             return
         }
-        
+
         guard let last = self.currentScope.lastInstruction?.position else {
             return
         }
@@ -199,6 +195,18 @@ public struct MonkeyC: Compiler {
 
         let afterAlternative = self.currentInstructions.count
         self.replaceOperands(operands: [Int32(afterAlternative)], at: jumpPosition)
+    }
+
+    /// Handles the compilation of `AssignStatement`
+    mutating func handleAssignStatement(_ statement: AssignStatement) throws {
+        try compile(statement.value)
+        let symbol = try symbolTable.resolve(statement.name.value)
+
+        guard symbol.type == .var else {
+            throw AssignConstantError(statement.name.value)
+        }
+
+        self.emit(.assignGlobal, Int32(symbol.index))
     }
 
     /// Turns function literals into compiled functions

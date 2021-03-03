@@ -168,3 +168,19 @@ Supported options are:
 | ---- | ----------- |
 | lhs | An `MArray`  or `Hash` |
 | index | The value to use as index |
+
+### `getFunctionInstructions(_:)`
+
+```swift
+public func getFunctionInstructions(_ function: BaseType) -> Instructions?
+```
+
+Extract the VM instructions from a language especific compiled function
+- Parameter function: The supposed function
+- Returns: The instructions or `nil` if `function` is not actually a compiled function representation
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| function | The supposed function |

@@ -55,4 +55,10 @@ public protocol VMOperations {
     ///   - lhs: The value to be indexed
     ///   - index: The index to apply
     func executeIndexExpression(_ lhs: BaseType, index: BaseType) throws -> BaseType
+
+
+    /// Extract the VM instructions from a language especific compiled function
+    /// - Parameter function: The supposed function
+    /// - Returns: The instructions or `nil` if `function` is not actually a compiled function representation
+    func getFunctionInstructions(_ function: BaseType) -> Instructions?
 }

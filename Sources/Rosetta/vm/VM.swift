@@ -11,11 +11,32 @@ import Foundation
 public let kStackSize = 2048
 /// Max number of global elements
 public let kGlobalsSize = 65536
+/// Max numbef of frames
+public let kMaxFrames = 1024
 
 /// Rosetta VM implementation
 public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType == BaseType {
     public internal(set) var constants: [BaseType]
-    var instructions: Instructions
+
+    var frames: [Frame]
+    var frameIndex = 0
+
+    var currentFrame: Frame {
+        self.frames[self.frameIndex]
+    }
+
+    var currentInstructions: Instructions {
+        self.currentFrame.instructions
+    }
+
+    var currentInstructionPointer: Int {
+        get {
+            return self.currentFrame.instrucionPointer
+        }
+        set {
+            self.currentFrame.instrucionPointer = newValue
+        }
+    }
 
     var operations: Operations
 
@@ -46,7 +67,6 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         globals: inout [BaseType?]
     ) {
         self.constants = constants
-        self.instructions = bytcode.instructions
         self.operations = operations
         self.constants = constants
         self.globals = globals
@@ -54,6 +74,10 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         self.stack = []
         stack.reserveCapacity(kStackSize)
         stackPointer = 0
+
+        self.frames = []
+        self.frames.reserveCapacity(kMaxFrames)
+        self.frames.append(Frame(bytcode.instructions))
     }
 
     /// Init a new VM with a set of bytecode to run
@@ -77,19 +101,18 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     /// Runs the VM against the assigned bytecode
     /// - Throws: `VMError` if anything fails while interpreting the bytecode
     public mutating func run() throws {
-        var instructionPointer = 0
-
-        while instructionPointer < self.instructions.count {
-            guard let opCode = OpCodes(rawValue: instructions[instructionPointer]) else {
-                throw UnknownOpCode(instructions[instructionPointer])
+        while self.currentInstructionPointer < self.currentInstructions.count {
+            guard let opCode = OpCodes(rawValue: self.currentInstructions[self.currentInstructionPointer]) else {
+                throw UnknownOpCode(self.currentInstructions[self.currentInstructionPointer])
             }
 
             switch opCode {
             case .constant:
-                guard let constIndex = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+                guard let constIndex = self.currentInstructions
+                    .readInt(bytes: 2, startIndex: self.currentInstructionPointer + 1) else {
                     continue
                 }
-                instructionPointer += 2
+                self.currentInstructionPointer += 2
                 try self.push(self.constants[Int(constIndex)])
             case .pop:
                 self.pop()
@@ -107,25 +130,91 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
             case .null:
                 try self.push(self.operations.null)
             case .jumpf, .jump:
-                instructionPointer = self.handleJumps(opCode, ip: instructionPointer)
+                self.currentInstructionPointer = self.handleJumps(opCode, ip: self.currentInstructionPointer)
             case .setGlobal, .assignGlobal, .getGlobal:
-                instructionPointer = try self.handleVariables(opCode, ip: instructionPointer)
+                self.currentInstructionPointer = try self.handleVariables(opCode, ip: self.currentInstructionPointer)
             case .array:
-                instructionPointer = try self.handleArrays(instructionPointer)
+                self.currentInstructionPointer = try self.handleArrays(self.currentInstructionPointer)
             case .hash:
-                instructionPointer = try self.handleHashes(instructionPointer)
+                self.currentInstructionPointer = try self.handleHashes(self.currentInstructionPointer)
             case .index:
                 guard let index = self.pop() else { continue }
                 guard let lhs = self.pop() else { continue }
 
                 let value = try self.operations.executeIndexExpression(lhs, index: index)
                 try self.push(value)
+            case .call:
+                let function = self.stack[self.stackPointer - 1]
+                guard let instructions = self.operations.getFunctionInstructions(function) else {
+                    throw CallingNonFunction(function)
+                }
+
+                self.pushFrame(Frame(instructions))
+                continue
+            case .returnVal:
+                let value = self.pop()
+                self.popFrame()
+                self.pop()
+
+                try self.push(value)
+            case .return:
+                self.popFrame()
+                self.pop()
+                try self.push(self.operations.null)
             default:
                 break
             }
-            instructionPointer += 1
+
+            self.currentInstructionPointer += 1
         }
     }
+
+    /// Push a new element in the stack
+    /// - Parameter object: The element to push
+    /// - Throws: `StackOverflow` if the stack is at full capacity.
+    ///           The available capacity is defined by the constant: `kStackSize`
+    mutating func push(_ object: BaseType?) throws {
+        guard let object = object else { return }
+        guard self.stackPointer < kStackSize else { throw StackOverflow() }
+
+        self.stack.insert(object, at: self.stackPointer)
+        self.stackPointer += 1
+    }
+
+    /// Pop the element at top of the stack
+    /// - Returns: The poped element
+    @discardableResult
+    mutating func pop() -> BaseType? {
+        guard !self.stack.isEmpty else {
+            self.lastPoped = nil
+            return nil
+        }
+
+        let value = self.stack[self.stackPointer - 1]
+        self.lastPoped = value
+        self.stackPointer -= 1
+        return value
+    }
+
+    /// Push a new frame into our stack ready for execution
+    /// - Parameter frame: The new frame
+    mutating func pushFrame(_ frame: Frame) {
+        self.frames.append(frame)
+        self.frameIndex += 1
+    }
+
+    /// Pops the top of the frame stack an returns it
+    /// - Returns: The `Frame` on top of the stack or `nil` if the stack is empty 
+    @discardableResult
+    mutating func popFrame() -> Frame? {
+        guard let last = self.frames.popLast() else {
+            return nil
+        }
+        self.frameIndex -= 1
+        return last
+    }
+
+    // MARK: - Helper methods for op codes execution
 
     /// Executes both VM supported jump operations: `OpJump`, `OpJumpFalse`
     /// - Parameters:
@@ -136,7 +225,8 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         var instructionPointer = instructionPointer
         switch code {
         case .jumpf:
-            guard let destination = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+            guard let destination = self.currentInstructions
+                .readInt(bytes: 2, startIndex: instructionPointer + 1) else {
                 break
             }
             instructionPointer += 2
@@ -145,7 +235,8 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 instructionPointer = Int(destination) - 1
             }
         case .jump:
-            guard let destination = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+            guard let destination = self.currentInstructions
+                .readInt(bytes: 2, startIndex: instructionPointer + 1) else {
                 break
             }
             instructionPointer += 2
@@ -163,7 +254,7 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     /// - Returns: The new instruction pointer after the array  is created
     mutating func handleArrays(_ instructionPointer: Int) throws -> Int {
         var instructionPointer = instructionPointer
-        guard let count = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+        guard let count = self.currentInstructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
             return instructionPointer
         }
         instructionPointer += 2
@@ -181,7 +272,7 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     /// - Returns: The new instruction pointer after the hash  is created
     mutating func handleHashes(_ instructionPointer: Int) throws -> Int {
         var instructionPointer = instructionPointer
-        guard let count = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+        guard let count = self.currentInstructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
             return instructionPointer
         }
         instructionPointer += 2
@@ -203,7 +294,7 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         var instructionPointer = instructionPointer
         switch opCode {
         case .setGlobal, .assignGlobal:
-            guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+            guard let index = self.currentInstructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
                 break
             }
             instructionPointer += 2
@@ -212,7 +303,7 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 self.globals[Int(index)] = value
             }
         case .getGlobal:
-            guard let index = instructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
+            guard let index = self.currentInstructions.readInt(bytes: 2, startIndex: instructionPointer + 1) else {
                 break
             }
             instructionPointer += 2
@@ -258,94 +349,5 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         }
 
         return output
-    }
-
-    /// Push a new element in the stack
-    /// - Parameter object: The element to push
-    /// - Throws: `StackOverflow` if the stack is at full capacity.
-    ///           The available capacity is defined by the constant: `kStackSize`
-    mutating func push(_ object: BaseType?) throws {
-        guard let object = object else { return }
-        guard self.stackPointer < kStackSize else { throw StackOverflow() }
-
-        self.stack.insert(object, at: self.stackPointer)
-        self.stackPointer += 1
-    }
-
-    /// Pop the element at top of the stack
-    /// - Returns: The poped element
-    @discardableResult
-    mutating func pop() -> BaseType? {
-        guard !self.stack.isEmpty else {
-            self.lastPoped = nil
-            return nil
-        }
-
-        let value = self.stack[self.stackPointer - 1]
-        self.lastPoped = value
-        self.stackPointer -= 1
-        return value
-    }
-}
-
-/// All VM errors should implement this protocol
-public protocol VMError: RosettaError {
-}
-
-/// Throw this error when a program tries to push more than `kStackSize`
-/// elements into the VM stack
-public struct StackOverflow: VMError {
-    public var message: String = "Stack overflow"
-    public var line: Int?
-    public var column: Int?
-    public var file: String?
-}
-
-/// Throw this error when a instruction byte code doesn't match with on
-/// of the VM supported operations
-public struct UnknownOpCode: VMError {
-    public var message: String
-    public var line: Int?
-    public var column: Int?
-    public var file: String?
-
-    public init(_ code: OpCode) {
-        self.message = String(format: "Unknown op code: %02X", code)
-    }
-}
-
-/// Throw this when a value from the base lang is not usable as Hash key
-public struct InvalidHashKey<BaseType>: VMError {
-    public var message: String
-    public var line: Int?
-    public var column: Int?
-    public var file: String?
-
-    public init(_ key: BaseType) {
-        self.message = "Value: \(key) cannot be used as hash key"
-    }
-}
-
-/// Throw this when a value from the base lang is not usable as index for arrays
-public struct InvalidArrayIndex<BaseType>: VMError {
-    public var message: String
-    public var line: Int?
-    public var column: Int?
-    public var file: String?
-
-    public init(_ index: BaseType) {
-        self.message = "Index \(index) can't be applied to type Array"
-    }
-}
-
-/// Throw this when tryng to apply an index expression to a non-indexable value
-public struct IndexNotSupported<BaseType>: VMError {
-    public var message: String
-    public var line: Int?
-    public var column: Int?
-    public var file: String?
-
-    public init(_ value: BaseType) {
-        self.message = "Can't apply index to: \(value)"
     }
 }

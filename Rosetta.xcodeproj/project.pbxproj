@@ -35,6 +35,8 @@
 
 /* Begin PBXBuildFile section */
 		F88A051325E9B17D001470C0 /* CompilerScopesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88A051225E9B17D001470C0 /* CompilerScopesTests.swift */; };
+		F8E70C5225F04792008476B4 /* Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E70C5125F04792008476B4 /* Frame.swift */; };
+		F8E70C6225F056F0008476B4 /* VMErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E70C6125F056F0008476B4 /* VMErrors.swift */; };
 		F8EB17CB25E1AB5D00CD9147 /* SymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB17CA25E1AB5D00CD9147 /* SymbolTable.swift */; };
 		F8EB17DB25E1AC7800CD9147 /* SymbolTableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB17DA25E1AC7800CD9147 /* SymbolTableTests.swift */; };
 		OBJ_240 /* MonkeyRepl.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* MonkeyRepl.swift */; };
@@ -407,6 +409,8 @@
 
 /* Begin PBXFileReference section */
 		F88A051225E9B17D001470C0 /* CompilerScopesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerScopesTests.swift; sourceTree = "<group>"; };
+		F8E70C5125F04792008476B4 /* Frame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Frame.swift; sourceTree = "<group>"; };
+		F8E70C6125F056F0008476B4 /* VMErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMErrors.swift; sourceTree = "<group>"; };
 		F8EB17CA25E1AB5D00CD9147 /* SymbolTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTable.swift; sourceTree = "<group>"; };
 		F8EB17DA25E1AC7800CD9147 /* SymbolTableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTableTests.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -1128,6 +1132,8 @@
 			children = (
 				OBJ_80 /* VM.swift */,
 				OBJ_81 /* VMOperations.swift */,
+				F8E70C5125F04792008476B4 /* Frame.swift */,
+				F8E70C6125F056F0008476B4 /* VMErrors.swift */,
 			);
 			path = vm;
 			sourceTree = "<group>";
@@ -1579,11 +1585,13 @@
 				F8EB17CB25E1AB5D00CD9147 /* SymbolTable.swift in Sources */,
 				OBJ_345 /* Lexer.swift in Sources */,
 				OBJ_346 /* StringExtensions.swift in Sources */,
+				F8E70C5225F04792008476B4 /* Frame.swift in Sources */,
 				OBJ_347 /* Token.swift in Sources */,
 				OBJ_348 /* Node.swift in Sources */,
 				OBJ_349 /* ParseError.swift in Sources */,
 				OBJ_350 /* Parser.swift in Sources */,
 				OBJ_351 /* Program.swift in Sources */,
+				F8E70C6225F056F0008476B4 /* VMErrors.swift in Sources */,
 				OBJ_352 /* StreamReader.swift in Sources */,
 				OBJ_353 /* VM.swift in Sources */,
 				OBJ_354 /* VMOperations.swift in Sources */,

@@ -145,6 +145,17 @@ public struct MonkeyVMOperations: VMOperations {
         }
     }
 
+    /// Extract the VM instructions from a language especific compiled function
+    /// - Parameter function: The supposed function
+    /// - Returns: The instructions or `nil` if `function` is not actually a compiled function representation
+    public func getFunctionInstructions(_ function: BaseType) -> Instructions? {
+        guard let function = function as? CompiledFunction else {
+            return nil
+        }
+
+        return function.instructions
+    }
+
     func executeArrayIndexExpression(_ lhs: MArray, index: BaseType) throws -> BaseType {
         guard let integer = index as? Integer else {
             throw InvalidArrayIndex(index)

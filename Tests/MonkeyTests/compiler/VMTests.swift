@@ -182,6 +182,93 @@ class VMTests: XCTestCase {
         try self.runVMTests(tests)
     }
 
+    func testCallingFunctionsWithoutArguments() throws {
+        let tests: [TestCase] = [
+            (
+                "let fivePlusTen = fn() { 5 + 10; }; \n fivePlusTen();",
+                Integer(15)
+            ),
+            (
+                """
+                let one = fn() { 1; };
+                let two = fn() { 2; };
+                one() + two()
+                """,
+                Integer(3)
+            ),
+            (
+                """
+                let a = fn() { 1 };
+                let b = fn() { a() + 1 };
+                let c = fn() { b() + 1 };
+                c();
+                """,
+                Integer(3)
+            )
+        ]
+
+        try self.runVMTests(tests)
+    }
+
+    func testCallingFunctionsWithReturnStatement() throws {
+        let tests: [TestCase] = [
+            (
+                """
+                let earlyExit  = fn() { return 99; 100; };
+                earlyExit();
+                """,
+                Integer(99)
+            ),
+            (
+                """
+                let earlyExit  = fn() { return 99; return 100; };
+                earlyExit();
+                """,
+                Integer(99)
+            )
+        ]
+
+        try self.runVMTests(tests)
+    }
+
+    func testCallingFunctionsWithoutReturnValue() throws {
+        let tests: [TestCase] = [
+            (
+                """
+                let noReturn = fn() { };
+                noReturn();
+                """,
+                Null.null
+            ),
+            (
+                """
+                let noReturn = fn() { };
+                let noReturnTwo = fn() { noReturn(); };
+                noReturn();
+                noReturnTwo();
+                """,
+                Null.null
+            )
+        ]
+
+        try self.runVMTests(tests)
+    }
+
+    func testFirstClassFunctions() throws {
+        let tests: [TestCase] = [
+            (
+                """
+                let returnsOne = fn() { 1; };
+                let returnsOneReturner = fn() { returnsOne; };
+                returnsOneReturner()();
+                """,
+                Integer(1)
+            )
+        ]
+
+        try self.runVMTests(tests)
+    }
+
     // MARK: Utils
 
     func runVMTests(_ tests: [TestCase], file: StaticString = #file, line: UInt = #line) throws {

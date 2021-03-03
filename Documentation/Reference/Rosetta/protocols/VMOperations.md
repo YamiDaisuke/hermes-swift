@@ -136,3 +136,19 @@ Performs an language index (A.K.A subscript) operation in the form of: `<express
 | ---- | ----------- |
 | lhs | The value to be indexed |
 | index | The index to apply |
+
+### `getFunctionInstructions(_:)`
+
+```swift
+func getFunctionInstructions(_ function: BaseType) -> Instructions?
+```
+
+Extract the VM instructions from a language especific compiled function
+- Parameter function: The supposed function
+- Returns: The instructions or `nil` if `function` is not actually a compiled function representation
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| function | The supposed function |
