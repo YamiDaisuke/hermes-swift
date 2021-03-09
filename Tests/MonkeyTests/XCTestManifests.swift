@@ -45,6 +45,7 @@ extension MonkeyCompilerTests {
     // to regenerate.
     static let __allTests__MonkeyCompilerTests = [
         ("testArrayLiterals", testArrayLiterals),
+        ("testAssigmentScopes", testAssigmentScopes),
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
         ("testFunctionCalls", testFunctionCalls),
@@ -54,7 +55,10 @@ extension MonkeyCompilerTests {
         ("testHashLiterals", testHashLiterals),
         ("testIndexExpressions", testIndexExpressions),
         ("testIntegerArithmetic", testIntegerArithmetic),
+        ("testLetStatementsScopes", testLetStatementsScopes),
+        ("testRedeclarionScopes", testRedeclarionScopes),
         ("testStringExpressions", testStringExpressions),
+        ("testVarStatementsScopes", testVarStatementsScopes),
     ]
 }
 

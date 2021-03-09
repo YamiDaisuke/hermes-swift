@@ -169,6 +169,30 @@ case getGlobal
 
 Get the value assigned to a global id
 
+### `setLocal`
+
+```swift
+case setLocal
+```
+
+Creates a local bound to a value
+
+### `assignLocal`
+
+```swift
+case assignLocal
+```
+
+Assigns a local bound to a value
+
+### `getLocal`
+
+```swift
+case getLocal
+```
+
+Get the value assigned to a local id
+
 ### `array`
 
 ```swift

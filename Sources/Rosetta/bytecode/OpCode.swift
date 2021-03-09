@@ -115,6 +115,12 @@ public enum OpCodes: OpCode {
     case assignGlobal
     /// Get the value assigned to a global id
     case getGlobal
+    /// Creates a local bound to a value
+    case setLocal
+    /// Assigns a local bound to a value
+    case assignLocal
+    /// Get the value assigned to a local id
+    case getLocal
     /// Creates an Array from the first "n" elements in the stack
     case array
     /// Creates a HashMap from the first "n" elements in the stack
@@ -169,7 +175,10 @@ public struct OperationDefinition {
         .null: OperationDefinition(name: "OpNull", operandsWidth: []),
         .setGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [.word]),
         .assignGlobal: OperationDefinition(name: "OpAssignGlobal", operandsWidth: [.word]),
-        .getGlobal: OperationDefinition(name: "OpSetGlobal", operandsWidth: [.word]),
+        .getGlobal: OperationDefinition(name: "OpGetGlobal", operandsWidth: [.word]),
+        .setLocal: OperationDefinition(name: "OpSetLocal", operandsWidth: [.byte]),
+        .assignLocal: OperationDefinition(name: "OpAssignLocal", operandsWidth: [.byte]),
+        .getLocal: OperationDefinition(name: "OpGetLocal", operandsWidth: [.byte]),
         .array: OperationDefinition(name: "OpArray", operandsWidth: [.word]),
         .hash: OperationDefinition(name: "OpHash", operandsWidth: [.word]),
         .index: OperationDefinition(name: "OpIndex", operandsWidth: []),

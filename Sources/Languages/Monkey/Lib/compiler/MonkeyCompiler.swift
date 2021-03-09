@@ -81,12 +81,14 @@ public struct MonkeyC: Compiler {
             try compile(declareStatement.value)
             let type: VariableType = declareStatement.token.type == .let ? .let : .var
             let symbol = try symbolTable.define(declareStatement.name.value, type: type)
-            self.emit(.setGlobal, Int32(symbol.index))
+            let operation: OpCodes = symbol.scope == .global ? .setGlobal : .setLocal
+            self.emit(operation, Int32(symbol.index))
         case let assignStatement as AssignStatement:
             try handleAssignStatement(assignStatement)
         case let identifier as Identifier:
             let symbol = try self.symbolTable.resolve(identifier.value)
-            self.emit(.getGlobal, Int32(symbol.index))
+            let operation: OpCodes = symbol.scope == .global ? .getGlobal : .getLocal
+            self.emit(operation, Int32(symbol.index))
         case let function as FunctionLiteral:
             try self.handleFunctionLiterals(function)
         case let callExpression as CallExpression:
@@ -206,7 +208,8 @@ public struct MonkeyC: Compiler {
             throw AssignConstantError(statement.name.value)
         }
 
-        self.emit(.assignGlobal, Int32(symbol.index))
+        let operation: OpCodes = symbol.scope == .global ? .assignGlobal : .assignLocal
+        self.emit(operation, Int32(symbol.index))
     }
 
     /// Turns function literals into compiled functions

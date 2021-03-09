@@ -32,6 +32,7 @@ private struct DummyCompiler: Compiler {
 class CompilerScopesTests: XCTestCase {
     func testCompilerScopes() throws {
         var compiler = DummyCompiler()
+        let globalSymbolTable = compiler.symbolTable
         XCTAssertEqual(compiler.scopeIndex, 0)
         compiler.emit(.mul)
 
@@ -40,8 +41,11 @@ class CompilerScopesTests: XCTestCase {
         compiler.emit(.sub)
         XCTAssertEqual(compiler.currentScope.instructions.count, 1)
         XCTAssertEqual(compiler.currentScope.lastInstruction?.code, .sub)
+        XCTAssertEqual(compiler.symbolTable.outer, globalSymbolTable)
         compiler.leaveScope()
         XCTAssertEqual(compiler.scopeIndex, 0)
+        XCTAssertEqual(compiler.symbolTable, globalSymbolTable)
+        XCTAssertNil(compiler.symbolTable.outer)
 
         compiler.emit(.add)
         XCTAssertEqual(compiler.currentScope.instructions.count, 2)

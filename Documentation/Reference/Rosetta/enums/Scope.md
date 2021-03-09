@@ -15,6 +15,12 @@ Assigned scope for compiled symbols
 case global
 ```
 
+### `local`
+
+```swift
+case local
+```
+
 ## Properties
 ### `description`
 

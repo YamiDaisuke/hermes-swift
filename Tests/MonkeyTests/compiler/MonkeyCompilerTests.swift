@@ -593,6 +593,271 @@ class MonkeyCompilerTests: XCTestCase {
         try runCompilerTests(tests)
     }
 
+    func testLetStatementsScopes() throws {
+        let tests: [TestCase] = [
+            (
+                "let num = 55; \n fn() { num }",
+                [
+                    Integer(55),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.getGlobal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "fn () { let num = 55; num }",
+                [
+                    Integer(55),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 0),
+                        Bytecode.make(.setLocal, 0),
+                        Bytecode.make(.getLocal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "fn () { let a = 55; let b = 77; a + b }",
+                [
+                    Integer(55),
+                    Integer(77),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 0),
+                        Bytecode.make(.setLocal, 0),
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.setLocal, 1),
+                        Bytecode.make(.getLocal, 0),
+                        Bytecode.make(.getLocal, 1),
+                        Bytecode.make(.add),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
+    func testVarStatementsScopes() throws {
+        let tests: [TestCase] = [
+            (
+                "var num = 55; \n fn() { num }",
+                [
+                    Integer(55),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.getGlobal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "fn () { var num = 55; num }",
+                [
+                    Integer(55),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 0),
+                        Bytecode.make(.setLocal, 0),
+                        Bytecode.make(.getLocal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "fn () { var a = 55; var b = 77; a + b }",
+                [
+                    Integer(55),
+                    Integer(77),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 0),
+                        Bytecode.make(.setLocal, 0),
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.setLocal, 1),
+                        Bytecode.make(.getLocal, 0),
+                        Bytecode.make(.getLocal, 1),
+                        Bytecode.make(.add),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
+    func testRedeclarionScopes() throws {
+        let tests: [TestCase] = [
+            (
+                "let num = 55; \n fn() { let num = 60; num; }",
+                [
+                    Integer(55),
+                    Integer(60),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.setLocal, 0),
+                        Bytecode.make(.getLocal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
+    func testAssigmentScopes() throws {
+        let tests: [TestCase] = [
+            (
+                "var num = 55; \n fn() { num = 60; num; }",
+                [
+                    Integer(55),
+                    Integer(60),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.assignGlobal, 0),
+                        Bytecode.make(.getGlobal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "var num = 55; \n fn() { var num = 10; num = 60; num; }",
+                [
+                    Integer(55),
+                    Integer(10),
+                    Integer(60),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.setLocal, 0),
+                        Bytecode.make(.constant, 2),
+                        Bytecode.make(.assignLocal, 0),
+                        Bytecode.make(.getLocal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "let num = 55; \n fn() { var num = 10; num = 60; num; }",
+                [
+                    Integer(55),
+                    Integer(10),
+                    Integer(60),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.setLocal, 0),
+                        Bytecode.make(.constant, 2),
+                        Bytecode.make(.assignLocal, 0),
+                        Bytecode.make(.getLocal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                // This one will throw an error
+                "let const = 55; \n fn() { const = 60; const; }",
+                [
+                    Integer(55),
+                    Integer(60),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.assignGlobal, 0),
+                        Bytecode.make(.getGlobal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                // This one will throw an error
+                "var const = 55; \n fn() { let const = 10; const = 60; const; }",
+                [
+                    Integer(55),
+                    Integer(10),
+                    Integer(60),
+                    CompiledFunction(instructions: Array([
+                        Bytecode.make(.constant, 1),
+                        Bytecode.make(.setLocal, 0),
+                        Bytecode.make(.constant, 2),
+                        Bytecode.make(.assignLocal, 0),
+                        Bytecode.make(.getLocal, 0),
+                        Bytecode.make(.returnVal)
+                    ].joined()))
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        do {
+            try runCompilerTests(tests)
+        } catch let error as AssignConstantError {
+            XCTAssertEqual(error.description, "Cannot assign to value: \"const\" is a constant")
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+    }
+
     // MARK: Utils
 
     func runCompilerTests(_ tests: [TestCase], file: StaticString = #file, line: UInt = #line) throws {

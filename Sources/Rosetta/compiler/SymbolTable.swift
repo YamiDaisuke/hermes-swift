@@ -10,11 +10,14 @@ import Foundation
 /// Assigned scope for compiled symbols
 public enum Scope: CustomStringConvertible {
     case global
+    case local
 
     public var description: String {
         switch self {
         case .global:
             return "global"
+        case .local:
+            return "local"
         }
     }
 }
@@ -43,7 +46,7 @@ extension Symbol: Equatable {
 }
 
 /// Holds a list of compiled symbols
-public struct SymbolTable: CustomStringConvertible {
+public class SymbolTable: NSObject {
     /// Maps symbols metadata to the assigned name
     var store: [String: Symbol] = [:]
     /// How many symbols this table contains
@@ -51,21 +54,33 @@ public struct SymbolTable: CustomStringConvertible {
         return store.count
     }
 
-    public init() { }
+    /// Outer closure scope
+    var outer: SymbolTable?
+
+    /// Default init
+    public override init() { }
+
+    /// Creates a new `SymbolTable` from a base outer scope
+    public init(_ outer: SymbolTable) {
+        self.outer = outer
+    }
 
     /// Defines a new symbol with the given name
     /// - Parameters:
     ///     - name: The name/identifier of the symbol
     ///     - type: Define if this symbol is a constant or a variable
-    /// - Throws: `RedeclarationError` if `name` is not already in this table
+    /// - Throws: `RedeclarationError` if `name` is  already in this table
     /// - Returns: The newly created symbol
     @discardableResult
-    public mutating func define(_ name: String, type: VariableType = .let) throws -> Symbol {
+    public func define(_ name: String, type: VariableType = .let) throws -> Symbol {
+        // We should only check redeclaratins in the local table
+        // it is perfectly valid to redeclare a global variable
+        // in the local scope
         guard self.store[name] == nil else {
             throw RedeclarationError(name)
         }
-
-        let symbol = Symbol(name: name, scope: .global, index: self.totalDefinitions, type: type)
+        let scope: Scope = self.outer == nil ? .global : .local
+        let symbol = Symbol(name: name, scope: scope, index: self.totalDefinitions, type: type)
         self.store[name] = symbol
         return symbol
     }
@@ -75,14 +90,22 @@ public struct SymbolTable: CustomStringConvertible {
     /// - Throws: `CantResolveName` if `name` is not registerd in this table
     /// - Returns: The `Symbol` assigned to `name`
     public func resolve(_ name: String) throws -> Symbol {
-        guard let symbol = self.store[name] else {
-            throw CantResolveName(name)
+        // First check for a local value
+        if let symbol = self.store[name] {
+            return symbol
         }
 
-        return symbol
+        // If we have an outer `SymbolTable` check for the
+        // value in there
+        if let outer = self.outer {
+            return try outer.resolve(name)
+        }
+
+        // If both previous steps fails throw an error
+        throw CantResolveName(name)
     }
 
-    public var description: String {
+    public override var description: String {
         "\(self.store.map { "\($0.key): \($0.value.index),\($0.value.scope)" }.joined(separator: "\n"))"
     }
 }

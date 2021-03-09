@@ -15,7 +15,8 @@ class BytecodeTests: XCTestCase {
     func testMake() {
         let tests: [Test] = [
             (OpCodes.constant, [65534], [OpCodes.constant.rawValue, 255, 254]),
-            (OpCodes.add, [], [OpCodes.add.rawValue])
+            (OpCodes.add, [], [OpCodes.add.rawValue]),
+            (OpCodes.getLocal, [255], [OpCodes.getLocal.rawValue, 255])
         ]
         for test in tests {
             let instructions = Bytecode.make(test.opCode, operands: test.operands)
@@ -32,12 +33,14 @@ class BytecodeTests: XCTestCase {
         instructions.append(contentsOf: Bytecode.make(.constant, 2))
         instructions.append(contentsOf: Bytecode.make(.constant, 65535))
         instructions.append(contentsOf: Bytecode.make(.add))
+        instructions.append(contentsOf: Bytecode.make(.getLocal, 1))
 
         let expected = """
         0000 OpConstant      1
         0003 OpConstant      2
         0006 OpConstant      65535
         0009 OpAdd
+        0010 OpGetLocal      1
         """
 
         print(instructions.description)
@@ -46,7 +49,8 @@ class BytecodeTests: XCTestCase {
 
     func testReadOperands() {
         let tests: [(OpCodes, [Int32], Int)] = [
-            (.constant, [65535], 2)
+            (.constant, [65535], 2),
+            (.getLocal, [255], 1)
         ]
 
         for test in tests {

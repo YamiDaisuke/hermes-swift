@@ -84,7 +84,7 @@ public protocol Compiler {
     /// A pool of the compiled constant values
     var constants: [BaseType] { get set }
     /// The compiled `SymbolTable`
-    var symbolTable: SymbolTable { get }
+    var symbolTable: SymbolTable { get set }
 
     /// Puts all the compiled values into a single `BytecodeProgram`
     var bytecode: BytecodeProgram<BaseType> { get }
@@ -125,6 +125,8 @@ public extension Compiler {
         let newScope = CompilationScope()
         self.scopes.append(newScope)
         self.scopeIndex += 1
+
+        self.symbolTable = SymbolTable(self.symbolTable)
     }
 
     /// Closes the current compilation scope and returns the compiled instructions
@@ -133,6 +135,11 @@ public extension Compiler {
         let instructions = self.currentInstructions
         _ = self.scopes.popLast()
         self.scopeIndex -= 1
+
+        if let symbolTable = self.symbolTable.outer {
+            self.symbolTable = symbolTable
+        }
+
         return instructions
     }
 
