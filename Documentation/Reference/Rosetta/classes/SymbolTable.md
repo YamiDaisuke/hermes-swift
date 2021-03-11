@@ -9,6 +9,14 @@ public class SymbolTable: NSObject
 Holds a list of compiled symbols
 
 ## Properties
+### `totalDefinitions`
+
+```swift
+public var totalDefinitions: Int
+```
+
+How many symbols this table contains
+
 ### `description`
 
 ```swift

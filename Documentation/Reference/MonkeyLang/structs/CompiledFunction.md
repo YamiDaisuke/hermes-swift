@@ -21,6 +21,12 @@ public var type: ObjectType
 public var instructions: Instructions
 ```
 
+### `localsCount`
+
+```swift
+public var localsCount: Int
+```
+
 ### `description`
 
 ```swift

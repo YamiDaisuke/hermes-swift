@@ -9,10 +9,10 @@ public class Frame
 Represents the current call frame inside the VM
 
 ## Methods
-### `init(_:)`
+### `init(_:basePointer:)`
 
 ```swift
-public init(_ instructions: Instructions)
+public init(_ instructions: Instructions, basePointer: Int = 0)
 ```
 
 Creates a new frame with a list of instructions

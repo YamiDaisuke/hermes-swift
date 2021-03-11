@@ -226,8 +226,12 @@ public struct MonkeyC: Compiler {
             self.emit(.return)
         }
 
+        let localsCount = self.symbolTable.totalDefinitions
         let instructions = self.leaveScope()
-        let compiledFunction = CompiledFunction(instructions: instructions)
+        let compiledFunction = CompiledFunction(
+            instructions: instructions,
+            localsCount: localsCount
+        )
         self.emit(.constant, self.addConstant(compiledFunction))
     }
 }

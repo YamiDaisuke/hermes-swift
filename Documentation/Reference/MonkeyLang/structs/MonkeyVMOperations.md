@@ -169,15 +169,16 @@ Supported options are:
 | lhs | An `MArray`  or `Hash` |
 | index | The value to use as index |
 
-### `getFunctionInstructions(_:)`
+### `decodeFunction(_:)`
 
 ```swift
-public func getFunctionInstructions(_ function: BaseType) -> Instructions?
+public func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int)?
 ```
 
-Extract the VM instructions from a language especific compiled function
+Extract the VM instructions and locals count from a language especific compiled function
 - Parameter function: The supposed function
-- Returns: The instructions or `nil` if `function` is not actually a compiled function representation
+- Returns: A tuple with the instructions and the locals count or `nil`
+           if `function` is not actually a compiled function representation
 
 #### Parameters
 

@@ -14,6 +14,8 @@ public let kGlobalsSize = 65536
 /// Max numbef of frames
 public let kMaxFrames = 1024
 
+// swiftlint:disable type_body_length file_length
+
 /// Rosetta VM implementation
 public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType == BaseType {
     public internal(set) var constants: [BaseType]
@@ -138,29 +140,24 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
             case .hash:
                 self.currentInstructionPointer = try self.handleHashes(self.currentInstructionPointer)
             case .index:
-                guard let index = self.pop() else { continue }
-                guard let lhs = self.pop() else { continue }
-
-                let value = try self.operations.executeIndexExpression(lhs, index: index)
-                try self.push(value)
+                try self.handleIndexOperation()
             case .call:
-                let function = self.stack[self.stackPointer - 1]
-                guard let instructions = self.operations.getFunctionInstructions(function) else {
-                    throw CallingNonFunction(function)
-                }
-
-                self.pushFrame(Frame(instructions))
+                try self.handleCallOperation()
                 continue
             case .returnVal:
                 let value = self.pop()
+                self.stackPointer = self.currentFrame.basePointer - 1
                 self.popFrame()
-                self.pop()
-
                 try self.push(value)
             case .return:
+                self.stackPointer = self.currentFrame.basePointer - 1
                 self.popFrame()
-                self.pop()
                 try self.push(self.operations.null)
+            case .setLocal, .assignLocal, .getLocal:
+                self.currentInstructionPointer = try self.handleLocalVariables(
+                    opCode,
+                    ip: self.currentInstructionPointer
+                )
             default:
                 break
             }
@@ -315,6 +312,75 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         }
 
         return instructionPointer
+    }
+
+    /// Executes a local variable operation including declaration, assignation and reading
+    /// - Parameters:
+    ///   - opCode: One of: `setLocal`, `assignLocal`, `getLocal`
+    ///   - instructionPointer: The current instruction pointer
+    /// - Throws: A `VMError` if the operations fails
+    /// - Returns: The new instruction pointer after the operation is performed
+    mutating func handleLocalVariables(_ opCode: OpCodes, ip instructionPointer: Int) throws -> Int {
+        var instructionPointer = instructionPointer
+        switch opCode {
+        case .setLocal, .assignLocal:
+            guard let localIndex = self.currentInstructions
+                .readInt(bytes: 1, startIndex: self.currentInstructionPointer + 1) else {
+                break
+            }
+
+            instructionPointer += 1
+            guard let value = self.pop() else {
+                break
+            }
+
+            self.stack[self.currentFrame.basePointer + Int(localIndex)] = value
+        case .getLocal:
+            guard let localIndex = self.currentInstructions
+                .readInt(bytes: 1, startIndex: self.currentInstructionPointer + 1) else {
+                break
+            }
+
+            instructionPointer += 1
+
+            try self.push(self.stack[self.currentFrame.basePointer + Int(localIndex)])
+        default:
+            break
+        }
+
+        return instructionPointer
+    }
+
+    /// Executes a function call operation, using an execution frame and stack for variables
+    /// - Throws:`CallingNonFunction` if the called variable is not a function
+    mutating func handleCallOperation() throws {
+        let function = self.stack[self.stackPointer - 1]
+        guard let decoded = self.operations.decodeFunction(function) else {
+            throw CallingNonFunction(function)
+        }
+
+
+        let frame = Frame(decoded.instructions, basePointer: self.stackPointer)
+        self.pushFrame(frame)
+        self.stackPointer = frame.basePointer + decoded.locals
+        self.stack.append(
+            contentsOf: Array(repeating: self.operations.null, count: decoded.locals)
+        )
+    }
+
+    /// Executes an index operation for the VM, the result and limitations
+    /// will depend on the underlyng language
+    ///
+    /// ```
+    /// <expresion>[<expression>]
+    /// ```
+    /// - Throws: A `VMError` if the operation is invalid
+    mutating func handleIndexOperation() throws {
+        guard let index = self.pop() else { return }
+        guard let lhs = self.pop() else { return }
+
+        let value = try self.operations.executeIndexExpression(lhs, index: index)
+        try self.push(value)
     }
 
     /// Builds an array from the stack

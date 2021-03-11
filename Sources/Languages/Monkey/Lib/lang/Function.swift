@@ -34,6 +34,7 @@ public struct CompiledFunction: Object {
     public var type: ObjectType { "compiledFunction" }
 
     public var instructions: Instructions
+    public var localsCount: Int
 
     public var description: String {
         "CompiledFunction:\n\(instructions.description)"

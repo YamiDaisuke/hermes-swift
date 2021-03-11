@@ -50,7 +50,7 @@ public class SymbolTable: NSObject {
     /// Maps symbols metadata to the assigned name
     var store: [String: Symbol] = [:]
     /// How many symbols this table contains
-    var totalDefinitions: Int {
+    public var totalDefinitions: Int {
         return store.count
     }
 

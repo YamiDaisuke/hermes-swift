@@ -34,6 +34,13 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		F8633D2825FA80D800CA3E9F /* VMTestsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633D2725FA80D800CA3E9F /* VMTestsHelper.swift */; };
+		F8633D5425FA81BF00CA3E9F /* VMFunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633D5325FA81BF00CA3E9F /* VMFunctionTests.swift */; };
+		F8633D7225FA829800CA3E9F /* CompilerTestsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633D7125FA829800CA3E9F /* CompilerTestsHelper.swift */; };
+		F8633D8225FA834700CA3E9F /* MonkeyCScopesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633D8125FA834700CA3E9F /* MonkeyCScopesTests.swift */; };
+		F8633D9225FA837700CA3E9F /* MonkeyCFunctionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633D9125FA837600CA3E9F /* MonkeyCFunctionsTests.swift */; };
+		F8633DA225FA841300CA3E9F /* MonkeyCCollectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633DA125FA841300CA3E9F /* MonkeyCCollectionsTests.swift */; };
+		F8633DB225FA847100CA3E9F /* VMCollectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633DB125FA847100CA3E9F /* VMCollectionsTests.swift */; };
 		F88A051325E9B17D001470C0 /* CompilerScopesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88A051225E9B17D001470C0 /* CompilerScopesTests.swift */; };
 		F8E70C5225F04792008476B4 /* Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E70C5125F04792008476B4 /* Frame.swift */; };
 		F8E70C6225F056F0008476B4 /* VMErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E70C6125F056F0008476B4 /* VMErrors.swift */; };
@@ -408,6 +415,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F8633D2725FA80D800CA3E9F /* VMTestsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMTestsHelper.swift; sourceTree = "<group>"; };
+		F8633D5325FA81BF00CA3E9F /* VMFunctionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMFunctionTests.swift; sourceTree = "<group>"; };
+		F8633D7125FA829800CA3E9F /* CompilerTestsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerTestsHelper.swift; sourceTree = "<group>"; };
+		F8633D8125FA834700CA3E9F /* MonkeyCScopesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCScopesTests.swift; sourceTree = "<group>"; };
+		F8633D9125FA837600CA3E9F /* MonkeyCFunctionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCFunctionsTests.swift; sourceTree = "<group>"; };
+		F8633DA125FA841300CA3E9F /* MonkeyCCollectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCCollectionsTests.swift; sourceTree = "<group>"; };
+		F8633DB125FA847100CA3E9F /* VMCollectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMCollectionsTests.swift; sourceTree = "<group>"; };
 		F88A051225E9B17D001470C0 /* CompilerScopesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerScopesTests.swift; sourceTree = "<group>"; };
 		F8E70C5125F04792008476B4 /* Frame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Frame.swift; sourceTree = "<group>"; };
 		F8E70C6125F056F0008476B4 /* VMErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMErrors.swift; sourceTree = "<group>"; };
@@ -702,6 +716,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F8633D2625FA80C900CA3E9F /* vm */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_91 /* VMTests.swift */,
+				F8633D2725FA80D800CA3E9F /* VMTestsHelper.swift */,
+				F8633D5325FA81BF00CA3E9F /* VMFunctionTests.swift */,
+				F8633DB125FA847100CA3E9F /* VMCollectionsTests.swift */,
+			);
+			path = vm;
+			sourceTree = "<group>";
+		};
 		F88A051125E9B162001470C0 /* compiler */ = {
 			isa = PBXGroup;
 			children = (
@@ -1171,6 +1196,7 @@
 		OBJ_87 /* MonkeyTests */ = {
 			isa = PBXGroup;
 			children = (
+				F8633D2625FA80C900CA3E9F /* vm */,
 				OBJ_88 /* XCTestManifests.swift */,
 				OBJ_89 /* compiler */,
 				OBJ_92 /* evaluator */,
@@ -1186,7 +1212,10 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_90 /* MonkeyCompilerTests.swift */,
-				OBJ_91 /* VMTests.swift */,
+				F8633D7125FA829800CA3E9F /* CompilerTestsHelper.swift */,
+				F8633D8125FA834700CA3E9F /* MonkeyCScopesTests.swift */,
+				F8633D9125FA837600CA3E9F /* MonkeyCFunctionsTests.swift */,
+				F8633DA125FA841300CA3E9F /* MonkeyCCollectionsTests.swift */,
 			);
 			path = compiler;
 			sourceTree = "<group>";
@@ -1559,14 +1588,21 @@
 				OBJ_317 /* MonkeyCompilerTests.swift in Sources */,
 				OBJ_318 /* VMTests.swift in Sources */,
 				OBJ_319 /* BuiltinFunctionsTests.swift in Sources */,
+				F8633DA225FA841300CA3E9F /* MonkeyCCollectionsTests.swift in Sources */,
 				OBJ_320 /* EvaluateOperationsTests.swift in Sources */,
 				OBJ_321 /* MonkeyEvaluatorTests.swift in Sources */,
 				OBJ_322 /* LexerTypesTests.swift in Sources */,
 				OBJ_323 /* MonkeyLexerTests.swift in Sources */,
 				OBJ_324 /* MonkeyParserExpressionTests.swift in Sources */,
+				F8633DB225FA847100CA3E9F /* VMCollectionsTests.swift in Sources */,
+				F8633D9225FA837700CA3E9F /* MonkeyCFunctionsTests.swift in Sources */,
+				F8633D8225FA834700CA3E9F /* MonkeyCScopesTests.swift in Sources */,
 				OBJ_325 /* MonkeyParserStatementsTests.swift in Sources */,
+				F8633D2825FA80D800CA3E9F /* VMTestsHelper.swift in Sources */,
 				OBJ_326 /* ParseHashLiteralsTests.swift in Sources */,
+				F8633D5425FA81BF00CA3E9F /* VMFunctionTests.swift in Sources */,
 				OBJ_327 /* ParseLiteralsTests.swift in Sources */,
+				F8633D7225FA829800CA3E9F /* CompilerTestsHelper.swift in Sources */,
 				OBJ_328 /* CustomAsserts.swift in Sources */,
 				OBJ_329 /* Utils.swift in Sources */,
 			);
