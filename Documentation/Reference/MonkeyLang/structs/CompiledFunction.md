@@ -27,6 +27,12 @@ public var instructions: Instructions
 public var localsCount: Int
 ```
 
+### `parameterCount`
+
+```swift
+public var parameterCount: Int
+```
+
 ### `description`
 
 ```swift
@@ -34,6 +40,12 @@ public var description: String
 ```
 
 ## Methods
+### `init(instructions:localsCount:parameterCount:)`
+
+```swift
+public init(instructions: Instructions, localsCount: Int = 0, parameterCount: Int = 0)
+```
+
 ### `isEquals(other:)`
 
 ```swift

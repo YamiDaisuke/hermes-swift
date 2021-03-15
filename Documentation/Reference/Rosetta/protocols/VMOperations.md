@@ -140,7 +140,7 @@ Performs an language index (A.K.A subscript) operation in the form of: `<express
 ### `decodeFunction(_:)`
 
 ```swift
-func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int)?
+func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int, parameters: Int)?
 ```
 
 Extract the VM instructions and locals count from a language especific compiled function

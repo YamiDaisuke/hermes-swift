@@ -354,16 +354,26 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     /// Executes a function call operation, using an execution frame and stack for variables
     /// - Throws:`CallingNonFunction` if the called variable is not a function
     mutating func handleCallOperation() throws {
-        let function = self.stack[self.stackPointer - 1]
+        guard let numArgs = self.currentInstructions
+            .readInt(bytes: 1, startIndex: self.currentInstructionPointer + 1) else {
+            return
+        }
+        self.currentInstructionPointer += 1
+
+        let function = self.stack[self.stackPointer - 1 - Int(numArgs)]
         guard let decoded = self.operations.decodeFunction(function) else {
             throw CallingNonFunction(function)
         }
 
+        guard decoded.parameters == numArgs else {
+            throw WrongArgumentCount(decoded.parameters, got: Int(numArgs))
+        }
 
-        let frame = Frame(decoded.instructions, basePointer: self.stackPointer)
+        let frame = Frame(decoded.instructions, basePointer: self.stackPointer - Int(numArgs))
         self.pushFrame(frame)
         self.stackPointer = frame.basePointer + decoded.locals
         self.stack.append(
+            // TODO: Append the right number 
             contentsOf: Array(repeating: self.operations.null, count: decoded.locals)
         )
     }

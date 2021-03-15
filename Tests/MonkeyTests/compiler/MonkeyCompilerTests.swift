@@ -312,14 +312,16 @@ class MonkeyCompilerTests: XCTestCase, CompilerTestsHelpers {
             )
         ]
 
-        do {
-            try runCompilerTests(tests)
-        } catch let error as AssignConstantError {
-            XCTAssertEqual(error.description, "Cannot assign to value: \"fail\" is a constant")
-        } catch let error as RedeclarationError {
-            XCTAssertEqual(error.description, "Cannot redeclare: \"fail\" it already exists")
-        } catch {
-            XCTFail("Unexpected error: \(error)")
+        for test in tests {
+            do {
+                try runCompilerTest(test)
+            } catch let error as AssignConstantError {
+                XCTAssertEqual(error.description, "Cannot assign to value: \"fail\" is a constant")
+            } catch let error as RedeclarationError {
+                XCTAssertEqual(error.description, "Cannot redeclare: \"fail\" it already exists")
+            } catch {
+                XCTFail("Unexpected error: \(error)")
+            }
         }
     }
 

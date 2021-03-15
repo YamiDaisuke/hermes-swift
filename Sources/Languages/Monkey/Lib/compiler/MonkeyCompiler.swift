@@ -92,8 +92,7 @@ public struct MonkeyC: Compiler {
         case let function as FunctionLiteral:
             try self.handleFunctionLiterals(function)
         case let callExpression as CallExpression:
-            try self.compile(callExpression.function)
-            self.emit(.call)
+            try self.handleCallExpression(callExpression)
         case let returnStmt as ReturnStatement:
             try self.compile(returnStmt.value)
             self.emit(.returnVal)
@@ -215,6 +214,11 @@ public struct MonkeyC: Compiler {
     /// Turns function literals into compiled functions
     mutating func handleFunctionLiterals(_ expression: FunctionLiteral) throws {
         self.enterScope()
+
+        for param in expression.params {
+            try self.symbolTable.define(param.value)
+        }
+
         try self.compile(expression.body)
 
 
@@ -230,8 +234,20 @@ public struct MonkeyC: Compiler {
         let instructions = self.leaveScope()
         let compiledFunction = CompiledFunction(
             instructions: instructions,
-            localsCount: localsCount
+            localsCount: localsCount,
+            parameterCount: expression.params.count
         )
         self.emit(.constant, self.addConstant(compiledFunction))
+    }
+
+    /// Turns a call expression into VM operations
+    mutating func handleCallExpression(_ expression: CallExpression) throws {
+        try self.compile(expression.function)
+
+        for arg in expression.args {
+            try self.compile(arg)
+        }
+
+        self.emit(.call, Int32(expression.args.count))
     }
 }

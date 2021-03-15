@@ -182,7 +182,7 @@ public struct OperationDefinition {
         .array: OperationDefinition(name: "OpArray", operandsWidth: [.word]),
         .hash: OperationDefinition(name: "OpHash", operandsWidth: [.word]),
         .index: OperationDefinition(name: "OpIndex", operandsWidth: []),
-        .call: OperationDefinition(name: "OpCall", operandsWidth: []),
+        .call: OperationDefinition(name: "OpCall", operandsWidth: [.byte]),
         .returnVal: OperationDefinition(name: "OpReturnVal", operandsWidth: []),
         .return: OperationDefinition(name: "OpReturn", operandsWidth: [])
     ]

@@ -172,7 +172,7 @@ Supported options are:
 ### `decodeFunction(_:)`
 
 ```swift
-public func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int)?
+public func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int, parameters: Int)?
 ```
 
 Extract the VM instructions and locals count from a language especific compiled function

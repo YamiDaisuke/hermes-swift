@@ -61,5 +61,5 @@ public protocol VMOperations {
     /// - Parameter function: The supposed function
     /// - Returns: A tuple with the instructions and the locals count or `nil`
     ///            if `function` is not actually a compiled function representation
-    func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int)?
+    func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int, parameters: Int)?
 }

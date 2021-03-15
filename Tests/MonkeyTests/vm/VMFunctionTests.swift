@@ -141,4 +141,105 @@ class VMFunctionTests: XCTestCase, VMTestsHelpers {
 
         try self.runVMTests(tests)
     }
+
+    func testCallFunctionsWithArgumentsBindings() throws {
+        let tests: [VMTestCase] = [
+            (
+                """
+                let identity = fn(a) { a; };
+                identity(4);
+                """,
+                Integer(4)
+            ),
+            (
+                """
+                let sum = fn(a, b) { a + b; };
+                sum(1, 2);
+                """,
+                Integer(3)
+            ),
+            (
+                """
+                let sum = fn(a, b) {
+                    let c = a + b;
+                    c;
+                };
+                sum(1, 2);
+                """,
+                Integer(3)
+            ),
+            (
+                """
+                let sum = fn(a, b) {
+                    let c = a + b;
+                    c;
+                };
+                sum(1, 2) + sum(3, 4);
+                """,
+                Integer(10)
+            ),
+            (
+                """
+                let sum = fn(a, b) {
+                    let c = a + b;
+                    c;
+                };
+                let outer = fn() {
+                    sum(1, 2) + sum(3, 4);
+                };
+                outer();
+                """,
+                Integer(10)
+            ),
+            (
+                """
+                let globalNum = 10;
+                    let sum = fn(a, b) {
+                    let c = a + b;
+                    c + globalNum;
+                };
+                let outer = fn() {
+                    sum(1, 2) + sum(3, 4) + globalNum;
+                };
+                outer() + globalNum;
+                """,
+                Integer(50)
+            )
+        ]
+
+        try self.runVMTests(tests)
+    }
+
+    func testCallFunctionsWithoutArgumentsBindings() throws {
+        let tests: [VMTestCase] = [
+            (
+                "fn() { 1; }(1);",
+                Null.null
+            ),
+            (
+                "fn(a) { a; }();",
+                Null.null
+            ),
+            (
+                "fn(a, b) { a + b; }(1);",
+                Null.null
+            )
+        ]
+
+        let errors = [
+            "Incorrect number of arguments in function call expected: 0 but got: 1",
+            "Incorrect number of arguments in function call expected: 1 but got: 0",
+            "Incorrect number of arguments in function call expected: 2 but got: 1"
+        ]
+
+        for testIndex in 0..<tests.count {
+            do {
+                try self.runVMTest(tests[testIndex])
+            } catch let error as WrongArgumentCount {
+                XCTAssertEqual(errors[testIndex], error.description)
+            } catch {
+                XCTFail("Unexpected error: \(error)")
+            }
+        }
+    }
 }

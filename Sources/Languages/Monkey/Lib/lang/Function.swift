@@ -35,6 +35,13 @@ public struct CompiledFunction: Object {
 
     public var instructions: Instructions
     public var localsCount: Int
+    public var parameterCount: Int
+
+    public init(instructions: Instructions, localsCount: Int = 0, parameterCount: Int = 0) {
+        self.instructions = instructions
+        self.localsCount = localsCount
+        self.parameterCount = parameterCount
+    }
 
     public var description: String {
         "CompiledFunction:\n\(instructions.description)"

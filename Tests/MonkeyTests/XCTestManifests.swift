@@ -190,7 +190,9 @@ extension VMFunctionTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__VMFunctionTests = [
+        ("testCallFunctionsWithArgumentsBindings", testCallFunctionsWithArgumentsBindings),
         ("testCallFunctionsWithBindings", testCallFunctionsWithBindings),
+        ("testCallFunctionsWithoutArgumentsBindings", testCallFunctionsWithoutArgumentsBindings),
         ("testCallingFunctionsWithoutArguments", testCallingFunctionsWithoutArguments),
         ("testCallingFunctionsWithoutReturnValue", testCallingFunctionsWithoutReturnValue),
         ("testCallingFunctionsWithReturnStatement", testCallingFunctionsWithReturnStatement),

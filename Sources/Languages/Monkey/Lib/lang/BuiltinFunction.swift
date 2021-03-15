@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Rosetta
 
 /// This is a wrapper for Monkey Language builtin functions
 /// such as `len`

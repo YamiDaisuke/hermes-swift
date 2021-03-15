@@ -84,18 +84,8 @@ struct InvalidCallExpression: EvaluatorError {
     }
 }
 
-struct WrongArgumentCount: EvaluatorError {
-    var message: String
-    var line: Int?
-    var column: Int?
-    var file: String?
-
-    init(_ expected: Int, got: Int, line: Int? = nil, column: Int? = nil, file: String? = nil) {
-        self.message = "Incorrect number of arguments in function call expected: \(expected) but got: \(got)"
-        self.line = line
-        self.column = column
-        self.file = file
-    }
+extension WrongArgumentCount: EvaluatorError {
+    /// From VMError
 }
 
 struct InvalidArgumentType: EvaluatorError {

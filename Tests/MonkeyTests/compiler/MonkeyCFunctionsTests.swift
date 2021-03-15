@@ -83,7 +83,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                 ],
                 [
                     Bytecode.make(.constant, 1),
-                    Bytecode.make(.call),
+                    Bytecode.make(.call, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -103,7 +103,57 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     Bytecode.make(.constant, 1),
                     Bytecode.make(.setGlobal, 0),
                     Bytecode.make(.getGlobal, 0),
-                    Bytecode.make(.call),
+                    Bytecode.make(.call, 0),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "let oneArg = fn(a) { a }; oneArg(24);",
+                [
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.returnVal)
+                        ].joined()),
+                        localsCount: 0
+                    ),
+                    Integer(24)
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.getGlobal, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.call, 1),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "let manyArg = fn(a, b, c) { a; b; c; }; manyArg(24, 25, 26);",
+                [
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.pop),
+                            Bytecode.make(.getLocal, 1),
+                            Bytecode.make(.pop),
+                            Bytecode.make(.getLocal, 2),
+                            Bytecode.make(.returnVal)
+                        ].joined()),
+                        localsCount: 0
+                    ),
+                    Integer(24),
+                    Integer(25),
+                    Integer(26)
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.getGlobal, 0),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.call, 3),
                     Bytecode.make(.pop)
                 ]
             )

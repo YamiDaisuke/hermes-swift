@@ -80,3 +80,18 @@ public struct CallingNonFunction<BaseType>: VMError {
         self.message = "Calling non-function: \(value)"
     }
 }
+
+
+public struct WrongArgumentCount: VMError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
+
+    public init(_ expected: Int, got: Int, line: Int? = nil, column: Int? = nil, file: String? = nil) {
+        self.message = "Incorrect number of arguments in function call expected: \(expected) but got: \(got)"
+        self.line = line
+        self.column = column
+        self.file = file
+    }
+}

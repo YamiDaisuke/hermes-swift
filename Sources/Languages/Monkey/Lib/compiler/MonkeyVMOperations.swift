@@ -149,12 +149,12 @@ public struct MonkeyVMOperations: VMOperations {
     /// - Parameter function: The supposed function
     /// - Returns: A tuple with the instructions and the locals count or `nil`
     ///            if `function` is not actually a compiled function representation
-    public func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int)? {
+    public func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int, parameters: Int)? {
         guard let function = function as? CompiledFunction else {
             return nil
         }
 
-        return (function.instructions, function.localsCount)
+        return (function.instructions, function.localsCount, function.parameterCount)
     }
 
     func executeArrayIndexExpression(_ lhs: MArray, index: BaseType) throws -> BaseType {

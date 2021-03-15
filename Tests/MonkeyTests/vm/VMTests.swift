@@ -113,16 +113,18 @@ class VMTests: XCTestCase, VMTestsHelpers {
             ("let fail = 1; let fail = 10;", Null.null)
         ]
 
-        do {
-            try self.runVMTests(tests)
-        } catch let error as AssignConstantError {
-            // How awesome it is that we catch the error at compile time!!
-            XCTAssertEqual(error.message, "Cannot assign to value: \"fail\" is a constant")
-        } catch let error as RedeclarationError {
-            // How awesome it is that we catch the error at compile time!!
-            XCTAssertEqual(error.message, "Cannot redeclare: \"fail\" it already exists")
-        } catch {
-            XCTFail("Unexpected error: \(error)")
+        for test in tests {
+            do {
+                try self.runVMTest(test)
+            } catch let error as AssignConstantError {
+                // How awesome it is that we catch the error at compile time!!
+                XCTAssertEqual(error.message, "Cannot assign to value: \"fail\" is a constant")
+            } catch let error as RedeclarationError {
+                // How awesome it is that we catch the error at compile time!!
+                XCTAssertEqual(error.message, "Cannot redeclare: \"fail\" it already exists")
+            } catch {
+                XCTFail("Unexpected error: \(error)")
+            }
         }
     }
 

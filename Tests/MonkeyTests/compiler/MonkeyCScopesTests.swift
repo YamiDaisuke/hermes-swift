@@ -305,12 +305,14 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
             )
         ]
 
-        do {
-            try runCompilerTests(tests)
-        } catch let error as AssignConstantError {
-            XCTAssertEqual(error.description, "Cannot assign to value: \"const\" is a constant")
-        } catch {
-            XCTFail("Unexpected error: \(error)")
+        for test in tests {
+            do {
+                try runCompilerTest(test)
+            } catch let error as AssignConstantError {
+                XCTAssertEqual(error.description, "Cannot assign to value: \"const\" is a constant")
+            } catch {
+                XCTFail("Unexpected error: \(error)")
+            }
         }
     }
 }
