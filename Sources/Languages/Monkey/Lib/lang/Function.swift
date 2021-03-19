@@ -30,7 +30,7 @@ public struct Function: Object {
 }
 
 /// Same as `Function` but represented with compiled bytecode instructions
-public struct CompiledFunction: Object {
+public struct CompiledFunction: Object, VMFunctionDefinition {
     public var type: ObjectType { "compiledFunction" }
 
     public var instructions: Instructions

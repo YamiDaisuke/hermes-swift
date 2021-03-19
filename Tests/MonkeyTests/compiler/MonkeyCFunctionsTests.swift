@@ -23,8 +23,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                             Bytecode.make(.constant, 1),
                             Bytecode.make(.add),
                             Bytecode.make(.returnVal)
-                        ].joined()),
-                        localsCount: 0
+                        ].joined())
                     )
                 ],
                 [
@@ -43,8 +42,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                             Bytecode.make(.pop),
                             Bytecode.make(.constant, 1),
                             Bytecode.make(.returnVal)
-                        ].joined()),
-                        localsCount: 0
+                        ].joined())
                     )
                 ],
                 [
@@ -77,8 +75,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                         instructions: Array([
                             Bytecode.make(.constant, 0),
                             Bytecode.make(.returnVal)
-                        ].joined()),
-                        localsCount: 0
+                        ].joined())
                     )
                 ],
                 [
@@ -95,8 +92,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                         instructions: Array([
                             Bytecode.make(.constant, 0),
                             Bytecode.make(.returnVal)
-                        ].joined()),
-                        localsCount: 0
+                        ].joined())
                     )
                 ],
                 [
@@ -114,8 +110,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                         instructions: Array([
                             Bytecode.make(.getLocal, 0),
                             Bytecode.make(.returnVal)
-                        ].joined()),
-                        localsCount: 0
+                        ].joined())
                     ),
                     Integer(24)
                 ],
@@ -139,8 +134,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                             Bytecode.make(.pop),
                             Bytecode.make(.getLocal, 2),
                             Bytecode.make(.returnVal)
-                        ].joined()),
-                        localsCount: 0
+                        ].joined())
                     ),
                     Integer(24),
                     Integer(25),
@@ -154,6 +148,45 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     Bytecode.make(.constant, 2),
                     Bytecode.make(.constant, 3),
                     Bytecode.make(.call, 3),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
+    func testBuiltins() throws {
+        let tests: [CompilerTestCase] = [
+            (
+                "len([]); push([], 1)",
+                [Integer(1)],
+                [
+                    Bytecode.make(.getBuiltin, 0),
+                    Bytecode.make(.array, 0),
+                    Bytecode.make(.call, 1),
+                    Bytecode.make(.pop),
+                    Bytecode.make(.getBuiltin, 5),
+                    Bytecode.make(.array, 0),
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.call, 2),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                "fn () { len([]) }",
+                [
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.getBuiltin, 0),
+                            Bytecode.make(.array, 0),
+                            Bytecode.make(.call, 1),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    )
+                ],
+                [
+                    Bytecode.make(.constant, 0),
                     Bytecode.make(.pop)
                 ]
             )

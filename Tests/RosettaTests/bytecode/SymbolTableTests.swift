@@ -117,4 +117,29 @@ class SymbolTableTests: XCTestCase {
             }
         }
     }
+
+    func testResolveBuiltins() throws {
+        let global = SymbolTable()
+        let firstLocal = SymbolTable(global)
+        let secondLocal = SymbolTable(firstLocal)
+
+        let expected = [
+            Symbol(name: "a", scope: .builtin, index: 0),
+            Symbol(name: "c", scope: .builtin, index: 1),
+            Symbol(name: "e", scope: .builtin, index: 2),
+            Symbol(name: "f", scope: .builtin, index: 3)
+        ]
+
+        for index in 0..<expected.count {
+            let expect = expected[index]
+            try global.defineBuiltin(expect.name, index: index)
+        }
+
+        for table in [global, firstLocal, secondLocal] {
+            for expect in expected {
+                let result = try table.resolve(expect.name)
+                XCTAssertEqual(result, expect)
+            }
+        }
+    }
 }

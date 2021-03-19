@@ -365,16 +365,16 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
             throw CallingNonFunction(function)
         }
 
-        guard decoded.parameters == numArgs else {
-            throw WrongArgumentCount(decoded.parameters, got: Int(numArgs))
+        guard decoded.parameterCount == numArgs else {
+            throw WrongArgumentCount(decoded.parameterCount, got: Int(numArgs))
         }
 
         let frame = Frame(decoded.instructions, basePointer: self.stackPointer - Int(numArgs))
         self.pushFrame(frame)
-        self.stackPointer = frame.basePointer + decoded.locals
+        self.stackPointer = frame.basePointer + decoded.localsCount
         self.stack.append(
             // TODO: Append the right number 
-            contentsOf: Array(repeating: self.operations.null, count: decoded.locals)
+            contentsOf: Array(repeating: self.operations.null, count: decoded.localsCount)
         )
     }
 

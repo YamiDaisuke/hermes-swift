@@ -21,6 +21,12 @@ case global
 case local
 ```
 
+### `builtin`
+
+```swift
+case builtin
+```
+
 ## Properties
 ### `description`
 

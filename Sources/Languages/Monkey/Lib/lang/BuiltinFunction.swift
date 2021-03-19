@@ -17,9 +17,11 @@ public struct BuiltinFunction: Object {
     public typealias MonkeyFunction = ([Object]) throws -> Object?
     public var type: ObjectType { "Builtin" }
 
+    var name: String
     var function: MonkeyFunction
 
-    public init(_ function: @escaping MonkeyFunction) {
+    public init(name: String, _ function: @escaping MonkeyFunction) {
+        self.name = name
         self.function = function
     }
 
@@ -33,11 +35,14 @@ public struct BuiltinFunction: Object {
     }
 }
 
+/// An extension to define all available `BuiltinFunction` in Monkey language
+/// for each availble function we must declare a static constant, append it to the `all`
+/// array and add a new case into the string subscript 
 extension BuiltinFunction {
     /// `len` function expects a single `MString`or an `MArray` parameter and
     /// will return the number of characters in that `MString` as `Integer`
     /// or the number of elements in the `MArray` as `Integer`
-    static let len = BuiltinFunction { (args) throws -> Object? in
+    static let len = BuiltinFunction(name: "len") { (args) throws -> Object? in
         guard args.count == 1 else {
             throw WrongArgumentCount(1, got: args.count)
         }
@@ -55,7 +60,7 @@ extension BuiltinFunction {
 
     /// `first` function expects a single `MArray` parameter and will return
     /// the element at index 0 of the given array or `null` if the array is empty
-    static let first = BuiltinFunction { (args) throws -> Object? in
+    static let first = BuiltinFunction(name: "first") { (args) throws -> Object? in
         guard args.count == 1 else {
             throw WrongArgumentCount(1, got: args.count)
         }
@@ -70,7 +75,7 @@ extension BuiltinFunction {
     /// `last` function expects a single `MArray` parameter and will return
     /// the element at index = `len(array) - 1`  of the given array or `null`
     /// if the array is empty
-    static let last = BuiltinFunction { (args) throws -> Object? in
+    static let last = BuiltinFunction(name: "last") { (args) throws -> Object? in
         guard args.count == 1 else {
             throw WrongArgumentCount(1, got: args.count)
         }
@@ -86,7 +91,7 @@ extension BuiltinFunction {
     ///  a new `MArray` with the elements from the original array starting from
     ///  index 1. If the array has only one element it will return an empty array.
     ///  If the array is empty it will return `null`
-    static let rest = BuiltinFunction { (args) throws -> Object? in
+    static let rest = BuiltinFunction(name: "rest") { (args) throws -> Object? in
         guard args.count == 1 else {
             throw WrongArgumentCount(1, got: args.count)
         }
@@ -109,7 +114,7 @@ extension BuiltinFunction {
     /// `push` function expects an `MArray` parameter and one `Object` parameter
     /// it will return a new `MArray` instance with the same elements as the first parameter
     /// and the second paramter added at the end of the array
-    static let push = BuiltinFunction { (args) throws -> Object? in
+    static let push = BuiltinFunction(name: "push") { (args) throws -> Object? in
         guard args.count == 2 else {
             throw WrongArgumentCount(2, got: args.count)
         }
@@ -125,11 +130,27 @@ extension BuiltinFunction {
 
     /// `puts` function takes any number or parameters and print them to the stdout
     /// one per each line. Returns `null`
-    static let puts = BuiltinFunction { (args) throws -> Object? in
+    static let puts = BuiltinFunction(name: "puts") { (args) throws -> Object? in
         for arg in args {
             print(arg)
         }
         return Null.null
+    }
+
+    /// A list of all available functions
+    static let all: [BuiltinFunction] = [
+        .len,
+        .puts,
+        .first,
+        .last,
+        .rest,
+        .push
+    ]
+
+    /// Get builtin functions using an index instead of a name, this is useful
+    /// for the compiler and VM execution
+    static subscript(index: Int) -> BuiltinFunction? {
+        return all[index]
     }
 
     /// Here we map builtin functions with their respective indentifier

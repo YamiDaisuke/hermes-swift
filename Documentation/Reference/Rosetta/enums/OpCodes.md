@@ -240,3 +240,11 @@ case `return`
 ```
 
 Returns an empty value from a function
+
+### `getBuiltin`
+
+```swift
+case getBuiltin
+```
+
+Gets a builtin function native to the implementing language

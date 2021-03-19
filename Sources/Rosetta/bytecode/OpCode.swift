@@ -133,6 +133,8 @@ public enum OpCodes: OpCode {
     case returnVal
     /// Returns an empty value from a function
     case `return`
+    /// Gets a builtin function native to the implementing language
+    case getBuiltin
 }
 
 /// For a clear control on the operands byte sizes
@@ -184,6 +186,7 @@ public struct OperationDefinition {
         .index: OperationDefinition(name: "OpIndex", operandsWidth: []),
         .call: OperationDefinition(name: "OpCall", operandsWidth: [.byte]),
         .returnVal: OperationDefinition(name: "OpReturnVal", operandsWidth: []),
-        .return: OperationDefinition(name: "OpReturn", operandsWidth: [])
+        .return: OperationDefinition(name: "OpReturn", operandsWidth: []),
+        .getBuiltin: OperationDefinition(name: "OpGetBuiltin", operandsWidth: [.byte])
     ]
 }

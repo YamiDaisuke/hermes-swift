@@ -58,6 +58,7 @@ extension SymbolTableTests {
     // to regenerate.
     static let __allTests__SymbolTableTests = [
         ("testDefine", testDefine),
+        ("testResolveBuiltins", testResolveBuiltins),
         ("testResolveGlobal", testResolveGlobal),
         ("testResolveLocal", testResolveLocal),
         ("testResolveNestedLocal", testResolveNestedLocal),

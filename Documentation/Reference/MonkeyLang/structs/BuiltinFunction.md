@@ -23,10 +23,10 @@ public var description: String
 ```
 
 ## Methods
-### `init(_:)`
+### `init(name:_:)`
 
 ```swift
-public init(_ function: @escaping MonkeyFunction)
+public init(name: String, _ function: @escaping MonkeyFunction)
 ```
 
 ### `isEquals(other:)`

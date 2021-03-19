@@ -12,7 +12,7 @@ Holds a list of compiled symbols
 ### `totalDefinitions`
 
 ```swift
-public var totalDefinitions: Int
+public var totalDefinitions: Int = 0
 ```
 
 How many symbols this table contains
@@ -47,6 +47,26 @@ public func define(_ name: String, type: VariableType = .let) throws -> Symbol
 ```
 
 Defines a new symbol with the given name
+- Parameters:
+    - name: The name/identifier of the symbol
+    - type: Define if this symbol is a constant or a variable
+- Throws: `RedeclarationError` if `name` is  already in this table
+- Returns: The newly created symbol
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| name | The name/identifier of the symbol |
+| type | Define if this symbol is a constant or a variable |
+
+### `defineBuiltin(_:index:)`
+
+```swift
+public func defineBuiltin(_ name: String, index: Int) throws -> Symbol
+```
+
+Defines a new builtin symbol with the given name
 - Parameters:
     - name: The name/identifier of the symbol
     - type: Define if this symbol is a constant or a variable

@@ -59,7 +59,18 @@ public protocol VMOperations {
 
     /// Extract the VM instructions and locals count from a language especific compiled function
     /// - Parameter function: The supposed function
-    /// - Returns: A tuple with the instructions and the locals count or `nil`
+    /// - Returns: A value conforming the `VMFunctionDefinition` protocol or `nil`
     ///            if `function` is not actually a compiled function representation
-    func decodeFunction(_ function: BaseType) -> (instructions: Instructions, locals: Int, parameters: Int)?
+    func decodeFunction(_ function: BaseType) -> VMFunctionDefinition?
+}
+
+/// Language agnostic representation of functions so they can be
+/// executed by the VM
+public protocol VMFunctionDefinition {
+    /// Compiled intructions
+    var instructions: Instructions { get }
+    /// Number of declared local variables and constants
+    var localsCount: Int { get }
+    /// Number of expected parameters
+    var parameterCount: Int { get }
 }

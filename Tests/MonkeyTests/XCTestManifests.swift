@@ -55,6 +55,7 @@ extension MonkeyCFunctionsTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__MonkeyCFunctionsTests = [
+        ("testBuiltins", testBuiltins),
         ("testFunctionCalls", testFunctionCalls),
         ("testFunctions", testFunctions),
     ]

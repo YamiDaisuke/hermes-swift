@@ -3,7 +3,7 @@
 # `CompiledFunction`
 
 ```swift
-public struct CompiledFunction: Object
+public struct CompiledFunction: Object, VMFunctionDefinition
 ```
 
 Same as `Function` but represented with compiled bytecode instructions

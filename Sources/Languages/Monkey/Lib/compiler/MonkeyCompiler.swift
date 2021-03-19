@@ -18,7 +18,16 @@ public struct MonkeyC: Compiler {
     public var constants: [Object] = []
     public var symbolTable = SymbolTable()
 
-    public init() { }
+    public init() {
+        for index in 0..<BuiltinFunction.all.count {
+            guard let function = BuiltinFunction[index] else { continue }
+            do {
+                try symbolTable.defineBuiltin(function.name, index: index)
+            } catch {
+                print("Can't define \(function.name)")
+            }
+        }
+    }
 
     /// Creates a compiler instance with an existing `SymbolTable`
     /// - Parameter table: The existing table
@@ -87,8 +96,7 @@ public struct MonkeyC: Compiler {
             try handleAssignStatement(assignStatement)
         case let identifier as Identifier:
             let symbol = try self.symbolTable.resolve(identifier.value)
-            let operation: OpCodes = symbol.scope == .global ? .getGlobal : .getLocal
-            self.emit(operation, Int32(symbol.index))
+            loadSymbol(symbol)
         case let function as FunctionLiteral:
             try self.handleFunctionLiterals(function)
         case let callExpression as CallExpression:
@@ -249,5 +257,17 @@ public struct MonkeyC: Compiler {
         }
 
         self.emit(.call, Int32(expression.args.count))
+    }
+
+    /// Loads the right operation for symbol load 
+    mutating func loadSymbol(_ symbol: Symbol) {
+        switch symbol.scope {
+        case .global:
+            self.emit(.getGlobal, Int32(symbol.index))
+        case .local:
+            self.emit(.getLocal, Int32(symbol.index))
+        case .builtin:
+            self.emit(.getBuiltin, Int32(symbol.index))
+        }
     }
 }
