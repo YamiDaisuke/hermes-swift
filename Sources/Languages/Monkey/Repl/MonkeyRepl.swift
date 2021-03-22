@@ -80,7 +80,7 @@ struct MonkeyRepl: Repl {
         var globals: [Object?] = []
         globals.reserveCapacity(kGlobalsSize)
         globals.append(contentsOf: Array(repeating: nil, count: kGlobalsSize))
-        var symbolTable = SymbolTable()
+        var symbolTable = MonkeyC.newSymbolTable
         while true {
             let input = self.readInput()
 

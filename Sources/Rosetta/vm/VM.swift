@@ -158,6 +158,8 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                     opCode,
                     ip: self.currentInstructionPointer
                 )
+            case .getBuiltin:
+                try handleGetBuiltin()
             default:
                 break
             }
@@ -361,6 +363,15 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         self.currentInstructionPointer += 1
 
         let function = self.stack[self.stackPointer - 1 - Int(numArgs)]
+
+        let args = Array(self.stack[(self.stackPointer - Int(numArgs))..<self.stackPointer])
+        if let output = try self.operations.executeBuiltinFunction(function, args: args) {
+            self.stackPointer -= Int(numArgs) - 1
+            self.currentInstructionPointer += 1
+            try self.push(output)
+            return
+        }
+
         guard let decoded = self.operations.decodeFunction(function) else {
             throw CallingNonFunction(function)
         }
@@ -376,6 +387,23 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
             // TODO: Append the right number 
             contentsOf: Array(repeating: self.operations.null, count: decoded.localsCount)
         )
+    }
+
+    /// Puts the definition of a builtin function into the stack
+    /// - Throws: A `VMError` if the operations fails
+    mutating func handleGetBuiltin() throws {
+        guard let functionIndex = self.currentInstructions
+            .readInt(bytes: 1, startIndex: self.currentInstructionPointer + 1) else {
+            return
+        }
+
+        self.currentInstructionPointer += 1
+
+        guard let function = self.operations.getBuiltinFunction(Int(functionIndex)) else {
+            return
+        }
+
+        try self.push(function)
     }
 
     /// Executes an index operation for the VM, the result and limitations

@@ -30,7 +30,7 @@ public var constants: [Object] = []
 ### `symbolTable`
 
 ```swift
-public var symbolTable = SymbolTable()
+public var symbolTable: SymbolTable
 ```
 
 ## Methods

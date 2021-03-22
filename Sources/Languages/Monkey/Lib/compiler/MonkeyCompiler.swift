@@ -16,9 +16,11 @@ public struct MonkeyC: Compiler {
     public typealias BaseType = Object
 
     public var constants: [Object] = []
-    public var symbolTable = SymbolTable()
+    public var symbolTable: SymbolTable
 
-    public init() {
+    /// Creates a new symbol table including all available built in functions
+    public static var newSymbolTable: SymbolTable {
+        let symbolTable = SymbolTable()
         for index in 0..<BuiltinFunction.all.count {
             guard let function = BuiltinFunction[index] else { continue }
             do {
@@ -27,6 +29,12 @@ public struct MonkeyC: Compiler {
                 print("Can't define \(function.name)")
             }
         }
+
+        return symbolTable
+    }
+
+    public init() {
+        self.symbolTable = MonkeyC.newSymbolTable
     }
 
     /// Creates a compiler instance with an existing `SymbolTable`

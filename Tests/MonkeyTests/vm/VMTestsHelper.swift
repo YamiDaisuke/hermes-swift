@@ -12,7 +12,17 @@ import XCTest
 protocol VMTestsHelpers {
 }
 
-typealias VMTestCase = (input: String, expected: Object)
+struct VMTestCase {
+    var input: String
+    var expected: Object
+    var error: String?
+
+    init(_ input: String, _ expected: Object, _ error: String? = nil) {
+        self.input = input
+        self.expected = expected
+        self.error = error
+    }
+}
 
 extension VMTestsHelpers {
     func runVMTests(_ tests: [VMTestCase], file: StaticString = #file, line: UInt = #line) throws {
