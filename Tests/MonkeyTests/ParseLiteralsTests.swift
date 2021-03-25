@@ -34,15 +34,15 @@ class ParseLiteralsTests: XCTestCase {
 
         var commentStmt = program?.statements[1] as? CommentStatement
         XCTAssertNotNil(commentStmt)
-        XCTAssertEqual(commentStmt?.text, "Inline comment")
+        XCTAssertEqual(commentStmt?.text, "// Inline comment")
 
         commentStmt = program?.statements[2] as? CommentStatement
         XCTAssertNotNil(commentStmt)
-        XCTAssertEqual(commentStmt?.text, "Full line comment")
+        XCTAssertEqual(commentStmt?.text, "// Full line comment")
 
         commentStmt = program?.statements[3] as? CommentStatement
         XCTAssertNotNil(commentStmt)
-        XCTAssertEqual(commentStmt?.text, "Comment with code: let y = 100;")
+        XCTAssertEqual(commentStmt?.text, "// Comment with code: let y = 100;")
 
         expressionStmt = program?.statements[4] as? ExpressionStatement
         XCTAssertNotNil(expressionStmt)
@@ -50,7 +50,7 @@ class ParseLiteralsTests: XCTestCase {
 
         commentStmt = program?.statements[5] as? CommentStatement
         XCTAssertNotNil(commentStmt)
-        XCTAssertEqual(commentStmt?.text, "multiline with code\nlet a = 100;")
+        XCTAssertEqual(commentStmt?.text, "/* multiline with code\nlet a = 100;\n*/")
 
         let letStmt = program?.statements[6] as? DeclareStatement
         XCTAssertNotNil(letStmt)

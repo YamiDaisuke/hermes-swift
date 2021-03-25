@@ -123,20 +123,16 @@ public struct MonkeyLexer: Lexer {
             token = Token(type: .asterisk, literal: String(char))
         case "/":
             if next == "/" {
-                self.readChar()
-                self.readChar()
                 let comment = self.readComment()
                 token = Token(
                     type: .comment,
-                    literal: comment.trimmingCharacters(in: .whitespacesAndNewlines)
+                    literal: comment
                 )
             } else if next == "*" {
-                self.readChar()
-                self.readChar()
                 let comment = self.readMultilineComment()
                 token = Token(
                     type: .comment,
-                    literal: comment.trimmingCharacters(in: .whitespacesAndNewlines)
+                    literal: comment
                 )
             } else {
                 token = Token(type: .slash, literal: String(char))
@@ -219,7 +215,12 @@ public struct MonkeyLexer: Lexer {
     }
 
     mutating func readComment() -> String {
-        var output = ""
+        // Read both "/"
+        self.readChar()
+        self.readChar()
+
+        // Keep slashes as part of the literal
+        var output = "//"
         repeat {
             guard let current = self.readingChars?.current else {
                 break
@@ -237,7 +238,19 @@ public struct MonkeyLexer: Lexer {
     }
 
     mutating func readMultilineComment() -> String {
-        var output = ""
+        // Keep comment start as part of the literal
+        var output = "/*"
+        // Read "/"
+        self.readChar()
+
+        // If the first line of the comment is empty
+        // make sure we keep the line break in the comment
+        if self.readingChars?.next == "\n" {
+            output += "\n"
+        }
+
+        // Read *
+        self.readChar()
         repeat {
             guard let current = self.readingChars?.current else {
                 break
@@ -245,7 +258,7 @@ public struct MonkeyLexer: Lexer {
 
             if current == "*" && self.readingChars?.next == "/" {
                 self.readChar()
-                return output
+                break
             }
 
             output += String(current)
@@ -255,7 +268,7 @@ public struct MonkeyLexer: Lexer {
             self.readChar()
         } while self.readingChars?.current != nil && self.readingChars?.current != "\""
 
-        return output
+        return output + "*/"
     }
 
     mutating func readString() throws -> String {

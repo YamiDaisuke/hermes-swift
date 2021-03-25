@@ -151,9 +151,9 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .assign, literal: "="),
             Token(type: .int, literal: "10"),
             Token(type: .semicolon, literal: ";"),
-            Token(type: .comment, literal: "This is an inline comment"),
-            Token(type: .comment, literal: "This is a comment"),
-            Token(type: .comment, literal: "multiline\ncomment"),
+            Token(type: .comment, literal: "// This is an inline comment"),
+            Token(type: .comment, literal: "// This is a comment"),
+            Token(type: .comment, literal: "/*\nmultiline\ncomment\n*/"),
             Token(type: .eof, literal: "")
         ]
 
@@ -207,9 +207,9 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .semicolon, literal: ";", line: 5, column: 10),
             Token(type: .rbrace, literal: "}", line: 6, column: 0),
             Token(type: .semicolon, literal: ";", line: 6, column: 1),
-            Token(type: .comment, literal: "This is an inline comment", line: 6, column: 3),
-            Token(type: .comment, literal: "This is a comment", line: 7, column: 0),
-            Token(type: .comment, literal: "multiline\ncomment", line: 8, column: 0),
+            Token(type: .comment, literal: "// This is an inline comment", line: 6, column: 3),
+            Token(type: .comment, literal: "//  This is a comment", line: 7, column: 0),
+            Token(type: .comment, literal: "/*\nmultiline\ncomment\n*/", line: 8, column: 0),
             Token(type: .eof, literal: "", line: 11, column: 2)
         ]
 
@@ -266,9 +266,9 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .semicolon, literal: ";", line: 5, column: 10),
             Token(type: .rbrace, literal: "}", line: 6, column: 0),
             Token(type: .semicolon, literal: ";", line: 6, column: 1),
-            Token(type: .comment, literal: "This is an inline comment", line: 6, column: 3),
-            Token(type: .comment, literal: "This is a comment", line: 7, column: 0),
-            Token(type: .comment, literal: "multiline\ncomment", line: 8, column: 0),
+            Token(type: .comment, literal: "// This is an inline comment", line: 6, column: 3),
+            Token(type: .comment, literal: "//  This is a comment", line: 7, column: 0),
+            Token(type: .comment, literal: "/*\nmultiline\ncomment\n*/", line: 8, column: 0),
             Token(type: .eof, literal: "", line: 11, column: 2)
         ]
 
