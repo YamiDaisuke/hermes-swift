@@ -26,9 +26,8 @@ The book uses a language called Monkey designed for the book. From the book page
 
 The book uses Go Lang for the implementation but I want to do it in swift just because I like swift ❤️. For
 starters I will be using an XCode to compile and test my implementation, later on I'll try to implement a
-standalone compilation and maybe include support for linux. As in the book this implementation will not
-use third party libs only standard swift libraries. Maybe I'll include a lib to simplify the CLI
-implementation but nothing else.
+standalone compilation. As in the book this implementation will not use third party libs only standard
+swift libraries. Maybe I'll include a lib to simplify the CLI implementation but nothing else.
 
 ## Before you begin
 
@@ -88,6 +87,21 @@ the same type for example the following lines will produce an error:
 ```
 var a = 10;
 a = true;
+```
+
+### Comments
+
+Support for single line and multiline comments using `//` and `/**/` respectively
+
+```
+let a = 42; // Meaning of life
+/*
+Well it actually is:
+"""
+Answer to the Ultimate Question of Life, the Universe, and Everything
+"""
+*/
+puts(a);
 ```
 
 ## TODO
