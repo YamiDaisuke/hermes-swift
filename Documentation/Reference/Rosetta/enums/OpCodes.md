@@ -248,3 +248,11 @@ case getBuiltin
 ```
 
 Gets a builtin function native to the implementing language
+
+### `closure`
+
+```swift
+case closure
+```
+
+Creates a closure for a function

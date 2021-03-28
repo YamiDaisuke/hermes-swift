@@ -32,7 +32,7 @@ public extension Instructions {
             }
 
             let read = Bytecode.readOperands(def, instructions: Array(self[(index + 1)...]))
-            let operandsString = read.values.map { $0.description }.joined(separator: ",")
+            let operandsString = read.values.map { $0.description }.joined(separator: " ")
             let opName = operandsString.isEmpty ? def.name : def.name.padding(toLength: 16, withPad: " ", startingAt: 0)
             output += String(
                 format: "%04d %@%@",
@@ -135,6 +135,8 @@ public enum OpCodes: OpCode {
     case `return`
     /// Gets a builtin function native to the implementing language
     case getBuiltin
+    /// Creates a closure for a function
+    case closure
 }
 
 /// For a clear control on the operands byte sizes
@@ -187,6 +189,7 @@ public struct OperationDefinition {
         .call: OperationDefinition(name: "OpCall", operandsWidth: [.byte]),
         .returnVal: OperationDefinition(name: "OpReturnVal", operandsWidth: []),
         .return: OperationDefinition(name: "OpReturn", operandsWidth: []),
-        .getBuiltin: OperationDefinition(name: "OpGetBuiltin", operandsWidth: [.byte])
+        .getBuiltin: OperationDefinition(name: "OpGetBuiltin", operandsWidth: [.byte]),
+        .closure: OperationDefinition(name: "OpClosure", operandsWidth: [.word, .byte])
     ]
 }

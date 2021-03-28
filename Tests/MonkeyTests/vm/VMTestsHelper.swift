@@ -39,7 +39,7 @@ extension VMTestsHelpers {
         var vm = VM(bytecode, operations: MonkeyVMOperations())
         try vm.run()
 
-        let element = vm.lastPoped
+        let element = vm.lastPoped as? Object
         XCTAssert(
             element?.isEquals(other: test.expected) ?? false,
             "\(element?.description ?? "nil") is not equal to \(test.expected)"

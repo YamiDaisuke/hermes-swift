@@ -3,7 +3,7 @@
 # `VM`
 
 ```swift
-public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType == BaseType
+public struct VM<Operations: VMOperations>
 ```
 
 Rosetta VM implementation
@@ -12,19 +12,19 @@ Rosetta VM implementation
 ### `constants`
 
 ```swift
-public internal(set) var constants: [BaseType]
+public internal(set) var constants: [VMBaseType]
 ```
 
 ### `globals`
 
 ```swift
-public internal(set) var globals: [BaseType?]
+public internal(set) var globals: [VMBaseType?]
 ```
 
 ### `stackTop`
 
 ```swift
-public var stackTop: BaseType?
+public var stackTop: VMBaseType?
 ```
 
 Returns the current value sitting a top of the stack if the stack is empty returns `nil`
@@ -32,7 +32,7 @@ Returns the current value sitting a top of the stack if the stack is empty retur
 ### `lastPoped`
 
 ```swift
-public var lastPoped: BaseType?
+public var lastPoped: VMBaseType?
 ```
 
 ## Methods
@@ -40,10 +40,10 @@ public var lastPoped: BaseType?
 
 ```swift
 public init(
-    _ bytcode: BytecodeProgram<BaseType>,
+    _ bytcode: BytecodeProgram,
     operations: Operations,
-    constants: inout [BaseType],
-    globals: inout [BaseType?]
+    constants: inout [VMBaseType],
+    globals: inout [VMBaseType?]
 )
 ```
 
@@ -67,7 +67,7 @@ Creates a VM instance with an existing constants and global lists
 ### `init(_:operations:)`
 
 ```swift
-public init(_ bytcode: BytecodeProgram<BaseType>, operations: Operations)
+public init(_ bytcode: BytecodeProgram, operations: Operations)
 ```
 
 Init a new VM with a set of bytecode to run

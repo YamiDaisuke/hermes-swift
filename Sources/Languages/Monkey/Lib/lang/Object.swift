@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import Rosetta
 
 public typealias ObjectType = String
 
 /// Base Type for all variables inside Monkey Language
 /// think of this like the `Any` type of swift or `object`
 /// type in C#
-public protocol Object: CustomStringConvertible {
+public protocol Object: VMBaseType {
     var type: ObjectType { get }
 
     /// Compare agaist other object

@@ -17,11 +17,14 @@ public let kMaxFrames = 1024
 // swiftlint:disable type_body_length file_length
 
 /// Rosetta VM implementation
-public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType == BaseType {
-    public internal(set) var constants: [BaseType]
+public struct VM<Operations: VMOperations> {
+    public internal(set) var constants: [VMBaseType]
 
     var frames: [Frame]
     var frameIndex = 0
+
+    var mainFunction: VMFunction
+    var mainClosure: Closure
 
     var currentFrame: Frame {
         self.frames[self.frameIndex]
@@ -42,18 +45,18 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
 
     var operations: Operations
 
-    var stack: [BaseType]
+    var stack: [VMBaseType]
     var stackPointer: Int
 
-    public internal(set) var globals: [BaseType?]
+    public internal(set) var globals: [VMBaseType?]
 
     /// Returns the current value sitting a top of the stack if the stack is empty returns `nil`
-    public var stackTop: BaseType? {
+    public var stackTop: VMBaseType? {
         guard stackPointer > 0 else { return nil }
         return stack[stackPointer - 1]
     }
 
-    public var lastPoped: BaseType?
+    public var lastPoped: VMBaseType?
 
     /// Creates a VM instance with an existing constants and global lists
     /// - Parameters:
@@ -63,11 +66,19 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     ///   - constants: A list of existing constants
     ///   - globals: A list of existing globals 
     public init(
-        _ bytcode: BytecodeProgram<BaseType>,
+        _ bytcode: BytecodeProgram,
         operations: Operations,
-        constants: inout [BaseType],
-        globals: inout [BaseType?]
+        constants: inout [VMBaseType],
+        globals: inout [VMBaseType?]
     ) {
+        self.mainFunction = VMFunction(
+            instructions: bytcode.instructions,
+            localsCount: 0,
+            parameterCount: 0
+        )
+
+        self.mainClosure = Closure(function: self.mainFunction)
+
         self.constants = constants
         self.operations = operations
         self.constants = constants
@@ -79,7 +90,7 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
 
         self.frames = []
         self.frames.reserveCapacity(kMaxFrames)
-        self.frames.append(Frame(bytcode.instructions))
+        self.frames.append(Frame(self.mainClosure))
     }
 
     /// Init a new VM with a set of bytecode to run
@@ -87,9 +98,9 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     ///   - bytcode: The compiled bytecode
     ///   - operations: An implementation of `VMOperations` in charge of applying the language
     ///                 specific operations for this VM
-    public init(_ bytcode: BytecodeProgram<BaseType>, operations: Operations) {
+    public init(_ bytcode: BytecodeProgram, operations: Operations) {
         var constants = bytcode.constants
-        var globals: [BaseType?] = []
+        var globals: [VMBaseType?] = []
         globals.reserveCapacity(kGlobalsSize)
         globals.append(contentsOf: Array(repeating: nil, count: kGlobalsSize))
         self.init(
@@ -160,6 +171,8 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
                 )
             case .getBuiltin:
                 try handleGetBuiltin()
+            case .closure:
+                try self.handleClosure()
             default:
                 break
             }
@@ -172,7 +185,7 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     /// - Parameter object: The element to push
     /// - Throws: `StackOverflow` if the stack is at full capacity.
     ///           The available capacity is defined by the constant: `kStackSize`
-    mutating func push(_ object: BaseType?) throws {
+    mutating func push(_ object: VMBaseType?) throws {
         guard let object = object else { return }
         guard self.stackPointer < kStackSize else { throw StackOverflow() }
 
@@ -183,7 +196,7 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     /// Pop the element at top of the stack
     /// - Returns: The poped element
     @discardableResult
-    mutating func pop() -> BaseType? {
+    mutating func pop() -> VMBaseType? {
         guard !self.stack.isEmpty else {
             self.lastPoped = nil
             return nil
@@ -353,6 +366,28 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
         return instructionPointer
     }
 
+    mutating func handleClosure() throws {
+        guard let constIndex = self.currentInstructions
+            .readInt(bytes: 2, startIndex: self.currentInstructionPointer + 1) else {
+            return
+        }
+        self.currentInstructionPointer += 2
+
+        guard let free = self.currentInstructions
+            .readInt(bytes: 1, startIndex: self.currentInstructionPointer + 1) else {
+            return
+        }
+        self.currentInstructionPointer += 1
+
+        print("TODO: Free count: \(free)")
+        let function = self.constants[Int(constIndex)]
+        guard let decoded = self.operations.decodeFunction(function) else {
+            return
+        }
+        let closure = Closure(function: decoded)
+        try self.push(closure)
+    }
+
     /// Executes a function call operation, using an execution frame and stack for variables
     /// - Throws:`CallingNonFunction` if the called variable is not a function
     mutating func handleCallOperation() throws {
@@ -372,20 +407,23 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
             return
         }
 
-        guard let decoded = self.operations.decodeFunction(function) else {
+        guard let decoded = function as? Closure else {
             throw CallingNonFunction(function)
         }
 
-        guard decoded.parameterCount == numArgs else {
-            throw WrongArgumentCount(decoded.parameterCount, got: Int(numArgs))
+        guard decoded.function.parameterCount == numArgs else {
+            throw WrongArgumentCount(decoded.function.parameterCount, got: Int(numArgs))
         }
 
-        let frame = Frame(decoded.instructions, basePointer: self.stackPointer - Int(numArgs))
+        let frame = Frame(
+            decoded,
+            basePointer: self.stackPointer - Int(numArgs)
+        )
         self.pushFrame(frame)
-        self.stackPointer = frame.basePointer + decoded.localsCount
+        self.stackPointer = frame.basePointer + decoded.function.localsCount
         self.stack.append(
             // TODO: Append the right number 
-            contentsOf: Array(repeating: self.operations.null, count: decoded.localsCount)
+            contentsOf: Array(repeating: self.operations.null, count: decoded.function.localsCount)
         )
     }
 
@@ -426,8 +464,8 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     ///   - startIndex: Initial index in the stack
     ///   - endIndex: End index in the stack
     /// - Returns: An array of the elements in the stack from start to end index
-    func buildArray(from startIndex: Int, to endIndex: Int) -> [BaseType] {
-        var array: [BaseType] = []
+    func buildArray(from startIndex: Int, to endIndex: Int) -> [VMBaseType] {
+        var array: [VMBaseType] = []
         for pointer in startIndex..<endIndex {
             array.append(self.stack[pointer])
         }
@@ -440,10 +478,13 @@ public struct VM<BaseType, Operations: VMOperations> where Operations.BaseType =
     ///   - endIndex: End index in the stack
     /// - Throws: .....
     /// - Returns: An hashtable of the elements in the stack from start to end index
-    func buildHash(from startIndex: Int, to endIndex: Int) throws -> [AnyHashable: BaseType] {
-        var output: [AnyHashable: BaseType] = [:]
+    func buildHash(from startIndex: Int, to endIndex: Int) throws -> [AnyHashable: VMBaseType] {
+        var output: [AnyHashable: VMBaseType] = [:]
 
         for pointer in stride(from: startIndex, to: endIndex, by: 2) {
+            // We can asume the underlying language should implement types
+            // that conform to AnyHashable
+            // TODO: Supress warning
             guard let key = self.stack[pointer] as? AnyHashable else {
                 throw InvalidHashKey(self.stack[pointer])
             }

@@ -12,7 +12,7 @@ Represents the current call frame inside the VM
 ### `init(_:basePointer:)`
 
 ```swift
-public init(_ instructions: Instructions, basePointer: Int = 0)
+public init(_ closure: Closure, basePointer: Int = 0)
 ```
 
 Creates a new frame with a list of instructions

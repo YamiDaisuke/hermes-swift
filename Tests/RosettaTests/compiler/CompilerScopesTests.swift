@@ -8,15 +8,17 @@
 import XCTest
 @testable import Rosetta
 
-private struct DummyType {  }
+private struct DummyType: VMBaseType {
+    var description: String {
+        "dummy"
+    }
+}
 private struct DummyCompiler: Compiler {
-    typealias BaseType = DummyType
-
     var instructions: Instructions = []
 
     var scopes: [CompilationScope] = [CompilationScope()]
     var scopeIndex = 0
-    var constants: [DummyType] = []
+    var constants: [VMBaseType] = []
     var symbolTable = SymbolTable()
 
     init() {

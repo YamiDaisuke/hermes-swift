@@ -34,6 +34,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		F8100DAF2611004E00059176 /* VMFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8100DAE2611004E00059176 /* VMFunctions.swift */; };
 		F8633D2825FA80D800CA3E9F /* VMTestsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633D2725FA80D800CA3E9F /* VMTestsHelper.swift */; };
 		F8633D5425FA81BF00CA3E9F /* VMFunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633D5325FA81BF00CA3E9F /* VMFunctionTests.swift */; };
 		F8633D7225FA829800CA3E9F /* CompilerTestsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8633D7125FA829800CA3E9F /* CompilerTestsHelper.swift */; };
@@ -415,6 +416,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F8100DAE2611004E00059176 /* VMFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMFunctions.swift; sourceTree = "<group>"; };
 		F8633D2725FA80D800CA3E9F /* VMTestsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMTestsHelper.swift; sourceTree = "<group>"; };
 		F8633D5325FA81BF00CA3E9F /* VMFunctionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMFunctionTests.swift; sourceTree = "<group>"; };
 		F8633D7125FA829800CA3E9F /* CompilerTestsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerTestsHelper.swift; sourceTree = "<group>"; };
@@ -1159,6 +1161,7 @@
 				OBJ_81 /* VMOperations.swift */,
 				F8E70C5125F04792008476B4 /* Frame.swift */,
 				F8E70C6125F056F0008476B4 /* VMErrors.swift */,
+				F8100DAE2611004E00059176 /* VMFunctions.swift */,
 			);
 			path = vm;
 			sourceTree = "<group>";
@@ -1628,6 +1631,7 @@
 				OBJ_350 /* Parser.swift in Sources */,
 				OBJ_351 /* Program.swift in Sources */,
 				F8E70C6225F056F0008476B4 /* VMErrors.swift in Sources */,
+				F8100DAF2611004E00059176 /* VMFunctions.swift in Sources */,
 				OBJ_352 /* StreamReader.swift in Sources */,
 				OBJ_353 /* VM.swift in Sources */,
 				OBJ_354 /* VMOperations.swift in Sources */,

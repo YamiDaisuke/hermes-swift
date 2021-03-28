@@ -27,7 +27,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     )
                 ],
                 [
-                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.closure, 2, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -46,7 +46,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     )
                 ],
                 [
-                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.closure, 2, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -56,7 +56,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     CompiledFunction(instructions: Bytecode.make(.return), localsCount: 0)
                 ],
                 [
-                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.closure, 0, 0),
                     Bytecode.make(.pop)
                 ]
             )
@@ -79,7 +79,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     )
                 ],
                 [
-                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.closure, 1, 0),
                     Bytecode.make(.call, 0),
                     Bytecode.make(.pop)
                 ]
@@ -96,7 +96,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     )
                 ],
                 [
-                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.closure, 1, 0),
                     Bytecode.make(.setGlobal, 0),
                     Bytecode.make(.getGlobal, 0),
                     Bytecode.make(.call, 0),
@@ -115,7 +115,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     Integer(24)
                 ],
                 [
-                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.closure, 0, 0),
                     Bytecode.make(.setGlobal, 0),
                     Bytecode.make(.getGlobal, 0),
                     Bytecode.make(.constant, 1),
@@ -141,7 +141,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     Integer(26)
                 ],
                 [
-                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.closure, 0, 0),
                     Bytecode.make(.setGlobal, 0),
                     Bytecode.make(.getGlobal, 0),
                     Bytecode.make(.constant, 1),
@@ -186,7 +186,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     )
                 ],
                 [
-                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.closure, 0, 0),
                     Bytecode.make(.pop)
                 ]
             )

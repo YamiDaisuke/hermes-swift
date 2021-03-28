@@ -10,10 +10,8 @@ import Rosetta
 
 // swiftlint:disable force_cast
 public struct MonkeyVMOperations: VMOperations {
-    public typealias BaseType = Object
-
     /// Gets the empty value representation for the implementing language
-    public var null: BaseType {
+    public var null: VMBaseType {
         Null.null
     }
 
@@ -35,9 +33,9 @@ public struct MonkeyVMOperations: VMOperations {
     /// - Throws: `InvalidInfixExpression` if any of the operands is not supported.
     ///           `UnknownOperator` if the bytecode operator doesn't match a monkey operation
     /// - Returns: The result of the operation depending on the operands
-    public func binaryOperation<BaseType>(lhs: BaseType, rhs: BaseType, operation: OpCodes) throws -> BaseType {
-        let lhs = lhs as! Object
-        let rhs = rhs as! Object
+    public func binaryOperation(lhs: VMBaseType?, rhs: VMBaseType?, operation: OpCodes) throws -> VMBaseType {
+        guard let lhs = lhs as? Object else { return self.null }
+        guard let rhs = rhs as? Object else { return self.null }
         var symbol = ""
         switch operation {
         case .add:
@@ -60,7 +58,7 @@ public struct MonkeyVMOperations: VMOperations {
             throw UnknownOperator(String(format: "%02X", operation.rawValue))
         }
 
-        return try MonkeyOperations.evalInfix(lhs: lhs, operatorSymbol: symbol, rhs: rhs) as! BaseType
+        return try MonkeyOperations.evalInfix(lhs: lhs, operatorSymbol: symbol, rhs: rhs)
     }
 
     /// Maps and applies unary operation to the right Monkey operation
@@ -75,8 +73,8 @@ public struct MonkeyVMOperations: VMOperations {
     /// - Throws: `InvalidPrefixExpression` if any of the operands is not supported.
     ///           `UnknownOperator` if the bytecode operator doesn't match a monkey operation
     /// - Returns: The result of the operation depending on the operands
-    public func unaryOperation<BaseType>(rhs: BaseType, operation: OpCodes) throws -> BaseType {
-        let rhs = rhs as! Object
+    public func unaryOperation(rhs: VMBaseType?, operation: OpCodes) throws -> VMBaseType {
+        guard let rhs = rhs as? Object else { return self.null }
         var symbol = ""
         switch operation {
         case .minus:
@@ -87,7 +85,7 @@ public struct MonkeyVMOperations: VMOperations {
             throw UnknownOperator(String(format: "%02X", operation.rawValue))
         }
 
-        return try MonkeyOperations.evalPrefix(operator: symbol, rhs: rhs) as! BaseType
+        return try MonkeyOperations.evalPrefix(operator: symbol, rhs: rhs) ?? self.null
     }
 
 
@@ -97,7 +95,7 @@ public struct MonkeyVMOperations: VMOperations {
     /// the values independent of the swift language.
     /// - Parameter bool: The swift `Bool` value to wrap
     /// - Returns: A representation of swift `Bool` in Monkey language which will be `Boolean`
-    public func getLangBool(for bool: Bool) -> BaseType {
+    public func getLangBool(for bool: Bool) -> VMBaseType {
         Boolean(bool)
     }
 
@@ -105,20 +103,21 @@ public struct MonkeyVMOperations: VMOperations {
     /// Check if an `Object` is considered truthy
     /// - Parameter value: The value to check
     /// - Returns: `true` if the given value is considered truthy
-    public func isTruthy(_ value: BaseType?) -> Bool {
-        return ((value ?? Boolean.false) == Boolean.true).value
+    public func isTruthy(_ value: VMBaseType?) -> Bool {
+        let casted = value as? Object
+        return ((casted ?? Boolean.false) == Boolean.true).value
     }
 
     /// Takes a native Swift array of the lang base type and converts it to the lang equivalent
     /// - Parameter array: An swift Array 
-    public func buildLangArray(from array: [Object]) -> Object {
-        return MArray(elements: array)
+    public func buildLangArray(from array: [VMBaseType]) -> VMBaseType {
+        return MArray(elements: array as! [Object])
     }
 
     /// Takes a native Swift dictionary of the lang base type as both key and value, and converts it to the lang equivalent
     /// - Parameter array: An swift dictionary
-    public func buildLangHash(from dictionary: [AnyHashable: Object]) -> Object {
-        return Hash(pairs: dictionary)
+    public func buildLangHash(from dictionary: [AnyHashable: VMBaseType]) -> VMBaseType {
+        return Hash(pairs: dictionary as! [AnyHashable: Object])
     }
 
     /// Performs an language index (A.K.A subscript) operation in the form of: `<expression>[<expression>]`
@@ -134,7 +133,7 @@ public struct MonkeyVMOperations: VMOperations {
     /// - Throws: `IndexNotSupported` if `lhs` is not the right type.
     ///           `InvalidArrayIndex` or `InvalidHashKey` if  `index` can't be applied to `lhs`
     /// - Returns: The value associated wiith the `index` or `null`
-    public func executeIndexExpression(_ lhs: BaseType, index: BaseType) throws -> BaseType {
+    public func executeIndexExpression(_ lhs: VMBaseType, index: VMBaseType) throws -> VMBaseType {
         switch lhs {
         case let array as MArray:
             return try executeArrayIndexExpression(array, index: index)
@@ -149,7 +148,7 @@ public struct MonkeyVMOperations: VMOperations {
     /// - Parameter function: The supposed function
     /// - Returns: A tuple with the instructions and the locals count or `nil`
     ///            if `function` is not actually a compiled function representation
-    public func decodeFunction(_ function: BaseType) -> VMFunctionDefinition? {
+    public func decodeFunction(_ function: VMBaseType) -> VMFunctionDefinition? {
         guard let function = function as? CompiledFunction else {
             return nil
         }
@@ -160,22 +159,22 @@ public struct MonkeyVMOperations: VMOperations {
     /// Gets a language specific builtin function
     /// - Parameter index: The function index generated by the compiler
     /// - Returns: An object representing the requested function
-    public func getBuiltinFunction(_ index: Int) -> BaseType? {
+    public func getBuiltinFunction(_ index: Int) -> VMBaseType? {
         return BuiltinFunction[index]
     }
 
     /// Should execute a builtin function and
     /// - Parameter function: The function to execute
     /// - Returns: The produced value or nil if `function` is not a valid BuiltIn function
-    public func executeBuiltinFunction(_ function: BaseType, args: [BaseType]) throws -> BaseType? {
+    public func executeBuiltinFunction(_ function: VMBaseType, args: [VMBaseType]) throws -> VMBaseType? {
         guard let bultin = function as? BuiltinFunction else {
             return nil
         }
 
-        return try bultin.function(args) ?? Null.null
+        return try bultin.function(args as! [Object]) ?? Null.null
     }
 
-    func executeArrayIndexExpression(_ lhs: MArray, index: BaseType) throws -> BaseType {
+    func executeArrayIndexExpression(_ lhs: MArray, index: VMBaseType) throws -> VMBaseType {
         guard let integer = index as? Integer else {
             throw InvalidArrayIndex(index)
         }
@@ -183,7 +182,7 @@ public struct MonkeyVMOperations: VMOperations {
         return lhs[integer]
     }
 
-    func executeHashIndexExpression(_ lhs: Hash, index: BaseType) throws -> BaseType {
-        return try lhs.get(index) ?? Null.null
+    func executeHashIndexExpression(_ lhs: Hash, index: VMBaseType) throws -> VMBaseType {
+        return try lhs.get(index as! Object) ?? Null.null
     }
 }

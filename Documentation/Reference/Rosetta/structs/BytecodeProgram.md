@@ -3,7 +3,7 @@
 # `BytecodeProgram`
 
 ```swift
-public struct BytecodeProgram<BaseType>
+public struct BytecodeProgram
 ```
 
 Holds a compiled program represented in bytecode
@@ -18,5 +18,5 @@ public var instructions: Instructions
 ### `constants`
 
 ```swift
-public var constants: [BaseType]
+public var constants: [VMBaseType]
 ```

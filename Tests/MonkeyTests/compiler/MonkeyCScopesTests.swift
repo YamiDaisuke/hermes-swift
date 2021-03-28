@@ -30,7 +30,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                 [
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
-                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.closure, 1, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -49,7 +49,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                     )
                 ],
                 [
-                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.closure, 1, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -73,7 +73,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                     )
                 ],
                 [
-                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.closure, 2, 0),
                     Bytecode.make(.pop)
                 ]
             )
@@ -99,7 +99,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                 [
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
-                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.closure, 1, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -118,7 +118,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                     )
                 ],
                 [
-                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.closure, 1, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -142,7 +142,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                     )
                 ],
                 [
-                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.closure, 2, 0),
                     Bytecode.make(.pop)
                 ]
             )
@@ -171,7 +171,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                 [
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
-                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.closure, 2, 0),
                     Bytecode.make(.pop)
                 ]
             )
@@ -200,7 +200,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                 [
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
-                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.closure, 2, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -225,7 +225,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                 [
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
-                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.closure, 3, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -250,7 +250,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                 [
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
-                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.closure, 3, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -273,7 +273,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                 [
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
-                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.closure, 2, 0),
                     Bytecode.make(.pop)
                 ]
             ),
@@ -299,7 +299,7 @@ class MonkeyCScopesTests: XCTestCase, CompilerTestsHelpers {
                 [
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
-                    Bytecode.make(.constant, 3),
+                    Bytecode.make(.closure, 3, 0),
                     Bytecode.make(.pop)
                 ]
             )

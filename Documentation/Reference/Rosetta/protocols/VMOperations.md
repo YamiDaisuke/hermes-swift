@@ -10,7 +10,7 @@ public protocol VMOperations
 ### `null`
 
 ```swift
-var null: BaseType
+var null: VMBaseType
 ```
 
 Gets the empty value representation for the implementing language
@@ -19,7 +19,7 @@ Gets the empty value representation for the implementing language
 ### `binaryOperation(lhs:rhs:operation:)`
 
 ```swift
-func binaryOperation<BaseType>(lhs: BaseType, rhs: BaseType, operation: OpCodes) throws -> BaseType
+func binaryOperation(lhs: VMBaseType?, rhs: VMBaseType?, operation: OpCodes) throws -> VMBaseType
 ```
 
 Maps and applies binary operation on the implementing language
@@ -39,7 +39,7 @@ Maps and applies binary operation on the implementing language
 ### `unaryOperation(rhs:operation:)`
 
 ```swift
-func unaryOperation<BaseType>(rhs: BaseType, operation: OpCodes) throws -> BaseType
+func unaryOperation(rhs: VMBaseType?, operation: OpCodes) throws -> VMBaseType
 ```
 
 Maps and applies unary operation on the implementing language
@@ -57,7 +57,7 @@ Maps and applies unary operation on the implementing language
 ### `getLangBool(for:)`
 
 ```swift
-func getLangBool(for bool: Bool) -> BaseType
+func getLangBool(for bool: Bool) -> VMBaseType
 ```
 
 Gets the language specific representation of a VM boolean value
@@ -76,7 +76,7 @@ the values independent of the swift language.
 ### `isTruthy(_:)`
 
 ```swift
-func isTruthy(_ value: BaseType?) -> Bool
+func isTruthy(_ value: VMBaseType?) -> Bool
 ```
 
 Check if a value of the implemeting language is considered an equivalent of `true`
@@ -92,7 +92,7 @@ Check if a value of the implemeting language is considered an equivalent of `tru
 ### `buildLangArray(from:)`
 
 ```swift
-func buildLangArray(from array: [BaseType]) -> BaseType
+func buildLangArray(from array: [VMBaseType]) -> VMBaseType
 ```
 
 Takes a native Swift array of the lang base type and converts it to the lang equivalent
@@ -107,7 +107,7 @@ Takes a native Swift array of the lang base type and converts it to the lang equ
 ### `buildLangHash(from:)`
 
 ```swift
-func buildLangHash(from array: [AnyHashable: BaseType]) -> BaseType
+func buildLangHash(from array: [AnyHashable: VMBaseType]) -> VMBaseType
 ```
 
 Takes a native Swift dictionary of the lang base type as both key and value, and converts it to the lang equivalent
@@ -122,7 +122,7 @@ Takes a native Swift dictionary of the lang base type as both key and value, and
 ### `executeIndexExpression(_:index:)`
 
 ```swift
-func executeIndexExpression(_ lhs: BaseType, index: BaseType) throws -> BaseType
+func executeIndexExpression(_ lhs: VMBaseType, index: VMBaseType) throws -> VMBaseType
 ```
 
 Performs an language index (A.K.A subscript) operation in the form of: `<expression>[<expression>]`
@@ -140,7 +140,7 @@ Performs an language index (A.K.A subscript) operation in the form of: `<express
 ### `decodeFunction(_:)`
 
 ```swift
-func decodeFunction(_ function: BaseType) -> VMFunctionDefinition?
+func decodeFunction(_ function: VMBaseType) -> VMFunctionDefinition?
 ```
 
 Extract the VM instructions and locals count from a language especific compiled function
@@ -157,7 +157,7 @@ Extract the VM instructions and locals count from a language especific compiled 
 ### `getBuiltinFunction(_:)`
 
 ```swift
-func getBuiltinFunction(_ index: Int) -> BaseType?
+func getBuiltinFunction(_ index: Int) -> VMBaseType?
 ```
 
 Gets a language specific builtin function
@@ -173,10 +173,10 @@ Gets a language specific builtin function
 ### `executeBuiltinFunction(_:args:)`
 
 ```swift
-func executeBuiltinFunction(_ function: BaseType, args: [BaseType]) throws -> BaseType?
+func executeBuiltinFunction(_ function: VMBaseType, args: [VMBaseType]) throws -> VMBaseType?
 ```
 
-Should execute a builtin function and
+Should execute a builtin function
 - Parameter function: The function to execute
 - Returns: The produced value or nil if `function` is not a valid BuiltIn function
 

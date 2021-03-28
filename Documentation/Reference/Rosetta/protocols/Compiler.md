@@ -44,7 +44,7 @@ Returns the instructions compiled inside the current scope
 ### `constants`
 
 ```swift
-var constants: [BaseType]
+var constants: [VMBaseType]
 ```
 
 A pool of the compiled constant values
@@ -60,7 +60,7 @@ The compiled `SymbolTable`
 ### `bytecode`
 
 ```swift
-var bytecode: BytecodeProgram<BaseType>
+var bytecode: BytecodeProgram
 ```
 
 Puts all the compiled values into a single `BytecodeProgram`

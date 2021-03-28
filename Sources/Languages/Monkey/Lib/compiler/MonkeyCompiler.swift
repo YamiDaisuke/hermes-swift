@@ -15,7 +15,7 @@ public struct MonkeyC: Compiler {
 
     public typealias BaseType = Object
 
-    public var constants: [Object] = []
+    public var constants: [VMBaseType] = []
     public var symbolTable: SymbolTable
 
     /// Creates a new symbol table including all available built in functions
@@ -253,7 +253,7 @@ public struct MonkeyC: Compiler {
             localsCount: localsCount,
             parameterCount: expression.params.count
         )
-        self.emit(.constant, self.addConstant(compiledFunction))
+        self.emit(.closure, self.addConstant(compiledFunction), 0)
     }
 
     /// Turns a call expression into VM operations

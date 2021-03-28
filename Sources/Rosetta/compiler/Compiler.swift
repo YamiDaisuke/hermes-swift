@@ -68,10 +68,6 @@ public class CompilationScope {
 
 /// Base Compiler structure for Rosetta VM
 public protocol Compiler {
-    /// The basic value type for the implementing language
-    /// E.G.: In `Swift` this will be `Any`, in `C#` is `object`
-    associatedtype BaseType
-
     /// Keeps the compiled scopes
     var scopes: [CompilationScope] { get set }
     /// Marks the current scope being compiled
@@ -82,12 +78,12 @@ public protocol Compiler {
     var currentInstructions: Instructions { get }
 
     /// A pool of the compiled constant values
-    var constants: [BaseType] { get set }
+    var constants: [VMBaseType] { get set }
     /// The compiled `SymbolTable`
     var symbolTable: SymbolTable { get set }
 
     /// Puts all the compiled values into a single `BytecodeProgram`
-    var bytecode: BytecodeProgram<BaseType> { get }
+    var bytecode: BytecodeProgram { get }
 
     /// Traverse a parsed `Program` an creates the corresponding Bytecode
     /// - Parameter program: The program
@@ -116,7 +112,7 @@ public extension Compiler {
     }
 
     /// Returns the `BytecodeProgram` with all the compiled instructions 
-    var bytecode: BytecodeProgram<Self.BaseType> {
+    var bytecode: BytecodeProgram {
         BytecodeProgram(instructions: self.currentInstructions, constants: self.constants)
     }
 
@@ -146,7 +142,7 @@ public extension Compiler {
     /// Saves a constant value into the constants pool
     /// - Parameter value: The value to store
     /// - Returns: The index corresponding to the stored value
-    mutating func addConstant(_ value: Self.BaseType) -> Int32 {
+    mutating func addConstant(_ value: VMBaseType) -> Int32 {
         self.constants.append(value)
         return Int32(self.constants.count - 1)
     }

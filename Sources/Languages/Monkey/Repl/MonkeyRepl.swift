@@ -76,8 +76,8 @@ struct MonkeyRepl: Repl {
             return
         }
 
-        var constants: [Object] = []
-        var globals: [Object?] = []
+        var constants: [VMBaseType] = []
+        var globals: [VMBaseType?] = []
         globals.reserveCapacity(kGlobalsSize)
         globals.append(contentsOf: Array(repeating: nil, count: kGlobalsSize))
         var symbolTable = MonkeyC.newSymbolTable

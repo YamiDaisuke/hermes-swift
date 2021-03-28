@@ -25,7 +25,7 @@ Returns the instructions from the current compilation scope
 ### `bytecode`
 
 ```swift
-var bytecode: BytecodeProgram<Self.BaseType>
+var bytecode: BytecodeProgram
 ```
 
 Returns the `BytecodeProgram` with all the compiled instructions
@@ -50,7 +50,7 @@ Closes the current compilation scope and returns the compiled instructions
 ### `addConstant(_:)`
 
 ```swift
-mutating func addConstant(_ value: Self.BaseType) -> Int32
+mutating func addConstant(_ value: VMBaseType) -> Int32
 ```
 
 Saves a constant value into the constants pool

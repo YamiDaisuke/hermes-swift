@@ -24,7 +24,7 @@ public var scopeIndex: Int = 0
 ### `constants`
 
 ```swift
-public var constants: [Object] = []
+public var constants: [VMBaseType] = []
 ```
 
 ### `symbolTable`
