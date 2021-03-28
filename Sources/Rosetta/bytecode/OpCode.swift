@@ -137,6 +137,8 @@ public enum OpCodes: OpCode {
     case getBuiltin
     /// Creates a closure for a function
     case closure
+    /// Get a free variable from the closure
+    case getFree
 }
 
 /// For a clear control on the operands byte sizes
@@ -190,6 +192,7 @@ public struct OperationDefinition {
         .returnVal: OperationDefinition(name: "OpReturnVal", operandsWidth: []),
         .return: OperationDefinition(name: "OpReturn", operandsWidth: []),
         .getBuiltin: OperationDefinition(name: "OpGetBuiltin", operandsWidth: [.byte]),
-        .closure: OperationDefinition(name: "OpClosure", operandsWidth: [.word, .byte])
+        .closure: OperationDefinition(name: "OpClosure", operandsWidth: [.word, .byte]),
+        .getFree: OperationDefinition(name: "OpGetFree", operandsWidth: [.byte])
     ]
 }

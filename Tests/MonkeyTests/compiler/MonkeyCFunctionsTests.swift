@@ -194,4 +194,143 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
 
         try runCompilerTests(tests)
     }
+
+    func testClosures() throws {
+        let tests: [CompilerTestCase] = [
+            (
+                """
+                fn(a) {
+                    fn(b) {
+                        a + b
+                    }
+                }
+                """,
+                [
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.getFree, 0),
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.add),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    ),
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.closure, 0, 1),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    )
+                ],
+                [
+                    Bytecode.make(.closure, 1, 0),
+                    Bytecode.make(.pop),
+                ]
+            ),
+            (
+                """
+                fn(a) {
+                    fn(b) {
+                        fn(c) {
+                            a + b + c
+                        }
+                    }
+                }
+                """,
+                [
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.getFree, 0),
+                            Bytecode.make(.getFree, 1),
+                            Bytecode.make(.add),
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.add),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    ),
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.getFree, 0),
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.closure, 0, 2),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    ),
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.closure, 1, 1),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    )
+                ],
+                [
+                    Bytecode.make(.closure, 2, 0),
+                    Bytecode.make(.pop),
+                ]
+            ),
+            (
+                """
+                let global = 55;
+                fn() {
+                    let a = 66;
+                    fn() {
+                        let b = 77;
+                        fn() {
+                            let c = 88;
+                            global + a + b + c;
+                        }
+                    }
+                }
+                """,
+                [
+                    Integer(55),
+                    Integer(66),
+                    Integer(77),
+                    Integer(88),
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.constant, 3),
+                            Bytecode.make(.setLocal, 0),
+                            Bytecode.make(.getGlobal, 0),
+                            Bytecode.make(.getFree, 0),
+                            Bytecode.make(.add),
+                            Bytecode.make(.getFree, 1),
+                            Bytecode.make(.add),
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.add),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    ),
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.constant, 2),
+                            Bytecode.make(.setLocal, 0),
+                            Bytecode.make(.getFree, 0),
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.closure, 4, 2),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    ),
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.constant, 1),
+                            Bytecode.make(.setLocal, 0),
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.closure, 5, 1),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    )
+                ],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.closure, 6, 0),
+                    Bytecode.make(.pop),
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
 }

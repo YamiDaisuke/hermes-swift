@@ -256,3 +256,11 @@ case closure
 ```
 
 Creates a closure for a function
+
+### `getFree`
+
+```swift
+case getFree
+```
+
+Get a free variable from the closure

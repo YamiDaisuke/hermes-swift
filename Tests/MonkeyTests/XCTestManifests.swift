@@ -56,6 +56,7 @@ extension MonkeyCFunctionsTests {
     // to regenerate.
     static let __allTests__MonkeyCFunctionsTests = [
         ("testBuiltins", testBuiltins),
+        ("testClosures", testClosures),
         ("testFunctionCalls", testFunctionCalls),
         ("testFunctions", testFunctions),
     ]

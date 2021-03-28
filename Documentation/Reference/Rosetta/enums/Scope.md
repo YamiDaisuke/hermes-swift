@@ -27,6 +27,12 @@ case local
 case builtin
 ```
 
+### `free`
+
+```swift
+case free
+```
+
 ## Properties
 ### `description`
 

@@ -142,4 +142,94 @@ class SymbolTableTests: XCTestCase {
             }
         }
     }
+
+    func testResolveFree() throws {
+        let global = SymbolTable()
+        try global.define("a")
+        try global.define("b")
+
+        let firstLocal = SymbolTable(global)
+        try firstLocal.define("c")
+        try firstLocal.define("d")
+
+        let secondLocal = SymbolTable(firstLocal)
+        try secondLocal.define("e")
+        try secondLocal.define("f")
+
+        let tests = [
+            (
+                firstLocal,
+                [
+                    Symbol(name: "a", scope: .global, index: 0),
+                    Symbol(name: "b", scope: .global, index: 1),
+                    Symbol(name: "c", scope: .local, index: 0),
+                    Symbol(name: "d", scope: .local, index: 1)
+                ],
+                []
+            ),
+            (
+                secondLocal,
+                [
+                    Symbol(name: "a", scope: .global, index: 0),
+                    Symbol(name: "b", scope: .global, index: 1),
+                    Symbol(name: "c", scope: .free, index: 0),
+                    Symbol(name: "d", scope: .free, index: 1),
+                    Symbol(name: "e", scope: .local, index: 0),
+                    Symbol(name: "f", scope: .local, index: 1)
+                ],
+                [
+                    Symbol(name: "c", scope: .free, index: 0),
+                    Symbol(name: "d", scope: .free, index: 1)
+                ]
+            ),
+        ]
+
+        for test in tests {
+            for sym in test.1 {
+                let result = try test.0.resolve(sym.name)
+                XCTAssertEqual(sym, result)
+            }
+
+            XCTAssertEqual(test.0.freeSymbols.count, test.2.count)
+
+            for sym in test.2 {
+                let result = try test.0.resolve(sym.name)
+                XCTAssertEqual(sym, result)
+            }
+        }
+    }
+
+    func testResolveUnresolvavleFree() throws {
+        let global = SymbolTable()
+        try global.define("a")
+
+        let firstLocal = SymbolTable(global)
+        try firstLocal.define("c")
+
+        let secondLocal = SymbolTable(firstLocal)
+        try secondLocal.define("e")
+        try secondLocal.define("f")
+
+        let expected = [
+            Symbol(name: "a", scope: .global, index: 0),
+            Symbol(name: "c", scope: .free, index: 0),
+            Symbol(name: "e", scope: .local, index: 0),
+            Symbol(name: "f", scope: .local, index: 1),
+        ]
+
+        for expect in expected {
+            let result = try secondLocal.resolve(expect.name)
+            XCTAssertEqual(result, expect)
+        }
+
+        let unresolved = [
+            "b",
+            "d"
+        ]
+
+        for name in unresolved {
+            let result = try? secondLocal.resolve(name)
+            XCTAssertNil(result)
+        }
+    }
 }

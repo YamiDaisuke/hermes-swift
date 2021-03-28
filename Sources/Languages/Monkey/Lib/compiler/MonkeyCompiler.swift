@@ -246,14 +246,20 @@ public struct MonkeyC: Compiler {
             self.emit(.return)
         }
 
+        let freeSymbols = self.symbolTable.freeSymbols
         let localsCount = self.symbolTable.totalDefinitions
         let instructions = self.leaveScope()
+
+        for symbol in freeSymbols {
+            self.loadSymbol(symbol)
+        }
+
         let compiledFunction = CompiledFunction(
             instructions: instructions,
             localsCount: localsCount,
             parameterCount: expression.params.count
         )
-        self.emit(.closure, self.addConstant(compiledFunction), 0)
+        self.emit(.closure, self.addConstant(compiledFunction), Int32(freeSymbols.count))
     }
 
     /// Turns a call expression into VM operations
@@ -276,6 +282,8 @@ public struct MonkeyC: Compiler {
             self.emit(.getLocal, Int32(symbol.index))
         case .builtin:
             self.emit(.getBuiltin, Int32(symbol.index))
+        case .free:
+            self.emit(.getFree, Int32(symbol.index))
         }
     }
 }

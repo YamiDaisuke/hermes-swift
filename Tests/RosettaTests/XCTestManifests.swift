@@ -59,9 +59,11 @@ extension SymbolTableTests {
     static let __allTests__SymbolTableTests = [
         ("testDefine", testDefine),
         ("testResolveBuiltins", testResolveBuiltins),
+        ("testResolveFree", testResolveFree),
         ("testResolveGlobal", testResolveGlobal),
         ("testResolveLocal", testResolveLocal),
         ("testResolveNestedLocal", testResolveNestedLocal),
+        ("testResolveUnresolvavleFree", testResolveUnresolvavleFree),
     ]
 }
 

@@ -12,6 +12,7 @@ public enum Scope: CustomStringConvertible {
     case global
     case local
     case builtin
+    case free
 
     public var description: String {
         switch self {
@@ -21,6 +22,8 @@ public enum Scope: CustomStringConvertible {
             return "local"
         case .builtin:
             return "builtin"
+        case .free:
+            return "free"
         }
     }
 }
@@ -58,6 +61,9 @@ public class SymbolTable: NSObject {
     /// Outer closure scope
     var outer: SymbolTable?
 
+    /// Free values captured by closure
+    public var freeSymbols: [Symbol] = []
+
     /// Default init
     public override init() { }
 
@@ -90,7 +96,7 @@ public class SymbolTable: NSObject {
     /// Defines a new builtin symbol with the given name
     /// - Parameters:
     ///     - name: The name/identifier of the symbol
-    ///     - type: Define if this symbol is a constant or a variable
+    ///     - index: The value index in this table
     /// - Throws: `RedeclarationError` if `name` is  already in this table
     /// - Returns: The newly created symbol
     @discardableResult
@@ -107,6 +113,34 @@ public class SymbolTable: NSObject {
         return symbol
     }
 
+    /// Defines a new free symbol with the given name
+    /// - Parameters:
+    ///     - name: The name/identifier of the symbol
+    ///     - index: The value index in this table
+    /// - Throws: `RedeclarationError` if `name` is  already in this table
+    /// - Returns: The newly created symbol
+    @discardableResult
+    public func defineFree(from original: Symbol) throws -> Symbol {
+        // We should only check redeclaratins in the local table
+        // it is perfectly valid to redeclare a global variable
+        // in the local scope
+        guard self.store[original.name] == nil else {
+            throw RedeclarationError(original.name)
+        }
+
+        self.freeSymbols.append(original)
+
+        let symbol = Symbol(
+            name: original.name,
+            scope: .free,
+            index: self.freeSymbols.count - 1,
+            type: .let
+        )
+
+        self.store[original.name] = symbol
+        return symbol
+    }
+
     /// Resolves a name/identifier into a symbol
     /// - Parameter name: The name/identifier to resolve
     /// - Throws: `CantResolveName` if `name` is not registerd in this table
@@ -120,7 +154,13 @@ public class SymbolTable: NSObject {
         // If we have an outer `SymbolTable` check for the
         // value in there
         if let outer = self.outer {
-            return try outer.resolve(name)
+            let value = try outer.resolve(name)
+
+            if value.scope == .global || value.scope == .builtin {
+                return value
+            }
+
+            return try self.defineFree(from: value)
         }
 
         // If both previous steps fails throw an error

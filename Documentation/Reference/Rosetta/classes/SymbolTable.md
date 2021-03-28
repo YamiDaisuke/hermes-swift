@@ -17,6 +17,14 @@ public var totalDefinitions: Int = 0
 
 How many symbols this table contains
 
+### `freeSymbols`
+
+```swift
+public var freeSymbols: [Symbol] = []
+```
+
+Free values captured by closure
+
 ### `description`
 
 ```swift
@@ -69,7 +77,7 @@ public func defineBuiltin(_ name: String, index: Int) throws -> Symbol
 Defines a new builtin symbol with the given name
 - Parameters:
     - name: The name/identifier of the symbol
-    - type: Define if this symbol is a constant or a variable
+    - index: The value index in this table
 - Throws: `RedeclarationError` if `name` is  already in this table
 - Returns: The newly created symbol
 
@@ -78,7 +86,27 @@ Defines a new builtin symbol with the given name
 | Name | Description |
 | ---- | ----------- |
 | name | The name/identifier of the symbol |
-| type | Define if this symbol is a constant or a variable |
+| index | The value index in this table |
+
+### `defineFree(from:)`
+
+```swift
+public func defineFree(from original: Symbol) throws -> Symbol
+```
+
+Defines a new free symbol with the given name
+- Parameters:
+    - name: The name/identifier of the symbol
+    - index: The value index in this table
+- Throws: `RedeclarationError` if `name` is  already in this table
+- Returns: The newly created symbol
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| name | The name/identifier of the symbol |
+| index | The value index in this table |
 
 ### `resolve(_:)`
 

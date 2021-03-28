@@ -476,7 +476,7 @@ public struct VM<Operations: VMOperations> {
     /// - Parameters:
     ///   - startIndex: Initial index in the stack
     ///   - endIndex: End index in the stack
-    /// - Throws: .....
+    /// - Throws: `InvalidHashKey` if the value provided as key is not hashable
     /// - Returns: An hashtable of the elements in the stack from start to end index
     func buildHash(from startIndex: Int, to endIndex: Int) throws -> [AnyHashable: VMBaseType] {
         var output: [AnyHashable: VMBaseType] = [:]
