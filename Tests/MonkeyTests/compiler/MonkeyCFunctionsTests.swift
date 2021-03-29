@@ -9,6 +9,7 @@ import XCTest
 @testable import Rosetta
 @testable import MonkeyLang
 
+// swiftlint:disable type_body_length function_body_length
 class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
     func testFunctions() throws {
         let tests: [CompilerTestCase] = [
@@ -224,7 +225,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                 ],
                 [
                     Bytecode.make(.closure, 1, 0),
-                    Bytecode.make(.pop),
+                    Bytecode.make(.pop)
                 ]
             ),
             (
@@ -266,7 +267,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                 ],
                 [
                     Bytecode.make(.closure, 2, 0),
-                    Bytecode.make(.pop),
+                    Bytecode.make(.pop)
                 ]
             ),
             (
@@ -326,7 +327,7 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
                     Bytecode.make(.closure, 6, 0),
-                    Bytecode.make(.pop),
+                    Bytecode.make(.pop)
                 ]
             )
         ]

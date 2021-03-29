@@ -169,6 +169,10 @@ public struct VM<Operations: VMOperations> {
                     opCode,
                     ip: self.currentInstructionPointer
                 )
+            case .getFree:
+                self.currentInstructionPointer = try self.handleFreeVariables(
+                    self.currentInstructionPointer
+                )
             case .getBuiltin:
                 try handleGetBuiltin()
             case .closure:
@@ -366,6 +370,27 @@ public struct VM<Operations: VMOperations> {
         return instructionPointer
     }
 
+    /// Executes a local variable operation including declaration, assignation and reading
+    /// - Parameters:
+    ///   - opCode: One of: `setLocal`, `assignLocal`, `getLocal`
+    ///   - instructionPointer: The current instruction pointer
+    /// - Throws: A `VMError` if the operations fails
+    /// - Returns: The new instruction pointer after the operation is performed
+    mutating func handleFreeVariables(_ instructionPointer: Int) throws -> Int {
+        var instructionPointer = instructionPointer
+
+        guard let index = self.currentInstructions
+            .readInt(bytes: 1, startIndex: self.currentInstructionPointer + 1) else {
+            return instructionPointer
+        }
+        instructionPointer += 1
+
+        let closure = self.currentFrame.closure
+        try self.push(closure.free[Int(index)])
+
+        return instructionPointer
+    }
+
     mutating func handleClosure() throws {
         guard let constIndex = self.currentInstructions
             .readInt(bytes: 2, startIndex: self.currentInstructionPointer + 1) else {
@@ -377,14 +402,23 @@ public struct VM<Operations: VMOperations> {
             .readInt(bytes: 1, startIndex: self.currentInstructionPointer + 1) else {
             return
         }
+        let freeCount = Int(free)
         self.currentInstructionPointer += 1
 
-        print("TODO: Free count: \(free)")
         let function = self.constants[Int(constIndex)]
+
+        var freeVars: [VMBaseType] = []
+        freeVars.reserveCapacity(freeCount)
+
+        for index in 0..<freeCount {
+            freeVars.append(self.stack[self.stackPointer - freeCount + index])
+        }
+        self.stackPointer -= freeCount
+
         guard let decoded = self.operations.decodeFunction(function) else {
             return
         }
-        let closure = Closure(function: decoded)
+        let closure = Closure(function: decoded, free: freeVars)
         try self.push(closure)
     }
 

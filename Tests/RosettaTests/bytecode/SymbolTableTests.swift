@@ -181,7 +181,7 @@ class SymbolTableTests: XCTestCase {
                     Symbol(name: "c", scope: .free, index: 0),
                     Symbol(name: "d", scope: .free, index: 1)
                 ]
-            ),
+            )
         ]
 
         for test in tests {
@@ -214,7 +214,7 @@ class SymbolTableTests: XCTestCase {
             Symbol(name: "a", scope: .global, index: 0),
             Symbol(name: "c", scope: .free, index: 0),
             Symbol(name: "e", scope: .local, index: 0),
-            Symbol(name: "f", scope: .local, index: 1),
+            Symbol(name: "f", scope: .local, index: 1)
         ]
 
         for expect in expected {

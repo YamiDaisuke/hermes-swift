@@ -199,6 +199,7 @@ extension VMFunctionTests {
         ("testCallingFunctionsWithoutArguments", testCallingFunctionsWithoutArguments),
         ("testCallingFunctionsWithoutReturnValue", testCallingFunctionsWithoutReturnValue),
         ("testCallingFunctionsWithReturnStatement", testCallingFunctionsWithReturnStatement),
+        ("testClosures", testClosures),
         ("testFirstClassFunctions", testFirstClassFunctions),
     ]
 }
