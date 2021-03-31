@@ -40,7 +40,7 @@ public struct MonkeyEvaluator: Evaluator {
                 return MString(statement.value)
             case let declareStmt as DeclareStatement:
                 let value = try eval(node: declareStmt.value, environment: environment)
-                let type: Environment<Object>.VariableType = declareStmt.token.type == .let ? .let : .var
+                let type: VariableType = declareStmt.token.type == .let ? .let : .var
                 try environment.create(declareStmt.name.value, value: value, type: type)
                 return Null.null
             case let assignStmt as AssignStatement:

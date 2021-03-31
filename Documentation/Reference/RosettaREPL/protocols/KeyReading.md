@@ -10,10 +10,10 @@ Protocol that defines the interface for subscribing
 to key events
 
 ## Methods
-### `subscribe(subscriber:)`
+### `subscribe(subscriber:raw:)`
 
 ```swift
-func subscribe(subscriber: @escaping (KeyEvent) -> Void)
+func subscribe(subscriber: @escaping (KeyEvent) -> Void, raw: ((UInt8) -> Void)?)
 ```
 
 Subscribes to key events. It blocks the thread until an exit or enter event is delivered.

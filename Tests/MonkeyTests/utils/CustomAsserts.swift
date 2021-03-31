@@ -9,6 +9,8 @@ import XCTest
 @testable import Rosetta
 @testable import MonkeyLang
 
+// MARK: - Assert Evaluator
+
 func MKAssertInteger(object: Object?, expected: Int, file: StaticString = #file, line: UInt = #line) {
     let integer = object as? Integer
     XCTAssertNotNil(integer, file: file, line: line)
@@ -20,6 +22,8 @@ func MKAssertBoolean(object: Object?, expected: Bool, file: StaticString = #file
     XCTAssertNotNil(bool, file: file, line: line)
     XCTAssertEqual(bool?.value, expected, file: file, line: line)
 }
+
+// MARK: - Assert Parser
 
 func MKAssertInfixExpression(
     expression: Expression?,
@@ -55,4 +59,40 @@ func MKAssertIdentifier(expression: Expression?, expected: String, file: StaticS
     XCTAssertNotNil(identifier, file: file, line: line)
     XCTAssertEqual(identifier?.value, expected, file: file, line: line)
     XCTAssertEqual(identifier?.literal, expected, file: file, line: line)
+}
+
+// MARK: - Assert Compiler
+
+func MKAssertInstructions(
+    _ instructions: Instructions,
+    _ expected: [Instructions],
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    let expectedConcat = Instructions(expected.joined())
+    print("--- Compiled ---")
+    print(instructions.description)
+    print("--- Expected ---")
+    print(expectedConcat.description)
+    print("------ End -----")
+    XCTAssertEqual(instructions.count, expectedConcat.count, file: file, line: line)
+    XCTAssertEqual(instructions, expectedConcat, file: file, line: line)
+}
+
+func MKAssertConstants(
+    _ emitted: [VMBaseType],
+    _ expected: [VMBaseType],
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    XCTAssertEqual(emitted.count, expected.count, file: file, line: line)
+    for index in 0..<emitted.count {
+        let value = emitted[index] as? Object
+        XCTAssertNotNil(value)
+        XCTAssert(
+            value?.isEquals(other: expected[index] as? Object ?? Null.null) ?? false,
+            file: file,
+            line: line
+        )
+    }
 }

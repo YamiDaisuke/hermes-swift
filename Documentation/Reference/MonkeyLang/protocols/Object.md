@@ -3,7 +3,7 @@
 # `Object`
 
 ```swift
-public protocol Object: CustomStringConvertible
+public protocol Object: VMBaseType
 ```
 
 Base Type for all variables inside Monkey Language

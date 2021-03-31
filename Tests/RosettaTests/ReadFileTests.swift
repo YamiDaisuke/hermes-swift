@@ -21,7 +21,7 @@ class ReadFileTests: XCTestCase {
 
         let a = 10;
         """
-        let path = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+        let path = FileManager.default.temporaryDirectory
         self.filePath = path.appendingPathComponent("test.mky")
         print()
         do {

@@ -72,6 +72,8 @@ enum MonkeyOperations {
     /// - `<Integer> / <Integer>`
     /// - `<Integer> > <Integer>`
     /// - `<Integer> < <Integer>`
+    /// - `<Integer> >= <Integer>`
+    /// - `<Integer> <= <Integer>`
     /// - `<Object> == <Object>`
     /// - `<Object> != <Object>`
     /// Equality and Inequality agaist `Boolean` values will use the other value thruty or falsy

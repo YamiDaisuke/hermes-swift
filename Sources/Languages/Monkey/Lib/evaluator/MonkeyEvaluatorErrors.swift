@@ -8,7 +8,7 @@
 import Foundation
 import Rosetta
 
-struct UnknownOperator: EvaluatorError {
+struct UnknownOperator: EvaluatorError, CompilerError, VMError {
     var message: String
     var line: Int?
     var column: Int?
@@ -56,7 +56,7 @@ struct InvalidPrefixExpression: EvaluatorError {
     }
 }
 
-struct InvalidInfixExpression: EvaluatorError {
+struct InvalidInfixExpression: EvaluatorError, CompilerError {
     var message: String
     var line: Int?
     var column: Int?
@@ -84,18 +84,8 @@ struct InvalidCallExpression: EvaluatorError {
     }
 }
 
-struct WrongArgumentCount: EvaluatorError {
-    var message: String
-    var line: Int?
-    var column: Int?
-    var file: String?
-
-    init(_ expected: Int, got: Int, line: Int? = nil, column: Int? = nil, file: String? = nil) {
-        self.message = "Incorrect number of arguments in function call expected: \(expected) but got: \(got)"
-        self.line = line
-        self.column = column
-        self.file = file
-    }
+extension WrongArgumentCount: EvaluatorError {
+    /// From VMError
 }
 
 struct InvalidArgumentType: EvaluatorError {
@@ -112,7 +102,7 @@ struct InvalidArgumentType: EvaluatorError {
     }
 }
 
-struct InvalidHashKey: EvaluatorError {
+struct InvalidHashKey: EvaluatorError, VMError {
     var message: String
     var line: Int?
     var column: Int?

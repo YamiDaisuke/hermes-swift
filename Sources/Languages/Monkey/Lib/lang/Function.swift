@@ -28,3 +28,30 @@ public struct Function: Object {
         return otherFn.description == self.description
     }
 }
+
+/// Same as `Function` but represented with compiled bytecode instructions
+public struct CompiledFunction: Object, VMFunctionDefinition {
+    public var type: ObjectType { "compiledFunction" }
+
+    public var instructions: Instructions
+    public var localsCount: Int
+    public var parameterCount: Int
+
+    public init(instructions: Instructions, localsCount: Int = 0, parameterCount: Int = 0) {
+        self.instructions = instructions
+        self.localsCount = localsCount
+        self.parameterCount = parameterCount
+    }
+
+    public var description: String {
+        "CompiledFunction:\n\(instructions.description)"
+    }
+
+    public func isEquals(other: Object) -> Bool {
+        guard let otherFn = other as? CompiledFunction else { return false }
+        // Keep this for easier debuging
+        print("==== Self\n\(self.instructions.description)\n====")
+        print("==== Other\n\(otherFn.instructions.description)\n====")
+        return otherFn.instructions == self.instructions
+    }
+}

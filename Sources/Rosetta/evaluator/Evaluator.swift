@@ -46,19 +46,27 @@ public extension Evaluator {
     }
 }
 
+/// Tells if a stored value is variable or constant
+public enum VariableType: Int32, CustomStringConvertible {
+    /// A.K.A: constant
+    case `let` = 0
+    /// A.K.A: variable
+    case `var` = 1
+
+    public var description: String {
+        switch self {
+        case .let:
+            return "let"
+        case .var:
+            return "var"
+        }
+    }
+}
+
 /// Holds the program variables states
 /// this implementation is prepared to keep
 /// track of outer environments like clousures
 public class Environment<BaseType> {
-    public enum VariableType: String, CustomStringConvertible {
-        case `let`
-        case `var`
-
-        public var description: String {
-            self.rawValue
-        }
-    }
-
     typealias Container = (type: VariableType, value: BaseType)
 
     /// Current scope variables

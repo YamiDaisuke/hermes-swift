@@ -65,30 +65,24 @@ public struct MonkeyLexer: Lexer {
         }
     }
 
-    // swiftlint:disable function_body_length
     public mutating func nextToken() -> Token {
         let file = filePath?.absoluteString.replacingOccurrences(of: "file://", with: "")
-        // TODO: Reduce body size
+        var token = Token(
+            type: .eof,
+            literal: "",
+            file: file,
+            line: self.currentLineNumber,
+            column: self.currentColumn
+        )
+
         guard !self.input.isEmpty || self.streamReader != nil else {
-            return Token(
-                type: .eof,
-                literal: "",
-                file: file,
-                line: self.currentLineNumber,
-                column: self.currentColumn
-            )
+            return token
         }
 
         self.skipWhitespace()
 
         guard let char = self.readingChars?.current else {
-            return Token(
-                type: .eof,
-                literal: "",
-                file: file,
-                line: self.currentLineNumber,
-                column: self.currentColumn
-            )
+            return token
         }
 
         var next = ""
@@ -99,88 +93,27 @@ public struct MonkeyLexer: Lexer {
         let startLine = self.currentLineNumber
         let startColumn = self.currentColumn
 
-        var token = Token(type: .eof, literal: "")
         switch char {
-        case "=":
+        case "+", "-", "*", ";", ":", "(", ")", ",", "{", "}", "[", "]":
+            // For all single character tokens the kind constant matches the character
+            token = Token(type: Token.Kind(char), literal: String(char))
+        case "=", "!", "<", ">":
             if next == "=" {
-                token = Token(type: .equals, literal: String(char) + next)
+                // For ==, !=, <=, >= tokens the kind constant matches the characters
+                token = Token(type: Token.Kind(String(char) + next), literal: String(char) + next)
                 self.readChar()
             } else {
-                token = Token(type: .assign, literal: String(char))
+                // For all single character tokens the kind constant matches the character
+                token = Token(type: Token.Kind(char), literal: String(char))
             }
-        case "+":
-            token = Token(type: .plus, literal: String(char))
-        case "-":
-            token = Token(type: .minus, literal: String(char))
-        case "!":
-            if next == "=" {
-                token = Token(type: .notEquals, literal: String(char) + next)
-                self.readChar()
-            } else {
-                token = Token(type: .bang, literal: String(char))
-            }
-        case "*":
-            token = Token(type: .asterisk, literal: String(char))
         case "/":
-            if next == "/" {
-                let comment = self.readComment()
-                token = Token(
-                    type: .comment,
-                    literal: comment
-                )
-            } else if next == "*" {
-                let comment = self.readMultilineComment()
-                token = Token(
-                    type: .comment,
-                    literal: comment
-                )
+            if let comment = self.tokenizeComments(nextCharacter: next) {
+                token = comment
             } else {
                 token = Token(type: .slash, literal: String(char))
             }
-        case "<":
-            if next == "=" {
-                token = Token(type: .lte, literal: String(char) + next)
-                self.readChar()
-            } else {
-                token = Token(type: .lt, literal: String(char))
-            }
-        case ">":
-            if next == "=" {
-                token = Token(type: .gte, literal: String(char) + next)
-                self.readChar()
-            } else {
-                token = Token(type: .gt, literal: String(char))
-            }
-        case ";":
-            token = Token(type: .semicolon, literal: String(char))
-        case ":":
-            token = Token(type: .colon, literal: String(char))
-        case "(":
-            token = Token(type: .lparen, literal: String(char))
-        case ")":
-            token = Token(type: .rparen, literal: String(char))
-        case ",":
-            token = Token(type: .comma, literal: String(char))
-        case "{":
-            token = Token(type: .lbrace, literal: String(char))
-        case "}":
-            token = Token(type: .rbrace, literal: String(char))
-        case "[":
-            token = Token(type: .lbracket, literal: String(char))
-        case "]":
-            token = Token(type: .rbracket, literal: String(char))
         case "\"":
-            self.readChar()
-            do {
-                let literal = try readString()
-                token = Token(type: .string, literal: literal)
-            } catch let error as Character {
-                token = Token(type: .ilegal, literal: String(error))
-            } catch let error as String {
-                token = Token(type: .ilegal, literal: error)
-            } catch {
-                token = Token(type: .ilegal, literal: String(char))
-            }
+            token = self.tokenizeString(char)
         default:
             if char.isIdentifierLetter {
                 let literal = self.readIdentifier()
@@ -197,6 +130,48 @@ public struct MonkeyLexer: Lexer {
         token.line = startLine
         token.column = startColumn
         token.file = file
+
+        return token
+    }
+
+    /// Tokenizes single line or multiline comments if the pattern does not match a valid comment
+    /// it returns a `nil` `Token`
+    mutating func tokenizeComments(nextCharacter next: String) -> Token? {
+        var token: Token?
+        if next == "/" {
+            let comment = self.readComment()
+            token = Token(
+                type: .comment,
+                literal: comment
+            )
+        } else if next == "*" {
+            let comment = self.readMultilineComment()
+            token = Token(
+                type: .comment,
+                literal: comment
+            )
+        }
+
+        return token
+    }
+
+
+    /// Tokenizes string literals
+    /// - Parameter initial: The current reading char
+    /// - Returns: The string `Token` or `ilegal` if the pattern is invalid
+    mutating func tokenizeString(_ initial: Character) -> Token {
+        var token: Token
+        self.readChar()
+        do {
+            let literal = try readString()
+            token = Token(type: .string, literal: literal)
+        } catch let error as Character {
+            token = Token(type: .ilegal, literal: String(error))
+        } catch let error as String {
+            token = Token(type: .ilegal, literal: error)
+        } catch {
+            token = Token(type: .ilegal, literal: String(initial))
+        }
 
         return token
     }

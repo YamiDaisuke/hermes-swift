@@ -19,6 +19,13 @@ do {
         overview: "The marvelous Monkey REPL and Interpreter"
     )
 
+    let mode = parser.add(
+        option: "--mode",
+        shortName: "-m",
+        kind: ReplMode.self,
+        usage: "Switch between compiled and interpreted (default) mode"
+    )
+
     let filename = parser.add(
         positional: "file",
         kind: String.self,
@@ -29,7 +36,9 @@ do {
 
     let argsv = Array(CommandLine.arguments.dropFirst())
     let parguments = try parser.parse(argsv)
-    var repl = MonkeyRepl()
+
+    let selectedMode = parguments.get(mode) ?? .interpreted
+
     if let filename = parguments.get(filename) {
         var filepath = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
         filepath.appendPathComponent(filename)
@@ -48,6 +57,7 @@ do {
             TerminalController.printError(error)
         }
     } else {
+        var repl = MonkeyRepl(mode: selectedMode)
         repl.run()
     }
 } catch let ArgumentParserError.expectedValue(value) {

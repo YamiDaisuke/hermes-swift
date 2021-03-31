@@ -10,10 +10,16 @@ import Rosetta
 
 struct FunctionLiteral: Expression {
     var token: Token
+    var name: String?
     var params: [Identifier] = []
     var body: BlockStatement
 
     var description: String {
-        "fn(\(params.map { $0.description }.joined(separator: ", "))\n\(self.body)"
+        let output = "fn(\(params.map { $0.description }.joined(separator: ", "))\n\(self.body)"
+        if let name = name {
+            return "\(name) \(output)"
+        } else {
+            return output
+        }
     }
 }

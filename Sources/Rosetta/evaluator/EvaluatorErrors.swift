@@ -13,7 +13,7 @@ public protocol EvaluatorError: RosettaError {
 
 /// Thrown by default `Environment` implementation contained by this package
 /// when trying to change the value of a constant
-public struct AssignConstantError: EvaluatorError {
+public struct AssignConstantError: EvaluatorError, CompilerError {
     public var message: String
     public var line: Int?
     public var column: Int?
@@ -29,7 +29,7 @@ public struct AssignConstantError: EvaluatorError {
 
 /// Thrown by default `Environment` implementation contained by this package
 /// when trying to create a new variable o constant with an already used name
-public struct RedeclarationError: EvaluatorError {
+public struct RedeclarationError: EvaluatorError, CompilerError {
     public var message: String
     public var line: Int?
     public var column: Int?
