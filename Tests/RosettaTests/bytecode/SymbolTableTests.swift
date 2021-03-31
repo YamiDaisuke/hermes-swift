@@ -232,4 +232,23 @@ class SymbolTableTests: XCTestCase {
             XCTAssertNil(result)
         }
     }
+
+    func testDefineAndResolveFunctionName() throws {
+        let global = SymbolTable()
+        try global.defineFunctionName("a")
+
+        let expected = Symbol(name: "a", scope: .function, index: 0)
+        let result = try global.resolve(expected.name)
+        XCTAssertEqual(result, expected)
+    }
+
+    func testShadowingFunctionName() throws {
+        let global = SymbolTable()
+        try global.defineFunctionName("a")
+        try global.define("a")
+
+        let expected = Symbol(name: "a", scope: .global, index: 0)
+        let result = try global.resolve(expected.name)
+        XCTAssertEqual(result, expected)
+    }
 }

@@ -35,15 +35,17 @@ class BytecodeTests: XCTestCase {
         instructions.append(contentsOf: Bytecode.make(.constant, 65535))
         instructions.append(contentsOf: Bytecode.make(.add))
         instructions.append(contentsOf: Bytecode.make(.getLocal, 1))
+        instructions.append(contentsOf: Bytecode.make(.currentClosure))
         instructions.append(contentsOf: Bytecode.make(.closure, 65535, 255))
 
         let expected = """
-        0000 OpConstant      1
-        0003 OpConstant      2
-        0006 OpConstant      65535
+        0000 OpConstant          1
+        0003 OpConstant          2
+        0006 OpConstant          65535
         0009 OpAdd
-        0010 OpGetLocal      1
-        0012 OpClosure       65535 255
+        0010 OpGetLocal          1
+        0012 OpCurrentClosure
+        0013 OpClosure           65535 255
         """
 
         print(instructions.description)

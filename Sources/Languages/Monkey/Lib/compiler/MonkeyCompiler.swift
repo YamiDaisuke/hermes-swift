@@ -95,9 +95,9 @@ public struct MonkeyC: Compiler {
 
             self.emit(.index)
         case let declareStatement as DeclareStatement:
-            try compile(declareStatement.value)
             let type: VariableType = declareStatement.token.type == .let ? .let : .var
             let symbol = try symbolTable.define(declareStatement.name.value, type: type)
+            try compile(declareStatement.value)
             let operation: OpCodes = symbol.scope == .global ? .setGlobal : .setLocal
             self.emit(operation, Int32(symbol.index))
         case let assignStatement as AssignStatement:
@@ -231,6 +231,10 @@ public struct MonkeyC: Compiler {
     mutating func handleFunctionLiterals(_ expression: FunctionLiteral) throws {
         self.enterScope()
 
+        if let name = expression.name {
+            try self.symbolTable.defineFunctionName(name)
+        }
+
         for param in expression.params {
             try self.symbolTable.define(param.value)
         }
@@ -284,6 +288,8 @@ public struct MonkeyC: Compiler {
             self.emit(.getBuiltin, Int32(symbol.index))
         case .free:
             self.emit(.getFree, Int32(symbol.index))
+        case .function:
+            self.emit(.currentClosure)
         }
     }
 }

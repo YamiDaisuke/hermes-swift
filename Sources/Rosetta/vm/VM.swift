@@ -121,12 +121,7 @@ public struct VM<Operations: VMOperations> {
 
             switch opCode {
             case .constant:
-                guard let constIndex = self.currentInstructions
-                    .readInt(bytes: 2, startIndex: self.currentInstructionPointer + 1) else {
-                    continue
-                }
-                self.currentInstructionPointer += 2
-                try self.push(self.constants[Int(constIndex)])
+                try self.handleConstant()
             case .pop:
                 self.pop()
             case .add, .sub, .mul, .div, .equal, .notEqual, .gt, .gte:
@@ -177,8 +172,9 @@ public struct VM<Operations: VMOperations> {
                 try handleGetBuiltin()
             case .closure:
                 try self.handleClosure()
-            default:
-                break
+            case .currentClosure:
+                let current = self.currentFrame.closure
+                try self.push(current)
             }
 
             self.currentInstructionPointer += 1
@@ -231,6 +227,17 @@ public struct VM<Operations: VMOperations> {
     }
 
     // MARK: - Helper methods for op codes execution
+
+    /// Excutes the constant operation by getting a value from
+    /// the constant pool into the stack
+    mutating func handleConstant() throws {
+        guard let constIndex = self.currentInstructions
+            .readInt(bytes: 2, startIndex: self.currentInstructionPointer + 1) else {
+            return
+        }
+        self.currentInstructionPointer += 2
+        try self.push(self.constants[Int(constIndex)])
+    }
 
     /// Executes both VM supported jump operations: `OpJump`, `OpJumpFalse`
     /// - Parameters:

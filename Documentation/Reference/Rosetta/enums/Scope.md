@@ -33,6 +33,12 @@ case builtin
 case free
 ```
 
+### `function`
+
+```swift
+case function
+```
+
 ## Properties
 ### `description`
 

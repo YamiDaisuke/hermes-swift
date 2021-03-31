@@ -47,6 +47,7 @@
 		F8E70C6225F056F0008476B4 /* VMErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E70C6125F056F0008476B4 /* VMErrors.swift */; };
 		F8EB17CB25E1AB5D00CD9147 /* SymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB17CA25E1AB5D00CD9147 /* SymbolTable.swift */; };
 		F8EB17DB25E1AC7800CD9147 /* SymbolTableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB17DA25E1AC7800CD9147 /* SymbolTableTests.swift */; };
+		F8F27BFD2613EF98006433DC /* Benchmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F27BFC2613EF98006433DC /* Benchmarks.swift */; };
 		OBJ_240 /* MonkeyRepl.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* MonkeyRepl.swift */; };
 		OBJ_241 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* main.swift */; };
 		OBJ_243 /* RosettaREPL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rosetta::RosettaREPL::Product" /* RosettaREPL.framework */; };
@@ -429,6 +430,7 @@
 		F8E70C6125F056F0008476B4 /* VMErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMErrors.swift; sourceTree = "<group>"; };
 		F8EB17CA25E1AB5D00CD9147 /* SymbolTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTable.swift; sourceTree = "<group>"; };
 		F8EB17DA25E1AC7800CD9147 /* SymbolTableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTableTests.swift; sourceTree = "<group>"; };
+		F8F27BFC2613EF98006433DC /* Benchmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Benchmarks.swift; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_100 /* MonkeyParserExpressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParserExpressionTests.swift; sourceTree = "<group>"; };
 		OBJ_101 /* MonkeyParserStatementsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyParserStatementsTests.swift; sourceTree = "<group>"; };
@@ -1206,6 +1208,7 @@
 				OBJ_96 /* lexer */,
 				OBJ_99 /* parser */,
 				OBJ_104 /* utils */,
+				F8F27BFC2613EF98006433DC /* Benchmarks.swift */,
 			);
 			name = MonkeyTests;
 			path = Tests/MonkeyTests;
@@ -1598,6 +1601,7 @@
 				OBJ_323 /* MonkeyLexerTests.swift in Sources */,
 				OBJ_324 /* MonkeyParserExpressionTests.swift in Sources */,
 				F8633DB225FA847100CA3E9F /* VMCollectionsTests.swift in Sources */,
+				F8F27BFD2613EF98006433DC /* Benchmarks.swift in Sources */,
 				F8633D9225FA837700CA3E9F /* MonkeyCFunctionsTests.swift in Sources */,
 				F8633D8225FA834700CA3E9F /* MonkeyCScopesTests.swift in Sources */,
 				OBJ_325 /* MonkeyParserStatementsTests.swift in Sources */,

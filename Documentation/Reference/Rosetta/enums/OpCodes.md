@@ -264,3 +264,11 @@ case getFree
 ```
 
 Get a free variable from the closure
+
+### `currentClosure`
+
+```swift
+case currentClosure
+```
+
+Push the current closure into the stack

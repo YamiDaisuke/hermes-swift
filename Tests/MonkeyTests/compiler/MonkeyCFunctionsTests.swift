@@ -9,7 +9,7 @@ import XCTest
 @testable import Rosetta
 @testable import MonkeyLang
 
-// swiftlint:disable type_body_length function_body_length
+// swiftlint:disable type_body_length function_body_length file_length
 class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
     func testFunctions() throws {
         let tests: [CompilerTestCase] = [
@@ -327,6 +327,81 @@ class MonkeyCFunctionsTests: XCTestCase, CompilerTestsHelpers {
                     Bytecode.make(.constant, 0),
                     Bytecode.make(.setGlobal, 0),
                     Bytecode.make(.closure, 6, 0),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
+    func testRecursiveFunction() throws {
+        let tests: [CompilerTestCase] = [
+            (
+                """
+                let countDown = fn(x) { countDown(x - 1); };
+                countDown(1);
+                """,
+                [
+                    Integer(1),
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.currentClosure),
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.constant, 0),
+                            Bytecode.make(.sub),
+                            Bytecode.make(.call, 1),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    ),
+                    Integer(1)
+                ],
+                [
+                    Bytecode.make(.closure, 1, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.getGlobal, 0),
+                    Bytecode.make(.constant, 2),
+                    Bytecode.make(.call, 1),
+                    Bytecode.make(.pop)
+                ]
+            ),
+            (
+                """
+                let wrapper = fn() {
+                    let countDown = fn(x) { countDown(x - 1); };
+                    countDown(1);
+                };
+                wrapper();
+                """,
+                [
+                    Integer(1),
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.currentClosure),
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.constant, 0),
+                            Bytecode.make(.sub),
+                            Bytecode.make(.call, 1),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    ),
+                    Integer(1),
+                    CompiledFunction(
+                        instructions: Array([
+                            Bytecode.make(.closure, 1, 0),
+                            Bytecode.make(.setLocal, 0),
+                            Bytecode.make(.getLocal, 0),
+                            Bytecode.make(.constant, 2),
+                            Bytecode.make(.call, 1),
+                            Bytecode.make(.returnVal)
+                        ].joined())
+                    )
+                ],
+                [
+                    Bytecode.make(.closure, 3, 0),
+                    Bytecode.make(.setGlobal, 0),
+                    Bytecode.make(.getGlobal, 0),
+                    Bytecode.make(.call, 0),
                     Bytecode.make(.pop)
                 ]
             )

@@ -136,6 +136,11 @@ public struct MonkeyParser: Parser {
         }
         try expectNext(toBe: .semicolon)
 
+        if var function = expression as? FunctionLiteral {
+            function.name = name.value
+            return DeclareStatement(token: token, name: name, value: function)
+        }
+
         return DeclareStatement(token: token, name: name, value: expression)
     }
 

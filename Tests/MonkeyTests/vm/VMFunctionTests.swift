@@ -9,7 +9,7 @@ import XCTest
 @testable import Rosetta
 @testable import MonkeyLang
 
-// swiftlint:disable type_body_length
+// swiftlint:disable type_body_length function_body_length
 class VMFunctionTests: XCTestCase, VMTestsHelpers {
     func testCallingFunctionsWithoutArguments() throws {
         let tests: [VMTestCase] = [
@@ -355,6 +355,42 @@ class VMFunctionTests: XCTestCase, VMTestsHelpers {
                 closure();
                 """,
                 Integer(99)
+            )
+        ]
+
+        try self.runVMTests(tests)
+    }
+
+    func testRecursiveFunctions() throws {
+        let tests = [
+            VMTestCase(
+                """
+                let countDown = fn(x) {
+                    if (x == 0) {
+                        return 0;
+                    } else {
+                        countDown(x - 1);
+                    }
+                };
+                countDown(1);
+                """,
+                Integer(0)
+            ),
+            VMTestCase(
+                """
+                let wrapper = fn() {
+                    let countDown = fn(x) {
+                        if (x == 0) {
+                            return 0;
+                        } else {
+                            countDown(x - 1);
+                        }
+                    };
+                    countDown(1);
+                };
+                wrapper();
+                """,
+                Integer(0)
             )
         ]
 

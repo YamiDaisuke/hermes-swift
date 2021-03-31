@@ -57,6 +57,7 @@ extension SymbolTableTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__SymbolTableTests = [
+        ("testDefineAndResolveFunctionName", testDefineAndResolveFunctionName),
         ("testDefine", testDefine),
         ("testResolveBuiltins", testResolveBuiltins),
         ("testResolveFree", testResolveFree),
@@ -64,6 +65,7 @@ extension SymbolTableTests {
         ("testResolveLocal", testResolveLocal),
         ("testResolveNestedLocal", testResolveNestedLocal),
         ("testResolveUnresolvavleFree", testResolveUnresolvavleFree),
+        ("testShadowingFunctionName", testShadowingFunctionName),
     ]
 }
 

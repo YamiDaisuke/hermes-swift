@@ -13,6 +13,7 @@ public enum Scope: CustomStringConvertible {
     case local
     case builtin
     case free
+    case function
 
     public var description: String {
         switch self {
@@ -24,6 +25,8 @@ public enum Scope: CustomStringConvertible {
             return "builtin"
         case .free:
             return "free"
+        case .function:
+            return "function"
         }
     }
 }
@@ -83,7 +86,7 @@ public class SymbolTable: NSObject {
         // We should only check redeclaratins in the local table
         // it is perfectly valid to redeclare a global variable
         // in the local scope
-        guard self.store[name] == nil else {
+        guard self.store[name] == nil || self.store[name]?.scope == .function  else {
             throw RedeclarationError(name)
         }
         let scope: Scope = self.outer == nil ? .global : .local
@@ -104,7 +107,7 @@ public class SymbolTable: NSObject {
         // We should only check redeclaratins in the local table
         // it is perfectly valid to redeclare a global variable
         // in the local scope
-        guard self.store[name] == nil else {
+        guard self.store[name] == nil || self.store[name]?.scope == .function else {
             throw RedeclarationError(name)
         }
 
@@ -115,8 +118,7 @@ public class SymbolTable: NSObject {
 
     /// Defines a new free symbol with the given name
     /// - Parameters:
-    ///     - name: The name/identifier of the symbol
-    ///     - index: The value index in this table
+    ///     - original: A symbol to convert into a free variable for the closure
     /// - Throws: `RedeclarationError` if `name` is  already in this table
     /// - Returns: The newly created symbol
     @discardableResult
@@ -124,7 +126,7 @@ public class SymbolTable: NSObject {
         // We should only check redeclaratins in the local table
         // it is perfectly valid to redeclare a global variable
         // in the local scope
-        guard self.store[original.name] == nil else {
+        guard self.store[original.name] == nil || self.store[original.name]?.scope == .function else {
             throw RedeclarationError(original.name)
         }
 
@@ -138,6 +140,19 @@ public class SymbolTable: NSObject {
         )
 
         self.store[original.name] = symbol
+        return symbol
+    }
+
+    /// Defines the function name in the current scope this only applies if the
+    /// current function is being assigned into a named variable or constant
+    /// - Parameters:
+    ///     - name: The name/identifier of the function
+    /// - Throws: `RedeclarationError` if `name` is  already in this table
+    /// - Returns: The newly created symbol
+    @discardableResult
+    public func defineFunctionName(_ name: String) throws -> Symbol {
+        let symbol = Symbol(name: name, scope: .function, index: 0)
+        self.store[name] = symbol
         return symbol
     }
 

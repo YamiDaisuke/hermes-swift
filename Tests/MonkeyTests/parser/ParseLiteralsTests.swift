@@ -134,6 +134,19 @@ class ParseLiteralsTests: XCTestCase {
         MKAssertInfixExpression(expression: bodyExpression?.expression, lhs: "x", operatorSymbol: "+", rhs: "y")
     }
 
+    func testFunctionLiteralWithName() throws {
+        let input = "let myFunction = fn() { };"
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertEqual(program?.statements.count, 1)
+        let expressionStatement = program?.statements.first as? DeclareStatement
+        let function = expressionStatement?.value as? FunctionLiteral
+        XCTAssertEqual(function?.name, "myFunction")
+    }
+
     func testArrayLiteral() throws {
         var input = "[1, 2 * 2, 3 + 3]"
         var lexer = MonkeyLexer(withString: input)

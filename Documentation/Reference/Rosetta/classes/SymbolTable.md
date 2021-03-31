@@ -96,8 +96,7 @@ public func defineFree(from original: Symbol) throws -> Symbol
 
 Defines a new free symbol with the given name
 - Parameters:
-    - name: The name/identifier of the symbol
-    - index: The value index in this table
+    - original: A symbol to convert into a free variable for the closure
 - Throws: `RedeclarationError` if `name` is  already in this table
 - Returns: The newly created symbol
 
@@ -105,8 +104,26 @@ Defines a new free symbol with the given name
 
 | Name | Description |
 | ---- | ----------- |
-| name | The name/identifier of the symbol |
-| index | The value index in this table |
+| original | A symbol to convert into a free variable for the closure |
+
+### `defineFunctionName(_:)`
+
+```swift
+public func defineFunctionName(_ name: String) throws -> Symbol
+```
+
+Defines the function name in the current scope this only applies if the
+current function is being assigned into a named variable or constant
+- Parameters:
+    - name: The name/identifier of the function
+- Throws: `RedeclarationError` if `name` is  already in this table
+- Returns: The newly created symbol
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| name | The name/identifier of the function |
 
 ### `resolve(_:)`
 

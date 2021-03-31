@@ -33,7 +33,7 @@ public extension Instructions {
 
             let read = Bytecode.readOperands(def, instructions: Array(self[(index + 1)...]))
             let operandsString = read.values.map { $0.description }.joined(separator: " ")
-            let opName = operandsString.isEmpty ? def.name : def.name.padding(toLength: 16, withPad: " ", startingAt: 0)
+            let opName = operandsString.isEmpty ? def.name : def.name.padding(toLength: 20, withPad: " ", startingAt: 0)
             output += String(
                 format: "%04d %@%@",
                 index,
@@ -139,6 +139,8 @@ public enum OpCodes: OpCode {
     case closure
     /// Get a free variable from the closure
     case getFree
+    /// Push the current closure into the stack
+    case currentClosure
 }
 
 /// For a clear control on the operands byte sizes
@@ -193,6 +195,7 @@ public struct OperationDefinition {
         .return: OperationDefinition(name: "OpReturn", operandsWidth: []),
         .getBuiltin: OperationDefinition(name: "OpGetBuiltin", operandsWidth: [.byte]),
         .closure: OperationDefinition(name: "OpClosure", operandsWidth: [.word, .byte]),
-        .getFree: OperationDefinition(name: "OpGetFree", operandsWidth: [.byte])
+        .getFree: OperationDefinition(name: "OpGetFree", operandsWidth: [.byte]),
+        .currentClosure: OperationDefinition(name: "OpCurrentClosure", operandsWidth: [])
     ]
 }
