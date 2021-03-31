@@ -9,7 +9,7 @@ import Foundation
 
 /// A byte mapping to one of the operations supported by the VM
 public typealias OpCode = UInt8
-/// Just to make code clear 
+/// Just to make code clear
 public typealias Byte = UInt8
 /// A list of bytes representing one or several or part of a VM instruction
 public typealias Instructions = [Byte]
@@ -32,14 +32,32 @@ public extension Instructions {
             }
 
             let read = Bytecode.readOperands(def, instructions: Array(self[(index + 1)...]))
+
+            #if os(Linux)
+            var formatString = "%04d"
+            let operandsString = read.values.map { $0.description }.joined(separator: " ")
+            let opName = (operandsString.isEmpty ?
+                def.name : def.name.padding(toLength: 20, withPad: " ", startingAt: 0))
+
+            formatString += " \(opName)\(operandsString)"
+
+            output += String(
+                format: formatString,
+                index
+            )
+            #else
+            let formatString = "%04d %@%@"
             let operandsString = read.values.map { $0.description }.joined(separator: " ")
             let opName = operandsString.isEmpty ? def.name : def.name.padding(toLength: 20, withPad: " ", startingAt: 0)
+
             output += String(
-                format: "%04d %@%@",
+                format: formatString,
                 index,
                 opName,
                 operandsString
             )
+            #endif
+
             index += 1 + read.count
 
             if index < self.count {
@@ -79,7 +97,7 @@ public enum OpCodes: OpCode {
     case constant
     /// Pops the value at top of the stack
     case pop
-    /// Adds the top two values in the stack 
+    /// Adds the top two values in the stack
     case add
     /// Subsctract the top two values in the stack
     case sub
