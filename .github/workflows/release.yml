@@ -6,7 +6,7 @@ on:
 jobs:
   buildLinux:
     runs-on: ubuntu-latest
-    container: yamidaisuke/rosetta-swift:latest
+    container: yamidaisuke/hermes-swift:latest
     steps:
     - name: Get the version
       id: get_version

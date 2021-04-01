@@ -1,9 +1,12 @@
-# Rosetta Swift
+# Hermes Swift
 
-[![macOS Test](https://github.com/YamiDaisuke/rosetta-swift/workflows/macOS%20Test/badge.svg)](https://github.com/YamiDaisuke/rosetta-swift/actions)
-[![Linux Test](https://github.com/YamiDaisuke/rosetta-swift/workflows/Linux%20Test/badge.svg)](https://github.com/YamiDaisuke/rosetta-swift/actions)
+[![macOS Test](https://github.com/YamiDaisuke/hermes-swift/workflows/macOS%20Test/badge.svg)](https://github.com/YamiDaisuke/hermes-swift/actions)
+[![Linux Test](https://github.com/YamiDaisuke/hermes-swift/workflows/Linux%20Test/badge.svg)](https://github.com/YamiDaisuke/hermes-swift/actions)
 [![codecov](https://codecov.io/gh/YamiDaisuke/rosetta-swift/branch/main/graph/badge.svg?token=14CTPDWLQW)](https://codecov.io/gh/YamiDaisuke/rosetta-swift)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+
+A Lexer, Parser, Interpreter, VM and compiler library built with swift, supporting the addition of new languages
+and currently implemented for the [Monkey Language](https://monkeylang.org).
 
 ## Introduction
 
@@ -117,3 +120,15 @@ with this library
 - [X] Create an standalone build and test script to work without XCode
 - [X] CI steps to build release artifacts
 - [X] Support Linux
+
+After this point TODO will be kept using github projects.
+
+## Disclaimer
+
+Initially, I named the project "Rosetta" thinking about the archeological artifact associated
+with language translation and interpretation, the name made sense however I completely
+forgot about Apple's Rosetta, only after a couple of days working on the repo the name clicked
+in my mind. To avoid the confusion the name can generate I have switched to the name "Hermes" after
+the greek god associated with language.
+
+I'll remove all references to previous name, but I might miss a couple, please forgive me.
