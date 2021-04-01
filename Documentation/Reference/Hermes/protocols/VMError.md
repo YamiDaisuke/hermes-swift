@@ -3,7 +3,7 @@
 # `VMError`
 
 ```swift
-public protocol VMError: RosettaError
+public protocol VMError: HermesError
 ```
 
 All VM errors should implement this protocol

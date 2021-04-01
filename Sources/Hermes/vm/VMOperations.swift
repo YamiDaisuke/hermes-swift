@@ -1,6 +1,6 @@
 //
 //  VMOperations.swift
-//  Rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 04-02-21.
 //
@@ -41,7 +41,7 @@ public protocol VMOperations {
     func isTruthy(_ value: VMBaseType?) -> Bool
 
     /// Takes a native Swift array of the lang base type and converts it to the lang equivalent
-    /// - Parameter array: An swift Array 
+    /// - Parameter array: An swift Array
     func buildLangArray(from array: [VMBaseType]) -> VMBaseType
 
     /// Takes a native Swift dictionary of the lang base type as both key and value, and converts it to the lang equivalent

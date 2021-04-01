@@ -1,6 +1,6 @@
 //
 //  VMErrors.swift
-//  Rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 03-03-21.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 /// All VM errors should implement this protocol
-public protocol VMError: RosettaError {
+public protocol VMError: HermesError {
 }
 
 /// Throw this error when a program tries to push more than `kStackSize`

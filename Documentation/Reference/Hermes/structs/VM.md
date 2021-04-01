@@ -6,7 +6,7 @@
 public struct VM<Operations: VMOperations>
 ```
 
-Rosetta VM implementation
+Hermes VM implementation
 
 ## Properties
 ### `constants`

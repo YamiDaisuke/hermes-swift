@@ -1,6 +1,6 @@
 //
 //  Compiler.swift
-//  Rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 01-02-21.
 //
@@ -66,7 +66,7 @@ public class CompilationScope {
     }
 }
 
-/// Base Compiler structure for Rosetta VM
+/// Base Compiler structure for Hermes VM
 public protocol Compiler {
     /// Keeps the compiled scopes
     var scopes: [CompilationScope] { get set }
@@ -111,7 +111,7 @@ public extension Compiler {
         self.currentScope.instructions
     }
 
-    /// Returns the `BytecodeProgram` with all the compiled instructions 
+    /// Returns the `BytecodeProgram` with all the compiled instructions
     var bytecode: BytecodeProgram {
         BytecodeProgram(instructions: self.currentInstructions, constants: self.constants)
     }
@@ -184,5 +184,5 @@ public extension Compiler {
 }
 
 /// All compilation errors should implement this protocol
-public protocol CompilerError: RosettaError {
+public protocol CompilerError: HermesError {
 }

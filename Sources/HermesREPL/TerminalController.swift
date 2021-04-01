@@ -1,6 +1,6 @@
 //
 //  TerminalController.swift
-//  RosettaREPL
+//  HermesREPL
 //
 //  Created by Franklin Cruz on 28-01-21.
 //
@@ -55,7 +55,7 @@ public extension TerminalController {
     }
 
     /// Calls print function wrapped in red color modifier for terminal output
-    /// - Parameter error: The object to print 
+    /// - Parameter error: The object to print
     static func printError(_ error: Any) {
         print("\u{001B}[31m\(error)\u{001B}[0m")
     }

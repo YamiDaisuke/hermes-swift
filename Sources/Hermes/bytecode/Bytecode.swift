@@ -1,6 +1,6 @@
 //
 //  Bytecode.swift
-//  Rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 31-01-21.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 public enum Bytecode {
-    /// Converts abstract representation into Rosetta VM bytecode instructions
+    /// Converts abstract representation into Hermes VM bytecode instructions
     /// - Parameters:
     ///   - op: The instruction `OpCode`
     ///   - operands: The operands values
@@ -17,7 +17,7 @@ public enum Bytecode {
         return Bytecode.make(op, operands: operands)
     }
 
-    /// Converts abstract representation into Rosetta VM bytecode instructions
+    /// Converts abstract representation into Hermes VM bytecode instructions
     /// - Parameters:
     ///   - op: The instruction `OpCode`
     ///   - operands: The operands values

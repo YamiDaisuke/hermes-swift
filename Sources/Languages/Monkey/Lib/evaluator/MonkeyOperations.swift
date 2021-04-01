@@ -8,7 +8,7 @@
 import Foundation
 
 /// Abstract operation evaluation, this will help to reduce duplicated code
-/// when applying the same operations inside the Rosetta VM
+/// when applying the same operations inside the Hermes VM
 enum MonkeyOperations {
     // MARK: - Prefix Operators
 

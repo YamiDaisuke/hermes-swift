@@ -1,6 +1,6 @@
 //
 //  BytecodeTests.swift
-//  RosettaTests
+//  HermesTests
 //
 //  Created by Franklin Cruz on 31-01-21.
 //

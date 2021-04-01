@@ -1,6 +1,6 @@
 //
 //  StringExtensionsTests.swift
-//  rosettaTest
+//  HermesTest
 //
 //  Created by Franklin Cruz on 29-12-20.
 //

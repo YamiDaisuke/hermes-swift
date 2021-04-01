@@ -1,6 +1,6 @@
 //
 //  MonkeyLexer.swift
-//  rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 30-12-20.
 //

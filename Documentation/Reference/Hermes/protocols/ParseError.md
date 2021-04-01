@@ -3,7 +3,7 @@
 # `ParseError`
 
 ```swift
-public protocol ParseError: RosettaError
+public protocol ParseError: HermesError
 ```
 
 All Parsing errors should implement this protocol

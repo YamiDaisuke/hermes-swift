@@ -1,6 +1,6 @@
 //
 //  CompilerScopesTests.swift
-//  RosettaTests
+//  HermesTests
 //
 //  Created by Franklin Cruz on 26-02-21.
 //

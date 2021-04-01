@@ -6,7 +6,7 @@
 public protocol Compiler
 ```
 
-Base Compiler structure for Rosetta VM
+Base Compiler structure for Hermes VM
 
 ## Properties
 ### `scopes`

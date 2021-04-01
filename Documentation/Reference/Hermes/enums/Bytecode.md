@@ -13,7 +13,7 @@ public enum Bytecode
 public static func make(_ op: OpCodes, _ operands: Int32...) -> Instructions
 ```
 
-Converts abstract representation into Rosetta VM bytecode instructions
+Converts abstract representation into Hermes VM bytecode instructions
 - Parameters:
   - op: The instruction `OpCode`
   - operands: The operands values
@@ -32,7 +32,7 @@ Converts abstract representation into Rosetta VM bytecode instructions
 public static func make(_ op: OpCodes, operands: [Int32] = []) -> Instructions
 ```
 
-Converts abstract representation into Rosetta VM bytecode instructions
+Converts abstract representation into Hermes VM bytecode instructions
 - Parameters:
   - op: The instruction `OpCode`
   - operands: The operands values

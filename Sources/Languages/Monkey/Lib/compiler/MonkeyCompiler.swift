@@ -8,7 +8,7 @@
 import Foundation
 import Hermes
 
-/// Monkey Lang compiler for the Rosetta VM
+/// Monkey Lang compiler for the Hermes  VM
 public struct MonkeyC: Compiler {
     public var scopes = [CompilationScope()]
     public var scopeIndex: Int = 0

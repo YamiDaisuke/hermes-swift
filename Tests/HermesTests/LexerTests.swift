@@ -1,6 +1,6 @@
 //
 //  LexerTest.swift
-//  rosettaTest
+//  HermesTest
 //
 //  Created by Franklin Cruz on 28-12-20.
 //

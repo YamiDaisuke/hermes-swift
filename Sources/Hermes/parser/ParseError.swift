@@ -1,6 +1,6 @@
 //
 //  ParseError.swift
-//  rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 01-01-21.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 /// All Parsing errors should implement this protocol
-public protocol ParseError: RosettaError {
+public protocol ParseError: HermesError {
     var message: String { get }
 }
 

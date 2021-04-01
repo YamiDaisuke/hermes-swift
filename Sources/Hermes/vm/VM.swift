@@ -1,6 +1,6 @@
 //
 //  VM.swift
-//  Rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 03-02-21.
 //
@@ -16,7 +16,7 @@ public let kMaxFrames = 1024
 
 // swiftlint:disable type_body_length file_length
 
-/// Rosetta VM implementation
+/// Hermes VM implementation
 public struct VM<Operations: VMOperations> {
     public internal(set) var constants: [VMBaseType]
 
@@ -64,7 +64,7 @@ public struct VM<Operations: VMOperations> {
     ///   - operations: An implementation of `VMOperations` in charge of applying the language
     ///                 specific operations for this VM
     ///   - constants: A list of existing constants
-    ///   - globals: A list of existing globals 
+    ///   - globals: A list of existing globals
     public init(
         _ bytcode: BytecodeProgram,
         operations: Operations,
@@ -216,7 +216,7 @@ public struct VM<Operations: VMOperations> {
     }
 
     /// Pops the top of the frame stack an returns it
-    /// - Returns: The `Frame` on top of the stack or `nil` if the stack is empty 
+    /// - Returns: The `Frame` on top of the stack or `nil` if the stack is empty
     @discardableResult
     mutating func popFrame() -> Frame? {
         guard let last = self.frames.popLast() else {
@@ -463,7 +463,7 @@ public struct VM<Operations: VMOperations> {
         self.pushFrame(frame)
         self.stackPointer = frame.basePointer + decoded.function.localsCount
         self.stack.append(
-            // TODO: Append the right number 
+            // TODO: Append the right number
             contentsOf: Array(repeating: self.operations.null, count: decoded.function.localsCount)
         )
     }

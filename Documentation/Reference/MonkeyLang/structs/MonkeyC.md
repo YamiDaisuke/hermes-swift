@@ -6,7 +6,7 @@
 public struct MonkeyC: Compiler
 ```
 
-Monkey Lang compiler for the Rosetta VM
+Monkey Lang compiler for the Hermes  VM
 
 ## Properties
 ### `scopes`

@@ -1,6 +1,6 @@
 //
 //  InfixExpression.swift
-//  rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 03-01-21.
 //

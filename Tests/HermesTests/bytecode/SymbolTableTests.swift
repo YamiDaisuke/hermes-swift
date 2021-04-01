@@ -1,6 +1,6 @@
 //
 //  SymbolTableTests.swift
-//  RosettaTests
+//  HermesTests
 //
 //  Created by Franklin Cruz on 20-02-21.
 //

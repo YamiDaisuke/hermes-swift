@@ -1,6 +1,6 @@
 //
 //  StreamReader.swift
-//  Rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 25-01-21.
 //

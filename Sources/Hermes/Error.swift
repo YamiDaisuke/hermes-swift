@@ -1,6 +1,6 @@
 //
 //  Error.swift
-//  Rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 27-01-21.
 //
@@ -10,7 +10,7 @@ import Foundation
 /// Base error protocol for this library, it includes optional information
 /// to print the script line, column and file where the error occurs if
 /// supported by the language
-public protocol RosettaError: Error, CustomStringConvertible {
+public protocol HermesError: Error, CustomStringConvertible {
     var message: String { get }
     var line: Int? { get set }
     var column: Int? { get set }
@@ -18,7 +18,7 @@ public protocol RosettaError: Error, CustomStringConvertible {
 }
 
 /// Convinience extension to print all available information contained in the error
-public extension RosettaError {
+public extension HermesError {
     var description: String {
         var output = self.message
 

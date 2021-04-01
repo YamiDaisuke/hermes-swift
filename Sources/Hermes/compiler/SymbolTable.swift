@@ -1,6 +1,6 @@
 //
 //  SymbolTable.swift
-//  Rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 20-02-21.
 //

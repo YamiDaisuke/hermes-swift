@@ -1,6 +1,6 @@
 //
 //  Repl.swift
-//  rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 30-12-20.
 //
@@ -26,7 +26,7 @@ enum ReplMode: String, ArgumentKind {
 
     static var completion = ShellCompletion.values([
         ("interpreted", "Code is interpreted on the fly"),
-        ("compiled", "Code is compiled and then run in the Rosetta VM")
+        ("compiled", "Code is compiled and then run in the Hermes VM")
     ])
 
     case interpreted

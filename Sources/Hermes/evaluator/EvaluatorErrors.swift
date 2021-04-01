@@ -1,6 +1,6 @@
 //
 //  EvaluatorErrors.swift
-//  Rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 27-01-21.
 //
@@ -8,7 +8,7 @@
 import Foundation
 
 /// All Evaluation errors should implement this protocol
-public protocol EvaluatorError: RosettaError {
+public protocol EvaluatorError: HermesError {
 }
 
 /// Thrown by default `Environment` implementation contained by this package

@@ -1,6 +1,6 @@
 //
 //  MonkeyEvaluatorErrors.swift
-//  rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 13-01-21.
 //

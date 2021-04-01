@@ -1,6 +1,6 @@
 //
 //  StringExtensions.swift
-//  rosetta
+//  Hermes
 //
 //  Created by Franklin Cruz on 28-12-20.
 //
