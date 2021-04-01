@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Holds a reference for an array literal, expressed in the form:
 /// `[<expression>, <epxression>,...,<expression>]`

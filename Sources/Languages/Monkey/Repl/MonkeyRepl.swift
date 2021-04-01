@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 import MonkeyLang
-import RosettaREPL
+import HermesREPL
 import TSCUtility
 import TSCBasic
 
@@ -69,7 +69,7 @@ struct MonkeyRepl: Repl {
         self.controller = TerminalController(stream: stdoutStream)
     }
 
-    /// REPL loop exectution 
+    /// REPL loop exectution
     mutating func run() {
         print(welcomeMessage)
         guard let controller = controller  else {

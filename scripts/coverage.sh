@@ -9,7 +9,7 @@ esac
 
 echo "Running on ${OS}"
 
-FRAMEWORK_NAME=Rosetta
+FRAMEWORK_NAME=Hermes
 
 if [ "$OS" == "Linux" ]
 then

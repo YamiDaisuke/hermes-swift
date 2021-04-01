@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 public struct MonkeyEvaluator: Evaluator {
     public typealias BaseType = Object
@@ -92,7 +92,7 @@ public struct MonkeyEvaluator: Evaluator {
     ///   - expression: The litral
     ///   - environment: The current `Environment`
     /// - Throws: `EvaluatorError` if any expression fails to parse
-    /// - Returns: A new `Hash` object 
+    /// - Returns: A new `Hash` object
     static func evalHashLiteral(_ expression: HashLiteral, environment: Environment<Object>) throws -> Object? {
         var hash = Hash(pairs: [:])
         for pair in expression.pairs {

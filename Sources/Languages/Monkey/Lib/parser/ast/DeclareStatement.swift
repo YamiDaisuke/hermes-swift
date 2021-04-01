@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Declare either constants or variable values of Monkey language which should follow this structure:
 ///  Constants:

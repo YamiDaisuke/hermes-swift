@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 struct ReturnStatement: Statement {
     var token: Token

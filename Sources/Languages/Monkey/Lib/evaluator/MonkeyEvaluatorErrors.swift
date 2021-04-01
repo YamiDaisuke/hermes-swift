@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 struct UnknownOperator: EvaluatorError, CompilerError, VMError {
     var message: String

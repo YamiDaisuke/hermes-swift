@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Rosetta
+@testable import Hermes
 @testable import MonkeyLang
 
 class MonkeyParserExpressionTests: XCTestCase {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Convinience so we can throw `String` as Errors
 extension String: Error { }

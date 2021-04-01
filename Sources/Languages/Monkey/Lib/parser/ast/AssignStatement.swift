@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Assign statement of Monkey language which should follow this structure:
 /// `<Identifier> = <Expression>;`

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 // Identifiers and literals
 public extension Token.Kind {

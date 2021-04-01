@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// This is a wrapper for Monkey Language builtin functions
 /// such as `len`
@@ -37,7 +37,7 @@ public struct BuiltinFunction: Object {
 
 /// An extension to define all available `BuiltinFunction` in Monkey language
 /// for each availble function we must declare a static constant, append it to the `all`
-/// array and add a new case into the string subscript 
+/// array and add a new case into the string subscript
 extension BuiltinFunction {
     /// `len` function expects a single `MString`or an `MArray` parameter and
     /// will return the number of characters in that `MString` as `Integer`

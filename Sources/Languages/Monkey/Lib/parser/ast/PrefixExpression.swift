@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Throw this error if there is no known way to parse a given `Token`
 /// as a prefix operator

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Represents a function call expression in the form of
 /// `<function expression>(<arguments>)`

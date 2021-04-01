@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// This `Node` represents a identifier name in Monkey language
 /// the valid characters for identifiers are "a-z", "A-Z" and "_"

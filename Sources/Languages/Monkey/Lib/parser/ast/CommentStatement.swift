@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Comment text for documentation
 struct CommentStatement: Statement {

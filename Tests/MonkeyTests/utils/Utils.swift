@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import Rosetta
+@testable import Hermes
 @testable import MonkeyLang
 
 enum Utils {

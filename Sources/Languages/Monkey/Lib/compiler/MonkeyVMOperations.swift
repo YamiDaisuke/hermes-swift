@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 // swiftlint:disable force_cast
 public struct MonkeyVMOperations: VMOperations {
@@ -109,7 +109,7 @@ public struct MonkeyVMOperations: VMOperations {
     }
 
     /// Takes a native Swift array of the lang base type and converts it to the lang equivalent
-    /// - Parameter array: An swift Array 
+    /// - Parameter array: An swift Array
     public func buildLangArray(from array: [VMBaseType]) -> VMBaseType {
         return MArray(elements: array as! [Object])
     }

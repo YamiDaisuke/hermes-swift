@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// This `Node` represents an boolean literal in Monkey language
 struct BooleanLiteral: Expression {

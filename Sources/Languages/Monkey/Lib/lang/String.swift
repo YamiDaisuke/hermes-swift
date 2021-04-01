@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Monkey Language `String` object, we have
 /// to callit `MString` to avoid colissions with swift

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Holds a reference for an index expression applied on any expression producing an `ArrayLiteral`
 /// `<expression>[<expression>]`

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 struct HashLiteral: Expression {
     typealias Pair = (key: Expression, value: Expression)

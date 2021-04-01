@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import Rosetta
-import RosettaREPL
+import Hermes
+import HermesREPL
 import MonkeyLang
 import TSCUtility
 import TSCBasic

@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "Rosetta",
+    name: "Hermes",
     products: [
         .executable(
             name: "Monkey",
@@ -13,11 +13,11 @@ let package = Package(
             name: "MonkeyLang",
             targets: ["MonkeyLang"]),
         .library(
-            name: "Rosetta",
-            targets: ["Rosetta"]),
+            name: "Hermes",
+            targets: ["Hermes"]),
         .library(
-            name: "RosettaREPL",
-            targets: ["RosettaREPL"])
+            name: "HermesREPL",
+            targets: ["HermesREPL"])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-tools-support-core.git", from: "0.1.12")
@@ -26,32 +26,32 @@ let package = Package(
         .target(
             name: "Monkey",
             dependencies: [
-                "Rosetta",
+                "Hermes",
                 "MonkeyLang",
-                "RosettaREPL"
+                "HermesREPL"
             ],
             path: "./Sources/Languages/Monkey/Repl/"),
         .target(
             name: "MonkeyLang",
             dependencies: [
-                "Rosetta"
+                "Hermes"
             ],
             path: "./Sources/Languages/Monkey/Lib/"),
         .target(
-            name: "Rosetta",
+            name: "Hermes",
             dependencies: [],
-            path: "./Sources/Rosetta/"),
+            path: "./Sources/Hermes/"),
         .target(
-            name: "RosettaREPL",
+            name: "HermesREPL",
             dependencies: [
                 .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core")
             ],
-            path: "./Sources/RosettaREPL/"),
+            path: "./Sources/HermesREPL/"),
         .testTarget(
             name: "MonkeyTests",
-            dependencies: ["MonkeyLang", "Rosetta"]),
+            dependencies: ["MonkeyLang", "Hermes"]),
         .testTarget(
-            name: "RosettaTests",
-            dependencies: ["Rosetta"])
+            name: "HermesTests",
+            dependencies: ["Hermes"])
     ]
 )

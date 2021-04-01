@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Represents any function from the MonkeyLanguage
 /// `Function` instances can be called and executed

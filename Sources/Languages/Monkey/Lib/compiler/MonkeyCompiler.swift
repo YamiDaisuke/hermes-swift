@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Monkey Lang compiler for the Rosetta VM
 public struct MonkeyC: Compiler {
@@ -277,7 +277,7 @@ public struct MonkeyC: Compiler {
         self.emit(.call, Int32(expression.args.count))
     }
 
-    /// Loads the right operation for symbol load 
+    /// Loads the right operation for symbol load
     mutating func loadSymbol(_ symbol: Symbol) {
         switch symbol.scope {
         case .global:

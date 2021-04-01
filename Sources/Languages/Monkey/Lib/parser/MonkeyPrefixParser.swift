@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
     func parse<P>(_ parser: inout P) throws -> Expression? where P: Parser {

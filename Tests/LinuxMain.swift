@@ -1,10 +1,10 @@
 import XCTest
 
+import HermesTests
 import MonkeyTests
-import RosettaTests
 
 var tests = [XCTestCaseEntry]()
+tests += HermesTests.__allTests()
 tests += MonkeyTests.__allTests()
-tests += RosettaTests.__allTests()
 
 XCTMain(tests)

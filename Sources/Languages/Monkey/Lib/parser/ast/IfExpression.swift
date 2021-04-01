@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Represent expressions in the form of:
 /// `if (<condition>) <consequence> else <alternative>`

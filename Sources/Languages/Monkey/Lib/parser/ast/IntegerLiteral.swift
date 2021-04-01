@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Rosetta
+import Hermes
 
 /// Throw this error when an invalid integer
 /// literal is found in the input script

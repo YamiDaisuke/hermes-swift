@@ -20,7 +20,7 @@ fi
 echo "Updating test definitions for Linux"
 swift test --generate-linuxmain
 git add Tests/MonkeyTests/XCTestManifests.swift
-git add Tests/RosettaTests/XCTestManifests.swift
+git add Tests/HermesTests/XCTestManifests.swift
 git add Tests/LinuxMain.swift
 
 echo "Generating documentation"

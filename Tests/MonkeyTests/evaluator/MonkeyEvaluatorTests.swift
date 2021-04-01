@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Rosetta
+@testable import Hermes
 @testable import MonkeyLang
 
 // swiftlint:disable type_body_length
