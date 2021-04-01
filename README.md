@@ -2,7 +2,7 @@
 
 [![macOS Test](https://github.com/YamiDaisuke/hermes-swift/workflows/macOS%20Test/badge.svg)](https://github.com/YamiDaisuke/hermes-swift/actions)
 [![Linux Test](https://github.com/YamiDaisuke/hermes-swift/workflows/Linux%20Test/badge.svg)](https://github.com/YamiDaisuke/hermes-swift/actions)
-[![codecov](https://codecov.io/gh/YamiDaisuke/rosetta-swift/branch/main/graph/badge.svg?token=14CTPDWLQW)](https://codecov.io/gh/YamiDaisuke/rosetta-swift)
+[![codecov](https://codecov.io/gh/YamiDaisuke/hermes-swift/branch/main/graph/badge.svg?token=14CTPDWLQW)](https://codecov.io/gh/YamiDaisuke/hermes-swift)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 A Lexer, Parser, Interpreter, VM and compiler library built with swift, supporting the addition of new languages
