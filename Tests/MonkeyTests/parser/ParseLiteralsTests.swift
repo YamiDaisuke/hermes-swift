@@ -79,6 +79,27 @@ class ParseLiteralsTests: XCTestCase {
         MKAssertIntegerLiteral(expression: expressionStmt?.expression, expected: 100)
     }
 
+    func testFloatLiteralExpression() throws {
+        let input = """
+        5.5;
+        0.1;
+        """
+
+        let lexer = MonkeyLexer(withString: input)
+        var parser = MonkeyParser(lexer: lexer)
+
+        let program = try parser.parseProgram()
+        XCTAssertEqual(program?.statements.count, 2)
+
+        var expressionStmt = program?.statements[0] as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        MKAssertFloatLiteral(expression: expressionStmt?.expression, expected: 5.5)
+
+        expressionStmt = program?.statements[1] as? ExpressionStatement
+        XCTAssertNotNil(expressionStmt)
+        MKAssertFloatLiteral(expression: expressionStmt?.expression, expected: 0.1)
+    }
+
     func testBooleanLiteralExpression() throws {
         let tests = [
             ("true;", true),

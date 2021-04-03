@@ -19,6 +19,8 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
             return try parseIdentifier(&parser)
         case Token.Kind.int:
             return try parseInteger(&parser)
+        case Token.Kind.float:
+            return try parseFloat(&parser)
         case Token.Kind.string:
             return try parseString(&parser)
         case Token.Kind.bang, Token.Kind.minus:
@@ -54,6 +56,14 @@ struct MonkeyPrefixParser: PrefixParser, MonkeyExpressionParser {
         }
 
         return try IntegerLiteral(token: token)
+    }
+
+    func parseFloat<P>(_ parser: inout P) throws -> Expression? where P: Parser {
+        guard let token = parser.currentToken, token.type == .float else {
+            throw InvalidToken(parser.currentToken)
+        }
+
+        return try FloatLiteral(token: token)
     }
 
     func parseString<P>(_ parser: inout P) throws -> Expression? where P: Parser {

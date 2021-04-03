@@ -47,6 +47,13 @@ func MKAssertIntegerLiteral(expression: Expression?, expected: Int, file: Static
     XCTAssertEqual(integer?.literal, expected.description, file: file, line: line)
 }
 
+func MKAssertFloatLiteral(expression: Expression?, expected: Float64, file: StaticString = #file, line: UInt = #line) {
+    let float = expression as? FloatLiteral
+    XCTAssertNotNil(float, file: file, line: line)
+    XCTAssertEqual(float?.value, expected, file: file, line: line)
+    XCTAssertEqual(float?.literal, expected.description, file: file, line: line)
+}
+
 func MKAssertBoolLiteral(expression: Expression?, expected: Bool, file: StaticString = #file, line: UInt = #line) {
     let boolean = expression as? BooleanLiteral
     XCTAssertNotNil(boolean, file: file, line: line)

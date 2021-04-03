@@ -34,6 +34,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		F868050626190DC200725307 /* FloatLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F868050526190DC200725307 /* FloatLiteral.swift */; };
 		OBJ_255 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Error.swift */; };
 		OBJ_256 /* Bytecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Bytecode.swift */; };
 		OBJ_257 /* OpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* OpCode.swift */; };
@@ -403,6 +404,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F868050526190DC200725307 /* FloatLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatLiteral.swift; sourceTree = "<group>"; };
 		"Hermes::Hermes::Product" /* Hermes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Hermes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesREPL::Product" /* HermesREPL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HermesREPL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesTests::Product" /* HermesTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = HermesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1089,7 +1091,7 @@
 			path = evaluator;
 			sourceTree = "<group>";
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -1107,7 +1109,6 @@
 				OBJ_248 /* README.md */,
 				OBJ_249 /* ACKNOWLEDGMENTS.md */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_51 /* lang */ = {
@@ -1181,6 +1182,7 @@
 				OBJ_87 /* PrefixExpression.swift */,
 				OBJ_88 /* ReturnStatement.swift */,
 				OBJ_89 /* StringLiteral.swift */,
+				F868050526190DC200725307 /* FloatLiteral.swift */,
 			);
 			path = ast;
 			sourceTree = "<group>";
@@ -1470,7 +1472,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_230 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1601,6 +1603,7 @@
 				OBJ_363 /* Null.swift in Sources */,
 				OBJ_364 /* Object.swift in Sources */,
 				OBJ_365 /* Return.swift in Sources */,
+				F868050626190DC200725307 /* FloatLiteral.swift in Sources */,
 				OBJ_366 /* String.swift in Sources */,
 				OBJ_367 /* Types.swift in Sources */,
 				OBJ_368 /* MonkeyLexer.swift in Sources */,

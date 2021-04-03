@@ -182,6 +182,7 @@ extension ParseLiteralsTests {
         ("testArrayLiteral", testArrayLiteral),
         ("testBooleanLiteralExpression", testBooleanLiteralExpression),
         ("testComments", testComments),
+        ("testFloatLiteralExpression", testFloatLiteralExpression),
         ("testFunctionLiteral", testFunctionLiteral),
         ("testFunctionLiteralWithName", testFunctionLiteralWithName),
         ("testIntLiteralExpression", testIntLiteralExpression),
