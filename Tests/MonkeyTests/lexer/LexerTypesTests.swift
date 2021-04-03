@@ -96,4 +96,19 @@ class LexerTypesTests: XCTestCase {
         lexer = MonkeyLexer(withString: input)
         XCTAssertEqual(lexer.readNumber(), "1")
     }
+
+    func testInvalidFloat() throws {
+        let tests = [
+            ("0.", Token(type: .ilegal, literal: "")),
+            (".4", Token(type: .ilegal, literal: ".")),
+            ("4.F", Token(type: .ilegal, literal: "F")),
+            (".", Token(type: .ilegal, literal: "."))
+        ]
+
+        for test in tests {
+            var lexer = MonkeyLexer(withString: test.0)
+            let next = lexer.nextToken()
+            XCTAssertEqual(next, test.1)
+        }
+    }
 }

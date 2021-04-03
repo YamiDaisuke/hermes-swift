@@ -45,6 +45,8 @@ class MonkeyLexerTests: XCTestCase {
         multiline
         comment
         */
+        3.0;
+        4.555;
         """
         // swiftlint:enable indentation_width
         let tokens: [Token] = [
@@ -154,6 +156,11 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .comment, literal: "// This is an inline comment"),
             Token(type: .comment, literal: "// This is a comment"),
             Token(type: .comment, literal: "/*\nmultiline\ncomment\n*/"),
+
+            Token(type: .float, literal: "3.0"),
+            Token(type: .semicolon, literal: ";"),
+            Token(type: .float, literal: "4.555"),
+            Token(type: .semicolon, literal: ";"),
             Token(type: .eof, literal: "")
         ]
 

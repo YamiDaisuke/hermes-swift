@@ -42,6 +42,7 @@ extension LexerTypesTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__LexerTypesTests = [
+        ("testInvalidFloat", testInvalidFloat),
         ("testInvalidStrings", testInvalidStrings),
         ("testReadIdentifier", testReadIdentifier),
         ("testReadInteger", testReadInteger),

@@ -121,6 +121,23 @@ public struct MonkeyLexer: Lexer {
                 return Token(type: type, literal: literal, file: file, line: startLine, column: startColumn)
             } else if char.isNumber {
                 let literal = self.readNumber()
+
+                if self.readingChars?.current == "." {
+                    guard self.readingChars?.next?.isNumber ?? false else {
+                        if let ilegalLiteral = self.readingChars?.next {
+                            token = Token(type: .ilegal, literal: String(ilegalLiteral))
+                        } else {
+                            token = Token(type: .ilegal, literal: "")
+                        }
+                        break
+                    }
+                    // Read floats
+                    self.readChar()
+                    let decimalPart = self.readNumber()
+                    let number = "\(literal).\(decimalPart)"
+                    return Token(type: .float, literal: number, file: file, line: startLine, column: startColumn)
+                }
+
                 return Token(type: .int, literal: literal, file: file, line: startLine, column: startColumn)
             }
             token = Token(type: .ilegal, literal: String(char))

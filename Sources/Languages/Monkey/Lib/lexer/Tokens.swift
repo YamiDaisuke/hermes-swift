@@ -13,6 +13,7 @@ public extension Token.Kind {
     static let comment = Token.Kind("comment")
     static let identifier = Token.Kind("identifier")
     static let int = Token.Kind("int")
+    static let float = Token.Kind("float")
     static let string = Token.Kind("string")
 
     static var literals: Set<Token.Kind> {
