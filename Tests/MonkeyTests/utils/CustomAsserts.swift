@@ -17,6 +17,12 @@ func MKAssertInteger(object: Object?, expected: Int, file: StaticString = #file,
     XCTAssertEqual(integer?.value, expected, file: file, line: line)
 }
 
+func MKAssertFloat(object: Object?, expected: Float64, file: StaticString = #file, line: UInt = #line) {
+    let float = object as? MFloat
+    XCTAssertNotNil(float, file: file, line: line)
+    XCTAssertEqual(float?.value, expected, file: file, line: line)
+}
+
 func MKAssertBoolean(object: Object?, expected: Bool, file: StaticString = #file, line: UInt = #line) {
     let bool = object as? Boolean
     XCTAssertNotNil(bool, file: file, line: line)

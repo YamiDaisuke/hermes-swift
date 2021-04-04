@@ -35,6 +35,28 @@ class EvaluateOperationsTests: XCTestCase {
         }
     }
 
+    func testEvalFloat() throws {
+        let tests = [
+            ("5.0", 5.0),
+            ("0.10", 0.10),
+            ("-5.5", -5.5),
+            ("-0.10", -0.10),
+            ("2.5 + 2.5", 5.0),
+            ("2.5 + 2", 4.5),
+            ("2.0 * 1.0", 2.0),
+            ("2.0 * 1", 2.0),
+            ("5.0 / 2.0", 2.5),
+            ("5.0 / 2", 2.5),
+            ("5.0 - 2.0", 3.0),
+            ("5.0 - 2", 3.0)
+        ]
+
+        for test in tests {
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
+            MKAssertFloat(object: evaluated, expected: test.1)
+        }
+    }
+
     func testEvalBoolean() throws {
         let tests = [
             ("true", true),
@@ -63,7 +85,75 @@ class EvaluateOperationsTests: XCTestCase {
             ("0 == false", true),
             ("0 == true", false),
             ("80 == false", false),
-            ("10 == true", true)
+            ("10 == true", true),
+
+            ("80.0 == false", false),
+            ("10.0 == true", true),
+            ("0.0 == false", true),
+            ("0.0 == true", false),
+        ]
+
+        for test in tests {
+            let evaluated = try Utils.testEval(input: test.0, environment: Environment())
+            MKAssertBoolean(object: evaluated, expected: test.1)
+        }
+    }
+
+    func testEvalFloatComparison() throws {
+        let tests = [
+            ("(1.0 > 2) == true", false),
+            ("(1 > 2.0) == false", true),
+            ("(1.0 < 2) == true", true),
+            ("(1 < 2.0) == false", false),
+
+            ("(2.0 > 1) == true", true),
+            ("(2 > 1.0) == false", false),
+            ("(2.0 < 1) == true", false),
+            ("(2 < 1.0) == false", true),
+
+            ("(1.0 > 2.0) == true", false),
+            ("(1.0 > 2.0) == false", true),
+            ("(1.0 < 2.0) == true", true),
+            ("(1.0 < 2.0) == false", false),
+
+            ("(2.5 > 1.5) == true", true),
+            ("(2.5 > 1.5) == false", false),
+            ("(2.5 < 1.5) == true", false),
+            ("(2.5 < 1.5) == false", true),
+
+            ("(1.0 >= 2) == true", false),
+            ("(1 >= 2.0) == false", true),
+            ("(1.0 <= 2) == true", true),
+            ("(1 <= 2.0) == false", false),
+            ("(1 <= 1.0) == true", true),
+
+            ("(2.0 >= 1) == true", true),
+            ("(2 >= 1.0) == false", false),
+            ("(2.0 <= 1) == true", false),
+            ("(2 <= 1.0) == false", true),
+            ("(2 <= 2.0) == true", true),
+
+            ("(1.0 >= 2.0) == true", false),
+            ("(1.0 >= 2.0) == false", true),
+            ("(1.0 <= 2.0) == true", true),
+            ("(1.0 <= 2.0) == false", false),
+            ("(1.0 <= 1.0) == true", true),
+
+            ("(2.5 >= 1.5) == true", true),
+            ("(2.5 >= 1.5) == false", false),
+            ("(2.5 <= 1.5) == true", false),
+            ("(2.5 <= 1.5) == false", true),
+            ("(2.5 <= 2.5) == true", true),
+
+            ("(1.0 == 2) == true", false),
+            ("(1.0 == 1) == true", true),
+            ("(1.0 == 2.0) == true", false),
+            ("(1.0 == 1.0) == true", true),
+
+            ("(1.0 != 2) == true", true),
+            ("(1.0 != 1) == true", false),
+            ("(1.0 != 2.0) == true", true),
+            ("(1.0 != 1.0) == true", false)
         ]
 
         for test in tests {
@@ -78,7 +168,8 @@ class EvaluateOperationsTests: XCTestCase {
             (#""Hello " + 10"#, "Hello 10"),
             (#""Hello " + true"#, "Hello true"),
             (#"10 + " Hello""#, "10 Hello"),
-            (#"true + " Hello""#, "true Hello")
+            (#"true + " Hello""#, "true Hello"),
+            (#"1.5 + " Hello""#, "1.5 Hello"),
         ]
 
         for test in tests {
@@ -99,6 +190,8 @@ class EvaluateOperationsTests: XCTestCase {
             (#""Hello" != 10"#, true),
             (#""10" == 10"#, false),
             (#""10" != 10"#, true),
+            (#""10" == 10.0"#, false),
+            (#""10" != 10.0"#, true),
             (#""Hello" == true"#, true),
             ("\"\" == false", true)
         ]
@@ -116,7 +209,9 @@ class EvaluateOperationsTests: XCTestCase {
             ("!5", false),
             ("!!true", true),
             ("!!false", false),
-            ("!!5", true)
+            ("!!5", true),
+            ("!!5.0", true),
+            ("!5.0", false)
         ]
 
         for test in tests {

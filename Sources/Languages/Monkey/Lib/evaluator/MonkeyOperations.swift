@@ -37,15 +37,16 @@ enum MonkeyOperations {
 
     /// Evals minus (-) prefix operator
     /// - Parameter rhs: An `Object` value
-    /// - Throws: `InvalidPrefixExpression` if the operand expression is not an `Integer`
-    /// - Returns: The resul of multiplying a `Integer` value by -1.
-    ///            If the `Object` can't be cast to `Integer` returns `Null`
+    /// - Throws: `InvalidPrefixExpression` if the operand expression is not an `Integer` or a `MFloat`
+    /// - Returns: The resul of multiplying a the numeric value by -1.
     static func evalMinusPrefix(rhs: Object?) throws-> Object? {
-        guard let int = rhs as? Integer else {
+        if let int = rhs as? Integer {
+            return -int
+        } else if let float = rhs as? MFloat {
+            return -float
+        } else {
             throw InvalidPrefixExpression("-", rhs: rhs)
         }
-
-        return -int
     }
 
     /// Evals bang (!) prefix operator
@@ -64,16 +65,32 @@ enum MonkeyOperations {
     ///
     /// Supported operators:
     /// - `<Integer> + <Integer>`
+    /// - `<Float> + <Integer>`
+    /// - `<Float> + <Float>`
     /// - `<String> + <String>`
     /// - `<String> + <Object>`
     /// - `<Object> + <String>`
     /// - `<Integer> - <Integer>`
+    /// - `<Float> - <Integer>`
+    /// - `<Float> - <Float>`
     /// - `<Integer> * <Integer>`
+    /// - `<Float> * <Integer>`
+    /// - `<Float> * <Float>`
     /// - `<Integer> / <Integer>`
+    /// - `<Float> / <Integer>`
+    /// - `<Float> / <Float>`
     /// - `<Integer> > <Integer>`
+    /// - `<Float> > <Integer>`
+    /// - `<Float> > <Float>`
     /// - `<Integer> < <Integer>`
+    /// - `<Float> < <Integer>`
+    /// - `<Float> < <Float>`
     /// - `<Integer> >= <Integer>`
+    /// - `<Float> >= <Integer>`
+    /// - `<Float> >= <Float>`
     /// - `<Integer> <= <Integer>`
+    /// - `<Float> <= <Integer>`
+    /// - `<Float> <= <Float>`
     /// - `<Object> == <Object>`
     /// - `<Object> != <Object>`
     /// Equality and Inequality agaist `Boolean` values will use the other value thruty or falsy
@@ -90,19 +107,19 @@ enum MonkeyOperations {
         case "+":
             return try MonkeyOperations.applyAddition(lhs: lhs, rhs: rhs)
         case "-":
-            return try MonkeyOperations.applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: -)
+            return try MonkeyOperations.applySubstraction(lhs: lhs, rhs: rhs)
         case "*":
-            return try MonkeyOperations.applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: *)
+            return try MonkeyOperations.applyMultiplication(lhs: lhs, rhs: rhs)
         case "/":
-            return try MonkeyOperations.applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: /)
+            return try MonkeyOperations.applyDivision(lhs: lhs, rhs: rhs)
         case ">":
-            return try MonkeyOperations.applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: >)
+            return try MonkeyOperations.applyGT(lhs: lhs, rhs: rhs)
         case "<":
-            return try MonkeyOperations.applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: <)
+            return try MonkeyOperations.applyLT(lhs: lhs, rhs: rhs)
         case ">=":
-            return try MonkeyOperations.applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: >=)
+            return try MonkeyOperations.applyGTE(lhs: lhs, rhs: rhs)
         case "<=":
-            return try MonkeyOperations.applyIntegerInfix(lhs: lhs, rhs: rhs, symbol: operatorSymbol, operation: <=)
+            return try MonkeyOperations.applyLTE(lhs: lhs, rhs: rhs)
         case "==":
             return MonkeyOperations.applyEqualInfix(lhs: lhs, rhs: rhs)
         case "!=":
@@ -117,6 +134,8 @@ enum MonkeyOperations {
     /// Supported variations are:
     /// ```
     /// Integer + Integer
+    /// Float + Integer
+    /// Float + Float
     /// String + Object // Using the Object String representation
     /// ```
     /// - Parameters:
@@ -126,6 +145,18 @@ enum MonkeyOperations {
     /// - Returns: The result of the operation depending on the operands
     static func applyAddition(lhs: Object?, rhs: Object?) throws -> Object {
         if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs + rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
+            return lhs + rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs + rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
             return lhs + rhs
         }
 
@@ -140,25 +171,186 @@ enum MonkeyOperations {
         throw InvalidInfixExpression("+", lhs: lhs, rhs: rhs)
     }
 
-    /// Applies the corresponding infix operation to two `Integer` operands
+    /// Applies the substraction operation to `Integer` or `MFloat` operands
     /// - Parameters:
     ///   - lhs: Any `Object` value
     ///   - rhs: Any `Object` value
-    ///   - operation: A function to apply the operation
-    /// - Throws: `InvalidInfixExpression` if the operand expressions are not `Integer`
-    /// - Returns: The result of applying the `operation` if both `lhs` and `rhs` are
-    ///            `Integer`. If not returns `Null`
-    static func applyIntegerInfix(
-        lhs: Object?,
-        rhs: Object?,
-        symbol: String,
-        operation: (Integer, Integer) -> Object
-    ) throws -> Object {
-        guard let intLhs = lhs as? Integer, let intRhs = rhs as? Integer else {
-            throw InvalidInfixExpression(symbol, lhs: lhs, rhs: rhs)
+    /// - Throws: `InvalidInfixExpression` if the operand expressions are not `MFloat` or `Integer`
+    /// - Returns: The result of substracting the operands
+    static func applySubstraction(lhs: Object?, rhs: Object?) throws -> Object {
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
+            return lhs - rhs
         }
 
-        return operation(intLhs, intRhs)
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs - rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
+            return lhs - rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs - rhs
+        }
+
+        throw InvalidInfixExpression("-", lhs: lhs, rhs: rhs)
+    }
+
+    /// Applies the multiplication operation to `Integer` or `MFloat` operands
+    /// - Parameters:
+    ///   - lhs: Any `Object` value
+    ///   - rhs: Any `Object` value
+    /// - Throws: `InvalidInfixExpression` if the operand expressions are not `MFloat` or `Integer`
+    /// - Returns: The result of multiplyin both operands
+    static func applyMultiplication(lhs: Object?, rhs: Object?) throws -> Object {
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
+            return lhs * rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs * rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
+            return lhs * rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs * rhs
+        }
+
+        throw InvalidInfixExpression("*", lhs: lhs, rhs: rhs)
+    }
+
+    /// Applies the division operation to `Integer` or `MFloat` operands
+    /// - Parameters:
+    ///   - lhs: Any `Object` value
+    ///   - rhs: Any `Object` value
+    /// - Throws: `InvalidInfixExpression` if the operand expressions are not `MFloat` or `Integer`
+    /// - Returns: The result of multiplyin both operands
+    static func applyDivision(lhs: Object?, rhs: Object?) throws -> Object {
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
+            return lhs / rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs / rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
+            return lhs / rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs / rhs
+        }
+
+        throw InvalidInfixExpression("/", lhs: lhs, rhs: rhs)
+    }
+
+    /// Applies the greater than operation to `Integer` or `MFloat` operands
+    /// - Parameters:
+    ///   - lhs: Any `Object` value
+    ///   - rhs: Any `Object` value
+    /// - Throws: `InvalidInfixExpression` if the operand expressions are not `MFloat` or `Integer`
+    /// - Returns: `true` if `lhs` is greater than `rhs`
+    static func applyGT(lhs: Object?, rhs: Object?) throws -> Object {
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
+            return lhs > rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs > rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
+            return lhs > rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs > rhs
+        }
+
+        throw InvalidInfixExpression(">", lhs: lhs, rhs: rhs)
+    }
+
+    /// Applies the lower than operation to `Integer` or `MFloat` operands
+    /// - Parameters:
+    ///   - lhs: Any `Object` value
+    ///   - rhs: Any `Object` value
+    /// - Throws: `InvalidInfixExpression` if the operand expressions are not `MFloat` or `Integer`
+    /// - Returns: `true` if `lhs` is lower than `rhs`
+    static func applyLT(lhs: Object?, rhs: Object?) throws -> Object {
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
+            return lhs < rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs < rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
+            return lhs < rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs < rhs
+        }
+
+        throw InvalidInfixExpression("<", lhs: lhs, rhs: rhs)
+    }
+
+    /// Applies the greater than or equal operation to `Integer` or `MFloat` operands
+    /// - Parameters:
+    ///   - lhs: Any `Object` value
+    ///   - rhs: Any `Object` value
+    /// - Throws: `InvalidInfixExpression` if the operand expressions are not `MFloat` or `Integer`
+    /// - Returns: `true` if `lhs` is greater than or equal to  `rhs`
+    static func applyGTE(lhs: Object?, rhs: Object?) throws -> Object {
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
+            return lhs >= rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs >= rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
+            return lhs >= rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs >= rhs
+        }
+
+        throw InvalidInfixExpression(">=", lhs: lhs, rhs: rhs)
+    }
+
+    /// Applies the lower than or equal operation to `Integer` or `MFloat` operands
+    /// - Parameters:
+    ///   - lhs: Any `Object` value
+    ///   - rhs: Any `Object` value
+    /// - Throws: `InvalidInfixExpression` if the operand expressions are not `MFloat` or `Integer`
+    /// - Returns: `true` if `lhs` is lower than or equal to  `rhs`
+    static func applyLTE(lhs: Object?, rhs: Object?) throws -> Object {
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
+            return lhs <= rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs <= rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
+            return lhs <= rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs <= rhs
+        }
+
+        throw InvalidInfixExpression("<=", lhs: lhs, rhs: rhs)
     }
 
     /// Test two objects for equality
@@ -168,7 +360,27 @@ enum MonkeyOperations {
     /// - Returns: `true` if both objects are the same, `Integer` and `Boolean` are
     ///            compared by value. Otherwise `false`
     static func applyEqualInfix(lhs: Object?, rhs: Object?) -> Boolean {
-        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+        if let lhs = lhs as? Integer {
+            if let rhs = rhs as? Integer {
+                return lhs == rhs
+            }
+
+            if let rhs = rhs as? MFloat {
+                return lhs == rhs
+            }
+        }
+
+        if let rhs = rhs as? Integer {
+            if let lhs = lhs as? Integer {
+                return lhs == rhs
+            }
+
+            if let lhs = lhs as? MFloat {
+                return lhs == rhs
+            }
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
             return lhs == rhs
         }
 
@@ -194,30 +406,6 @@ enum MonkeyOperations {
     /// - Returns: `false` if both objects are the same, `Integer` and `Boolean` are
     ///            compared by value. Otherwise `true`
     static func applyInequalityInfix(lhs: Object?, rhs: Object?) -> Boolean {
-        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
-            return lhs != rhs
-        }
-
-        if let lhs = lhs as? MString, let rhs = rhs as? MString {
-            return lhs != rhs
-        }
-
-        if let rhs = rhs as? MString {
-            return lhs != rhs
-        }
-
-        if let lhs = lhs as? MString {
-            return lhs != rhs
-        }
-
-        if let rhs = rhs as? Boolean {
-            return lhs != rhs
-        }
-
-        if let lhs = lhs as? Boolean {
-            return lhs != rhs
-        }
-
-        return .false
+        return !applyEqualInfix(lhs: lhs, rhs: rhs)
     }
 }

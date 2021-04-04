@@ -34,6 +34,8 @@ public struct MonkeyEvaluator: Evaluator {
                 return try evalReturnStatement(returnStmt, environment: environment)
             case let statement as IntegerLiteral:
                 return Integer(statement.value)
+            case let statement as FloatLiteral:
+                return MFloat(statement.value)
             case let statement as BooleanLiteral:
                 return statement.value ? Boolean.true : Boolean.false
             case let statement as StringLiteral:

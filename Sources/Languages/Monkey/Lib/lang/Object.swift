@@ -16,7 +16,8 @@ public typealias ObjectType = String
 public protocol Object: VMBaseType {
     var type: ObjectType { get }
 
-    /// Compare agaist other object
+    /// Compare agaist other object. Unlike `==` and `!=` this method requires
+    /// both values to be of the same type
     ///
     /// To avoid problems with the use of `Self` when implementing
     /// `Equatable` we use this approach.

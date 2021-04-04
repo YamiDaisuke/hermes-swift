@@ -31,6 +31,8 @@ extension EvaluateOperationsTests {
     static let __allTests__EvaluateOperationsTests = [
         ("testBangOperator", testBangOperator),
         ("testEvalBoolean", testEvalBoolean),
+        ("testEvalFloat", testEvalFloat),
+        ("testEvalFloatComparison", testEvalFloatComparison),
         ("testEvalInteger", testEvalInteger),
         ("testEvalStringCompare", testEvalStringCompare),
         ("testEvalStringConcatention", testEvalStringConcatention),

@@ -35,6 +35,7 @@
 
 /* Begin PBXBuildFile section */
 		F868050626190DC200725307 /* FloatLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F868050526190DC200725307 /* FloatLiteral.swift */; };
+		F86805182619125500725307 /* MFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86805172619125500725307 /* MFloat.swift */; };
 		OBJ_255 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Error.swift */; };
 		OBJ_256 /* Bytecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Bytecode.swift */; };
 		OBJ_257 /* OpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* OpCode.swift */; };
@@ -240,6 +241,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F868050F26190DC300725307 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "swift-tools-support-core::TSCBasic";
+			remoteInfo = TSCBasic;
+		};
+		F868051026190DC300725307 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "swift-tools-support-core::TSCUtility";
+			remoteInfo = TSCUtility;
+		};
 		F87D7F8826154B6900028F43 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
@@ -405,6 +420,7 @@
 
 /* Begin PBXFileReference section */
 		F868050526190DC200725307 /* FloatLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatLiteral.swift; sourceTree = "<group>"; };
+		F86805172619125500725307 /* MFloat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MFloat.swift; sourceTree = "<group>"; };
 		"Hermes::Hermes::Product" /* Hermes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Hermes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesREPL::Product" /* HermesREPL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HermesREPL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesTests::Product" /* HermesTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = HermesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1125,6 +1141,7 @@
 				OBJ_60 /* Return.swift */,
 				OBJ_61 /* String.swift */,
 				OBJ_62 /* Types.swift */,
+				F86805172619125500725307 /* MFloat.swift */,
 			);
 			path = lang;
 			sourceTree = "<group>";
@@ -1609,6 +1626,7 @@
 				OBJ_368 /* MonkeyLexer.swift in Sources */,
 				OBJ_369 /* Tokens.swift in Sources */,
 				OBJ_370 /* MonkeyExpressionParser.swift in Sources */,
+				F86805182619125500725307 /* MFloat.swift in Sources */,
 				OBJ_371 /* MonkeyInfixParser.swift in Sources */,
 				OBJ_372 /* MonkeyParser.swift in Sources */,
 				OBJ_373 /* MonkeyPrefixParser.swift in Sources */,
@@ -1874,12 +1892,12 @@
 		OBJ_430 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "swift-tools-support-core::TSCBasic" /* TSCBasic */;
-			targetProxy = "swift-tools-support-core::TSCBasic" /* TSCBasic */;
+			targetProxy = F868050F26190DC300725307 /* PBXContainerItemProxy */;
 		};
 		OBJ_431 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "swift-tools-support-core::TSCUtility" /* TSCUtility */;
-			targetProxy = "swift-tools-support-core::TSCUtility" /* TSCUtility */;
+			targetProxy = F868051026190DC300725307 /* PBXContainerItemProxy */;
 		};
 		OBJ_482 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

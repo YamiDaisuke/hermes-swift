@@ -50,6 +50,16 @@ any other `Integer` maps to `true`
 ### `init(_:)`
 
 ```swift
+public init(_ float: MFloat)
+```
+
+Convinience cast an `MFloat` to one of the
+`Bolean` constants. `0` matches to `false`
+any other `MFloat` maps to `true`
+
+### `init(_:)`
+
+```swift
 public init(_ string: MString)
 ```
 

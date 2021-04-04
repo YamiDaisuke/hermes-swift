@@ -36,6 +36,13 @@ public struct Boolean: Object, Hashable {
         self = integer.value != 0 ? .true : .false
     }
 
+    /// Convinience cast an `MFloat` to one of the
+    /// `Bolean` constants. `0` matches to `false`
+    /// any other `MFloat` maps to `true`
+    public init(_ float: MFloat) {
+        self = float.value != 0 ? .true : .false
+    }
+
     /// Convinience cast an `MString` to one of the
     /// `Bolean` constants. `""` matches to `false`
     /// any other `MString` maps to `true`
@@ -67,6 +74,8 @@ public struct Boolean: Object, Hashable {
             return bool.value == rhs.value ? .true : .false
         case let int as Integer:
             return Boolean(int).value == rhs.value ? .true : .false
+        case let float as MFloat:
+            return Boolean(float).value == rhs.value ? .true : .false
         case let string as MString:
             return Boolean(string).value == rhs.value ? .true : .false
         case _ as Null:
