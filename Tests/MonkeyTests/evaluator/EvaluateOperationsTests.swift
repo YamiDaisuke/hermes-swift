@@ -90,7 +90,7 @@ class EvaluateOperationsTests: XCTestCase {
             ("80.0 == false", false),
             ("10.0 == true", true),
             ("0.0 == false", true),
-            ("0.0 == true", false),
+            ("0.0 == true", false)
         ]
 
         for test in tests {
@@ -169,7 +169,7 @@ class EvaluateOperationsTests: XCTestCase {
             (#""Hello " + true"#, "Hello true"),
             (#"10 + " Hello""#, "10 Hello"),
             (#"true + " Hello""#, "true Hello"),
-            (#"1.5 + " Hello""#, "1.5 Hello"),
+            (#"1.5 + " Hello""#, "1.5 Hello")
         ]
 
         for test in tests {

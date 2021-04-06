@@ -46,13 +46,7 @@ public struct MonkeyEvaluator: Evaluator {
                 try environment.create(declareStmt.name.value, value: value, type: type)
                 return Null.null
             case let assignStmt as AssignStatement:
-                let value = try eval(node: assignStmt.value, environment: environment)
-                let currentType = environment.get(assignStmt.name.value)?.type
-                guard currentType != nil && value?.type == currentType else {
-                    throw TypeError(value?.type ?? "null", expected: currentType ?? "null")
-                }
-                try environment.set(assignStmt.name.value, value: value)
-                return Null.null
+                return try evalAssignStatement(assignStmt, environment: environment)
             case let identifier as Identifier:
                 return try evalIdentifier(identifier, environment: environment)
             case let function as FunctionLiteral:
@@ -151,7 +145,7 @@ public struct MonkeyEvaluator: Evaluator {
         return result
     }
 
-    /// Evals an `Indentifer` node and returns the stored value from the current `Enviroment`
+    /// Evals an `Indentifer` node and returns the stored value from the current `Environment`
     /// or a `BuiltinFunction` if one exits with the `identifier`
     ///
     /// **Important:** `Environment` have precendence over `BuiltinFunction` in this way we can
@@ -174,6 +168,28 @@ public struct MonkeyEvaluator: Evaluator {
         throw ReferenceError(identifier.value, line: identifier.token.line, column: identifier.token.column)
     }
 
+    /// Evals an `AssignStatement` and stores the value in the environment
+    /// - Parameters:
+    ///   - statement: The statement to evaluate
+    ///   - environment: The current `Environment`
+    /// - Throws: `AssignConstantError` if the target is a cosntant value or  `TypeError` if the target if a different type
+    /// - Returns: A `null` value
+    static func evalAssignStatement(_ statement: AssignStatement, environment: Environment<Object>) throws -> Object? {
+        let value = try eval(node: statement.value, environment: environment)
+        let currentType = environment.get(statement.name.value)?.type
+        guard currentType != nil && value?.type == currentType else {
+            throw TypeError(value?.type ?? "null", expected: currentType ?? "null")
+        }
+        try environment.set(statement.name.value, value: value)
+        return Null.null
+    }
+
+    /// Evals a function call expression
+    /// - Parameters:
+    ///   - expression: The expression to evaluate
+    ///   - environment: The current `Environment`
+    /// - Throws: `InvalidCallExpression` if the callee is not a function
+    /// - Returns: The value returned by the function
     static func evalCallExpression(_ expression: CallExpression, environment: Environment<Object>) throws -> Object? {
         let function = try eval(node: expression.function, environment: environment)
         let args = try evalExpressions(expression.args, environment: environment)

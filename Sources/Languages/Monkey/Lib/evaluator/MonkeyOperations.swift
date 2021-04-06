@@ -64,33 +64,17 @@ enum MonkeyOperations {
     /// Evals operations in the form `<expression> <operator> <expression>`
     ///
     /// Supported operators:
-    /// - `<Integer> + <Integer>`
-    /// - `<Float> + <Integer>`
-    /// - `<Float> + <Float>`
+    /// - `<Integer|Float> + <Integer|Float>`
     /// - `<String> + <String>`
     /// - `<String> + <Object>`
     /// - `<Object> + <String>`
-    /// - `<Integer> - <Integer>`
-    /// - `<Float> - <Integer>`
-    /// - `<Float> - <Float>`
-    /// - `<Integer> * <Integer>`
-    /// - `<Float> * <Integer>`
-    /// - `<Float> * <Float>`
-    /// - `<Integer> / <Integer>`
-    /// - `<Float> / <Integer>`
-    /// - `<Float> / <Float>`
-    /// - `<Integer> > <Integer>`
-    /// - `<Float> > <Integer>`
-    /// - `<Float> > <Float>`
-    /// - `<Integer> < <Integer>`
-    /// - `<Float> < <Integer>`
-    /// - `<Float> < <Float>`
-    /// - `<Integer> >= <Integer>`
-    /// - `<Float> >= <Integer>`
-    /// - `<Float> >= <Float>`
-    /// - `<Integer> <= <Integer>`
-    /// - `<Float> <= <Integer>`
-    /// - `<Float> <= <Float>`
+    /// - `<Integer|Float> - <Integer|Float>`
+    /// - `<Integer|Float> * <Integer|Float>`
+    /// - `<Integer|Float> / <Integer|Float>`
+    /// - `<Integer|Float> > <Integer|Float>`
+    /// - `<Integer|Float> < <Integer|Float>`
+    /// - `<Integer|Float> >= <Integer|Float>`
+    /// - `<Integer|Float> <= <Integer|Float>`
     /// - `<Object> == <Object>`
     /// - `<Object> != <Object>`
     /// Equality and Inequality agaist `Boolean` values will use the other value thruty or falsy
@@ -360,24 +344,16 @@ enum MonkeyOperations {
     /// - Returns: `true` if both objects are the same, `Integer` and `Boolean` are
     ///            compared by value. Otherwise `false`
     static func applyEqualInfix(lhs: Object?, rhs: Object?) -> Boolean {
-        if let lhs = lhs as? Integer {
-            if let rhs = rhs as? Integer {
-                return lhs == rhs
-            }
-
-            if let rhs = rhs as? MFloat {
-                return lhs == rhs
-            }
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs == rhs
         }
 
-        if let rhs = rhs as? Integer {
-            if let lhs = lhs as? Integer {
-                return lhs == rhs
-            }
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
+            return lhs == rhs
+        }
 
-            if let lhs = lhs as? MFloat {
-                return lhs == rhs
-            }
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs == rhs
         }
 
         if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
