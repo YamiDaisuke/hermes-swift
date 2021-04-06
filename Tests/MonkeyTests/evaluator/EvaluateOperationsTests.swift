@@ -43,12 +43,16 @@ class EvaluateOperationsTests: XCTestCase {
             ("-0.10", -0.10),
             ("2.5 + 2.5", 5.0),
             ("2.5 + 2", 4.5),
+            ("2 + 2.5", 4.5),
             ("2.0 * 1.0", 2.0),
             ("2.0 * 1", 2.0),
+            ("2 * 1.0", 2.0),
             ("5.0 / 2.0", 2.5),
             ("5.0 / 2", 2.5),
+            ("5 / 2.0", 2.5),
             ("5.0 - 2.0", 3.0),
-            ("5.0 - 2", 3.0)
+            ("5.0 - 2", 3.0),
+            ("5 - 2.0", 3.0)
         ]
 
         for test in tests {
@@ -85,12 +89,7 @@ class EvaluateOperationsTests: XCTestCase {
             ("0 == false", true),
             ("0 == true", false),
             ("80 == false", false),
-            ("10 == true", true),
-
-            ("80.0 == false", false),
-            ("10.0 == true", true),
-            ("0.0 == false", true),
-            ("0.0 == true", false)
+            ("10 == true", true)
         ]
 
         for test in tests {
@@ -147,13 +146,20 @@ class EvaluateOperationsTests: XCTestCase {
 
             ("(1.0 == 2) == true", false),
             ("(1.0 == 1) == true", true),
+            ("(1 == 1.0) == true", true),
             ("(1.0 == 2.0) == true", false),
             ("(1.0 == 1.0) == true", true),
 
             ("(1.0 != 2) == true", true),
             ("(1.0 != 1) == true", false),
+            ("(1 != 1.0) == true", false),
             ("(1.0 != 2.0) == true", true),
-            ("(1.0 != 1.0) == true", false)
+            ("(1.0 != 1.0) == true", false),
+
+            ("80.0 == false", false),
+            ("10.0 == true", true),
+            ("0.0 == false", true),
+            ("0.0 == true", false)
         ]
 
         for test in tests {

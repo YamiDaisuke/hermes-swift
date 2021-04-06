@@ -9,7 +9,25 @@ import XCTest
 @testable import Hermes
 @testable import MonkeyLang
 
+// swiftlint:disable type_body_length
 class MonkeyCompilerTests: XCTestCase, CompilerTestsHelpers {
+    func testFloats() throws {
+        let tests: [CompilerTestCase] = [
+            (
+                "1.0; 2.0;",
+                [MFloat(1), MFloat(2)],
+                [
+                    Bytecode.make(.constant, 0),
+                    Bytecode.make(.pop),
+                    Bytecode.make(.constant, 1),
+                    Bytecode.make(.pop)
+                ]
+            )
+        ]
+
+        try runCompilerTests(tests)
+    }
+
     func testIntegerArithmetic() throws {
         let tests: [CompilerTestCase] = [
             (

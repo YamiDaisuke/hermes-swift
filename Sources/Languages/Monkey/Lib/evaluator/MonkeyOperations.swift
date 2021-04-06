@@ -4,8 +4,9 @@
 //
 //  Created by Franklin Cruz on 04-02-21.
 //
-
 import Foundation
+
+// swiftlint:disable file_length
 
 /// Abstract operation evaluation, this will help to reduce duplicated code
 /// when applying the same operations inside the Hermes VM
@@ -382,6 +383,34 @@ enum MonkeyOperations {
     /// - Returns: `false` if both objects are the same, `Integer` and `Boolean` are
     ///            compared by value. Otherwise `true`
     static func applyInequalityInfix(lhs: Object?, rhs: Object?) -> Boolean {
-        return !applyEqualInfix(lhs: lhs, rhs: rhs)
+        if let lhs = lhs as? Integer, let rhs = rhs as? Integer {
+            return lhs != rhs
+        }
+
+        if let lhs = lhs as? Integer, let rhs = rhs as? MFloat {
+            return lhs != rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? Integer {
+            return lhs != rhs
+        }
+
+        if let lhs = lhs as? MFloat, let rhs = rhs as? MFloat {
+            return lhs != rhs
+        }
+
+        if let lhs = lhs as? MString, let rhs = rhs as? MString {
+            return lhs != rhs
+        }
+
+        if let rhs = rhs as? Boolean {
+            return lhs != rhs
+        }
+
+        if let lhs = lhs as? Boolean {
+            return lhs != rhs
+        }
+
+        return .true
     }
 }

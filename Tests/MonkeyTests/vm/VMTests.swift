@@ -74,6 +74,29 @@ class VMTests: XCTestCase, VMTestsHelpers {
         try self.runVMTests(tests)
     }
 
+    func testFloatExpressions() throws {
+        let tests = [
+            VMTestCase("5.0", MFloat(5.0)),
+            VMTestCase("0.10", MFloat(0.10)),
+            VMTestCase("-5.5", MFloat(-5.5)),
+            VMTestCase("-0.10", MFloat(-0.10)),
+            VMTestCase("2.5 + 2.5", MFloat(5.0)),
+            VMTestCase("2.5 + 2", MFloat(4.5)),
+            VMTestCase("2 + 2.5", MFloat(4.5)),
+            VMTestCase("2.0 * 1.0", MFloat(2.0)),
+            VMTestCase("2.0 * 1", MFloat(2.0)),
+            VMTestCase("2 * 1.0", MFloat(2.0)),
+            VMTestCase("5.0 / 2.0", MFloat(2.5)),
+            VMTestCase("5.0 / 2", MFloat(2.5)),
+            VMTestCase("5 / 2.0", MFloat(2.5)),
+            VMTestCase("5.0 - 2.0", MFloat(3.0)),
+            VMTestCase("5.0 - 2", MFloat(3.0)),
+            VMTestCase("5 - 2.0", MFloat(3.0))
+        ]
+
+        try self.runVMTests(tests)
+    }
+
     func testStringExpressions() throws {
         let tests: [VMTestCase] = [
             VMTestCase("\"monkey\"", MString("monkey")),
