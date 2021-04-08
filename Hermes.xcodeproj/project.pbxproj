@@ -36,6 +36,7 @@
 /* Begin PBXBuildFile section */
 		F868050626190DC200725307 /* FloatLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F868050526190DC200725307 /* FloatLiteral.swift */; };
 		F86805182619125500725307 /* MFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86805172619125500725307 /* MFloat.swift */; };
+		F8B3D9CB261E7E520039945F /* MonkeyCErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */; };
 		OBJ_255 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Error.swift */; };
 		OBJ_256 /* Bytecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Bytecode.swift */; };
 		OBJ_257 /* OpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* OpCode.swift */; };
@@ -421,6 +422,7 @@
 /* Begin PBXFileReference section */
 		F868050526190DC200725307 /* FloatLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatLiteral.swift; sourceTree = "<group>"; };
 		F86805172619125500725307 /* MFloat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MFloat.swift; sourceTree = "<group>"; };
+		F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCErrorTests.swift; sourceTree = "<group>"; };
 		"Hermes::Hermes::Product" /* Hermes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Hermes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesREPL::Product" /* HermesREPL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HermesREPL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesTests::Product" /* HermesTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = HermesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -756,6 +758,7 @@
 				OBJ_107 /* MonkeyCFunctionsTests.swift */,
 				OBJ_108 /* MonkeyCScopesTests.swift */,
 				OBJ_109 /* MonkeyCompilerTests.swift */,
+				F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */,
 			);
 			path = compiler;
 			sourceTree = "<group>";
@@ -1658,6 +1661,7 @@
 				OBJ_399 /* Benchmarks.swift in Sources */,
 				OBJ_400 /* XCTestManifests.swift in Sources */,
 				OBJ_401 /* CompilerTestsHelper.swift in Sources */,
+				F8B3D9CB261E7E520039945F /* MonkeyCErrorTests.swift in Sources */,
 				OBJ_402 /* MonkeyCCollectionsTests.swift in Sources */,
 				OBJ_403 /* MonkeyCFunctionsTests.swift in Sources */,
 				OBJ_404 /* MonkeyCScopesTests.swift in Sources */,

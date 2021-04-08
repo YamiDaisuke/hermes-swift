@@ -22,12 +22,17 @@ extension CompilerTestsHelpers {
     }
 
     func runCompilerTest(_ test: CompilerTestCase, file: StaticString = #file, line: UInt = #line) throws {
-        let program = try parse(test.input)
+        let bytecode = try compile(test.input)
+        MKAssertInstructions(bytecode.instructions, test.instructions)
+        MKAssertConstants(bytecode.constants, test.constants)
+    }
+
+    func compile(_ input: String, file: StaticString = #file, line: UInt = #line) throws -> BytecodeProgram {
+        let program = try parse(input)
         var compiler = MonkeyC()
         try compiler.compile(program)
         let bytecode = compiler.bytecode
-        MKAssertInstructions(bytecode.instructions, test.instructions)
-        MKAssertConstants(bytecode.constants, test.constants)
+        return bytecode
     }
 
     func parse(_ input: String, file: StaticString = #file, line: UInt = #line) throws -> Program {

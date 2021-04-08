@@ -50,73 +50,67 @@ public struct MonkeyC: Compiler {
     }
 
     public mutating func compile(_ node: Node) throws {
-        switch node {
-        case let expresion as ExpressionStatement:
-            try self.compile(expresion.expression)
-            self.emit(.pop)
-        case let prefix as PrefixExpression:
-            let operatorCode = try opCode(forPrefixOperator: prefix.operatorSymbol)
-            try self.compile(prefix.rhs)
-            self.emit(operatorCode)
-        case let infix as InfixExpression:
-            try self.handleInfixExpression(infix)
-        case let condition as IfExpression:
-            try self.handleIfExpression(condition)
-        case let block as BlockStatement:
-            for stmt in block.statements {
-                try self.compile(stmt)
+        do {
+            switch node {
+            case let expresion as ExpressionStatement:
+                try self.compile(expresion.expression)
+                self.emit(.pop)
+            case let prefix as PrefixExpression:
+                let operatorCode = try opCode(forPrefixOperator: prefix.operatorSymbol)
+                try self.compile(prefix.rhs)
+                self.emit(operatorCode)
+            case let infix as InfixExpression:
+                try self.handleInfixExpression(infix)
+            case let condition as IfExpression:
+                try self.handleIfExpression(condition)
+            case let block as BlockStatement:
+                for stmt in block.statements {
+                    try self.compile(stmt)
+                }
+            case let integer as IntegerLiteral:
+                let value = Integer(integer.value)
+                self.emit(.constant, self.addConstant(value))
+            case let float as FloatLiteral:
+                let value = MFloat(float.value)
+                self.emit(.constant, self.addConstant(value))
+            case let string as StringLiteral:
+                let value = MString(string.value)
+                self.emit(.constant, self.addConstant(value))
+            case let boolean as BooleanLiteral:
+                self.emit(boolean.value ? .true : .false)
+            case let array as ArrayLiteral:
+                try self.handleArrayLiteral(array)
+            case let hash as HashLiteral:
+                try self.handleHashLiteral(hash)
+            case let index as IndexExpression:
+                try compile(index.lhs)
+                try compile(index.index)
+
+                self.emit(.index)
+            case let declareStatement as DeclareStatement:
+                try self.handleDeclareStatement(declareStatement)
+            case let assignStatement as AssignStatement:
+                try handleAssignStatement(assignStatement)
+            case let identifier as Identifier:
+                let symbol = try self.symbolTable.resolve(identifier.value)
+                loadSymbol(symbol)
+            case let function as FunctionLiteral:
+                try self.handleFunctionLiterals(function)
+            case let callExpression as CallExpression:
+                try self.handleCallExpression(callExpression)
+            case let returnStmt as ReturnStatement:
+                try self.compile(returnStmt.value)
+                self.emit(.returnVal)
+            default:
+                break
             }
-        case let integer as IntegerLiteral:
-            let value = Integer(integer.value)
-            self.emit(.constant, self.addConstant(value))
-        case let float as FloatLiteral:
-            let value = MFloat(float.value)
-            self.emit(.constant, self.addConstant(value))
-        case let string as StringLiteral:
-            let value = MString(string.value)
-            self.emit(.constant, self.addConstant(value))
-        case let boolean as BooleanLiteral:
-            self.emit(boolean.value ? .true : .false)
-        case let array as ArrayLiteral:
-            for element in array.elements {
-                try self.compile(element)
-            }
-
-            self.emit(.array, Int32(array.elements.count))
-        case let hash as HashLiteral:
-            let pairs = hash.pairs.sorted { $0.key.description < $1.key.description }
-
-            for pair in pairs {
-                try self.compile(pair.key)
-                try self.compile(pair.value)
-            }
-
-            self.emit(.hash, Int32(pairs.count * 2))
-        case let index as IndexExpression:
-            try compile(index.lhs)
-            try compile(index.index)
-
-            self.emit(.index)
-        case let declareStatement as DeclareStatement:
-            let type: VariableType = declareStatement.token.type == .let ? .let : .var
-            let symbol = try symbolTable.define(declareStatement.name.value, type: type)
-            try compile(declareStatement.value)
-            let operation: OpCodes = symbol.scope == .global ? .setGlobal : .setLocal
-            self.emit(operation, Int32(symbol.index))
-        case let assignStatement as AssignStatement:
-            try handleAssignStatement(assignStatement)
-        case let identifier as Identifier:
-            let symbol = try self.symbolTable.resolve(identifier.value)
-            loadSymbol(symbol)
-        case let function as FunctionLiteral:
-            try self.handleFunctionLiterals(function)
-        case let callExpression as CallExpression:
-            try self.handleCallExpression(callExpression)
-        case let returnStmt as ReturnStatement:
-            try self.compile(returnStmt.value)
-            self.emit(.returnVal)
-        default:
-            break
+        } catch var error as CompilerError {
+            error.line = error.line ?? node.token.line
+            error.column = error.column ?? node.token.column
+            error.file = error.file ?? node.token.file
+            throw error
+        } catch {
+            throw error
         }
     }
 
@@ -278,6 +272,36 @@ public struct MonkeyC: Compiler {
         }
 
         self.emit(.call, Int32(expression.args.count))
+    }
+
+    /// Turns hash literals into VM operations
+    mutating func handleHashLiteral(_ literal: HashLiteral) throws {
+        let pairs = literal.pairs.sorted { $0.key.description < $1.key.description }
+
+        for pair in pairs {
+            try self.compile(pair.key)
+            try self.compile(pair.value)
+        }
+
+        self.emit(.hash, Int32(pairs.count * 2))
+    }
+
+    /// Turns array literals into VM operations
+    mutating func handleArrayLiteral(_ literal: ArrayLiteral) throws {
+        for element in literal.elements {
+            try self.compile(element)
+        }
+
+        self.emit(.array, Int32(literal.elements.count))
+    }
+
+    /// Turns variable or constant declaration into VM operations
+    mutating func handleDeclareStatement(_ statement: DeclareStatement) throws {
+        let type: VariableType = statement.token.type == .let ? .let : .var
+        let symbol = try symbolTable.define(statement.name.value, type: type)
+        try compile(statement.value)
+        let operation: OpCodes = symbol.scope == .global ? .setGlobal : .setLocal
+        self.emit(operation, Int32(symbol.index))
     }
 
     /// Loads the right operation for symbol load
