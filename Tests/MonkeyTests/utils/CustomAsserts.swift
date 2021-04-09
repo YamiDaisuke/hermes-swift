@@ -11,7 +11,7 @@ import XCTest
 
 // MARK: - Assert Evaluator
 
-func MKAssertInteger(object: Object?, expected: Int, file: StaticString = #file, line: UInt = #line) {
+func MKAssertInteger(object: Object?, expected: Int32, file: StaticString = #file, line: UInt = #line) {
     let integer = object as? Integer
     XCTAssertNotNil(integer, file: file, line: line)
     XCTAssertEqual(integer?.value, expected, file: file, line: line)
@@ -46,7 +46,7 @@ func MKAssertInfixExpression(
     XCTAssertEqual(infix?.rhs.literal, rhs, file: file, line: line)
 }
 
-func MKAssertIntegerLiteral(expression: Expression?, expected: Int, file: StaticString = #file, line: UInt = #line) {
+func MKAssertIntegerLiteral(expression: Expression?, expected: Int32, file: StaticString = #file, line: UInt = #line) {
     let integer = expression as? IntegerLiteral
     XCTAssertNotNil(integer, file: file, line: line)
     XCTAssertEqual(integer?.value, expected, file: file, line: line)

@@ -10,11 +10,16 @@ import Foundation
 /// An Integer value in Monkey
 public struct Integer: Object, Hashable {
     public var type: ObjectType { "Integer" }
-    public var value: Int
+    public var value: Int32
 
-    public init(_ value: Int) {
+    public init(_ value: Int32) {
         self.value = value
     }
+
+    public init(_ value: Int) {
+        self.value = Int32(value)
+    }
+
 
     public var description: String {
         value.description

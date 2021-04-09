@@ -50,10 +50,10 @@ public struct MArray: Object {
                 return Null.null
             }
 
-            return elements[index.value]
+            return elements[Int(index.value)]
         }
         set(newValue) {
-            self.elements[index.value] = newValue
+            self.elements[Int(index.value)] = newValue
         }
     }
 }

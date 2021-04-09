@@ -28,8 +28,8 @@ class MonkeyParserExpressionTests: XCTestCase {
 
     func testPrefixExpressions() throws {
         let tests: [(input: String, operator: String, value: Any)] = [
-            (input: "!5;", operator: "!", value: 5),
-            (input: "-15;", operator: "-", value: 15),
+            (input: "!5;", operator: "!", value: Int32(5)),
+            (input: "-15;", operator: "-", value: Int32(15)),
             (input: "!true;", operator: "!", value: true),
             (input: "!false;", operator: "!", value: false)
         ]
@@ -48,7 +48,7 @@ class MonkeyParserExpressionTests: XCTestCase {
             XCTAssertNotNil(prefix)
             XCTAssertEqual(prefix?.operatorSymbol, test.operator)
 
-            if let intValue = test.value as? Int {
+            if let intValue = test.value as? Int32 {
                 MKAssertIntegerLiteral(expression: prefix?.rhs, expected: intValue)
             }
 
@@ -87,11 +87,11 @@ class MonkeyParserExpressionTests: XCTestCase {
             XCTAssertNotNil(infix)
             XCTAssertEqual(infix?.operatorSymbol, test.operator)
 
-            if let intValue = test.lhs as? Int {
+            if let intValue = test.lhs as? Int32 {
                 MKAssertIntegerLiteral(expression: infix?.lhs, expected: intValue)
             }
 
-            if let intValue = test.rhs as? Int {
+            if let intValue = test.rhs as? Int32 {
                 MKAssertIntegerLiteral(expression: infix?.rhs, expected: intValue)
             }
 

@@ -11,7 +11,7 @@ import XCTest
 
 class EvaluateOperationsTests: XCTestCase {
     func testEvalInteger() throws {
-        let tests = [
+        let tests: [(String, Int32)] = [
             ("5", 5),
             ("10", 10),
             ("-5", -5),

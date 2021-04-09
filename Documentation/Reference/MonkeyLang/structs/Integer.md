@@ -18,7 +18,7 @@ public var type: ObjectType
 ### `value`
 
 ```swift
-public var value: Int
+public var value: Int32
 ```
 
 ### `description`
@@ -28,6 +28,12 @@ public var description: String
 ```
 
 ## Methods
+### `init(_:)`
+
+```swift
+public init(_ value: Int32)
+```
+
 ### `init(_:)`
 
 ```swift

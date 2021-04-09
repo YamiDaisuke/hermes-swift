@@ -39,13 +39,13 @@ class MonkeyEvaluatorTests: XCTestCase {
 
     func testIfElseExpression() throws {
         let tests = [
-            ("if (true) { 10 }", 10),
+            ("if (true) { 10 }", Int32(10)),
             ("if (false) { 10 }", nil),
-            ("if (1) { 10 }", 10),
-            ("if (1 < 2) { 10 }", 10),
+            ("if (1) { 10 }", Int32(10)),
+            ("if (1 < 2) { 10 }", Int32(10)),
             ("if (1 > 2) { 10 }", nil),
-            ("if (1 > 2) { 10 } else { 20 }", 20),
-            ("if (1 < 2) { 10 } else { 20 }", 10)
+            ("if (1 > 2) { 10 } else { 20 }", Int32(20)),
+            ("if (1 < 2) { 10 } else { 20 }", Int32(10))
         ]
 
         for test in tests {
@@ -60,7 +60,7 @@ class MonkeyEvaluatorTests: XCTestCase {
     }
 
     func testReturnStatement() throws {
-        let tests = [
+        let tests: [(String, Int32)] = [
             ("return 10;", 10),
             ("return 10; 9;", 10),
             ("return 2 * 5; 9;", 10),
@@ -100,7 +100,7 @@ class MonkeyEvaluatorTests: XCTestCase {
     }
 
     func testDeclareStatement() throws {
-        let tests = [
+        let tests: [(String, Int32?)] = [
             ("let a = 5; a;", 5),
             ("let a = 5 * 5; a;", 25),
             ("let a = 5; let b = a; b;", 5),
@@ -131,7 +131,7 @@ class MonkeyEvaluatorTests: XCTestCase {
     }
 
     func testAssignStatement() throws {
-        let tests = [
+        let tests: [(String, Int32?)] = [
             ("var a = 5; a = 10; a;", 10),
             ("var a = 10; a = 5 * 5; a;", 25),
             ("var a = 5; let b = 10; a = b; a;", 10),
@@ -174,7 +174,7 @@ class MonkeyEvaluatorTests: XCTestCase {
     }
 
     func testFunctionCall() throws {
-        let tests = [
+        let tests: [(String, Int32)] = [
             ("let identity = fn(x) { x; }; identity(5);", 5),
             ("let identity = fn(x) { return x; }; identity(5);", 5),
             ("let double = fn(x) { x * 2; }; double(5);", 10),
@@ -215,7 +215,7 @@ class MonkeyEvaluatorTests: XCTestCase {
     }
 
     func testArrayIndexExpression() throws {
-        let tests = [
+        let tests: [(String, Int32?)] = [
             ("[1, 2, 3][0]", 1),
             ("[1, 2, 3][1]", 2),
             ("[1, 2, 3][2]", 3),
@@ -239,7 +239,7 @@ class MonkeyEvaluatorTests: XCTestCase {
     }
 
     func testHashIndexExpressions() throws {
-        let tests = [
+        let tests: [(String, Int32?)] = [
             (#"{"foo": 5}["foo"]"#, 5),
             (#"{"foo": 5}["bar"]"#, nil),
             (#"let key = "foo"; {"foo": 5}[key]"#, 5),
@@ -275,7 +275,7 @@ class MonkeyEvaluatorTests: XCTestCase {
         let hash = evaluated as? Hash
         XCTAssertNotNil(hash)
 
-        let expected: [(Any, Int, String)] = [
+        let expected: [(Any, Int32, String)] = [
             ("one", 1, "string"),
             ("two", 2, "string"),
             ("three", 3, "string"),

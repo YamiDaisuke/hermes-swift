@@ -28,11 +28,11 @@ struct InvalidIntegerLiteral: ParseError {
 struct IntegerLiteral: Expression {
     var token: Token
     // Should we use a fixed bytes integer instead?
-    var value: Int
+    var value: Int32
 
     init(token: Token) throws {
         self.token = token
-        guard let intValue = Int(token.literal) else {
+        guard let intValue = Int32(token.literal) else {
             throw InvalidIntegerLiteral(literal: token.literal, line: token.line, column: token.column)
         }
         self.value = intValue

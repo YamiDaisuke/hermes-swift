@@ -37,6 +37,9 @@
 		F868050626190DC200725307 /* FloatLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F868050526190DC200725307 /* FloatLiteral.swift */; };
 		F86805182619125500725307 /* MFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86805172619125500725307 /* MFloat.swift */; };
 		F8B3D9CB261E7E520039945F /* MonkeyCErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */; };
+		F8D3A5DF2620F9C600FE84FD /* Compilable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A5DE2620F9C600FE84FD /* Compilable.swift */; };
+		F8D3A5FD2621020300FE84FD /* CompilableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A5FC2621020300FE84FD /* CompilableTests.swift */; };
+		F8D3A62A2621027200FE84FD /* TypeCompilation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A60C2621026C00FE84FD /* TypeCompilation.swift */; };
 		OBJ_255 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Error.swift */; };
 		OBJ_256 /* Bytecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Bytecode.swift */; };
 		OBJ_257 /* OpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* OpCode.swift */; };
@@ -55,7 +58,7 @@
 		OBJ_270 /* Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_31 /* Frame.swift */; };
 		OBJ_271 /* VM.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* VM.swift */; };
 		OBJ_272 /* VMErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* VMErrors.swift */; };
-		OBJ_273 /* VMFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* VMFunctions.swift */; };
+		OBJ_273 /* VMTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* VMTypes.swift */; };
 		OBJ_274 /* VMOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_35 /* VMOperations.swift */; };
 		OBJ_281 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_295 /* KeyReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_37 /* KeyReader.swift */; };
@@ -423,6 +426,9 @@
 		F868050526190DC200725307 /* FloatLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatLiteral.swift; sourceTree = "<group>"; };
 		F86805172619125500725307 /* MFloat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MFloat.swift; sourceTree = "<group>"; };
 		F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCErrorTests.swift; sourceTree = "<group>"; };
+		F8D3A5DE2620F9C600FE84FD /* Compilable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compilable.swift; sourceTree = "<group>"; };
+		F8D3A5FC2621020300FE84FD /* CompilableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilableTests.swift; sourceTree = "<group>"; };
+		F8D3A60C2621026C00FE84FD /* TypeCompilation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeCompilation.swift; sourceTree = "<group>"; };
 		"Hermes::Hermes::Product" /* Hermes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Hermes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesREPL::Product" /* HermesREPL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HermesREPL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesTests::Product" /* HermesTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = HermesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -569,7 +575,7 @@
 		OBJ_31 /* Frame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Frame.swift; sourceTree = "<group>"; };
 		OBJ_32 /* VM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VM.swift; sourceTree = "<group>"; };
 		OBJ_33 /* VMErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMErrors.swift; sourceTree = "<group>"; };
-		OBJ_34 /* VMFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMFunctions.swift; sourceTree = "<group>"; };
+		OBJ_34 /* VMTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMTypes.swift; sourceTree = "<group>"; };
 		OBJ_35 /* VMOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VMOperations.swift; sourceTree = "<group>"; };
 		OBJ_37 /* KeyReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyReader.swift; sourceTree = "<group>"; };
 		OBJ_38 /* Repl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repl.swift; sourceTree = "<group>"; };
@@ -759,6 +765,7 @@
 				OBJ_108 /* MonkeyCScopesTests.swift */,
 				OBJ_109 /* MonkeyCompilerTests.swift */,
 				F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */,
+				F8D3A5FC2621020300FE84FD /* CompilableTests.swift */,
 			);
 			path = compiler;
 			sourceTree = "<group>";
@@ -818,6 +825,7 @@
 			children = (
 				OBJ_14 /* Compiler.swift */,
 				OBJ_15 /* SymbolTable.swift */,
+				F8D3A5DE2620F9C600FE84FD /* Compilable.swift */,
 			);
 			path = compiler;
 			sourceTree = "<group>";
@@ -1051,7 +1059,7 @@
 				OBJ_31 /* Frame.swift */,
 				OBJ_32 /* VM.swift */,
 				OBJ_33 /* VMErrors.swift */,
-				OBJ_34 /* VMFunctions.swift */,
+				OBJ_34 /* VMTypes.swift */,
 				OBJ_35 /* VMOperations.swift */,
 			);
 			path = vm;
@@ -1096,6 +1104,7 @@
 			children = (
 				OBJ_45 /* MonkeyCompiler.swift */,
 				OBJ_46 /* MonkeyVMOperations.swift */,
+				F8D3A60C2621026C00FE84FD /* TypeCompilation.swift */,
 			);
 			path = compiler;
 			sourceTree = "<group>";
@@ -1557,9 +1566,10 @@
 				OBJ_268 /* Program.swift in Sources */,
 				OBJ_269 /* StreamReader.swift in Sources */,
 				OBJ_270 /* Frame.swift in Sources */,
+				F8D3A5DF2620F9C600FE84FD /* Compilable.swift in Sources */,
 				OBJ_271 /* VM.swift in Sources */,
 				OBJ_272 /* VMErrors.swift in Sources */,
-				OBJ_273 /* VMFunctions.swift in Sources */,
+				OBJ_273 /* VMTypes.swift in Sources */,
 				OBJ_274 /* VMOperations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1589,6 +1599,7 @@
 				OBJ_315 /* LexerTests.swift in Sources */,
 				OBJ_316 /* ReadFileTests.swift in Sources */,
 				OBJ_317 /* StringExtensionsTests.swift in Sources */,
+				F8D3A5FD2621020300FE84FD /* CompilableTests.swift in Sources */,
 				OBJ_318 /* XCTestManifests.swift in Sources */,
 				OBJ_319 /* BytecodeTests.swift in Sources */,
 				OBJ_320 /* SymbolTableTests.swift in Sources */,
@@ -1646,6 +1657,7 @@
 				OBJ_384 /* Identifier.swift in Sources */,
 				OBJ_385 /* IfExpression.swift in Sources */,
 				OBJ_386 /* IndexExpression.swift in Sources */,
+				F8D3A62A2621027200FE84FD /* TypeCompilation.swift in Sources */,
 				OBJ_387 /* InfixExpression.swift in Sources */,
 				OBJ_388 /* IntegerLiteral.swift in Sources */,
 				OBJ_389 /* PrefixExpression.swift in Sources */,
