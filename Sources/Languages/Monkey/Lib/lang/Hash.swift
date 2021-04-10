@@ -9,7 +9,7 @@ import Foundation
 
 /// Monkey Language `Hash` or Dictionary object
 struct Hash: Object {
-    var type: ObjectType { "Hash" }
+    static var type: ObjectType { "Hash" }
 
     var pairs: [AnyHashable: Object]
 
@@ -59,7 +59,7 @@ struct Hash: Object {
         case let bool as Boolean:
             value = pairs[bool]
         default:
-            throw InvalidHashKey(key.type)
+            throw InvalidHashKey(Swift.type(of: key).type)
         }
 
         return value ?? Null.null
@@ -79,7 +79,7 @@ struct Hash: Object {
         case let bool as Boolean:
             pairs[bool] = value
         default:
-            throw InvalidHashKey(key.type)
+            throw InvalidHashKey(Swift.type(of: key).type)
         }
     }
 }

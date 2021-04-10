@@ -9,12 +9,6 @@ public struct CompiledFunction: Object, VMFunctionDefinition
 Same as `Function` but represented with compiled bytecode instructions
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `instructions`
 
 ```swift

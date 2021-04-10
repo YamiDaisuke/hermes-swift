@@ -11,7 +11,7 @@ import Foundation
 /// to callit `MArray` to avoid colissions with swift
 /// `Array`
 public struct MArray: Object {
-    public var type: ObjectType { "Array" }
+    public static var type: ObjectType { "Array" }
     public var elements: [Object]
 
     /// Compare agaist other object

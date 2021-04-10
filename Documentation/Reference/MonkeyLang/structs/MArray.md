@@ -11,12 +11,6 @@ to callit `MArray` to avoid colissions with swift
 `Array`
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `elements`
 
 ```swift

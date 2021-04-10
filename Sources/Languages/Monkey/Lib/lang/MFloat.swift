@@ -9,7 +9,7 @@ import Foundation
 
 /// An Float value in Monkey
 public struct MFloat: Object, Hashable {
-    public var type: ObjectType { "Float" }
+    public static var type: ObjectType { "Float" }
     public var value: Float64
 
     public init(_ value: Float64) {

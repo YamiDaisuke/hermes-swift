@@ -9,12 +9,6 @@ public struct Boolean: Object, Hashable
 A Boolean value in Monkey
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `value`
 
 ```swift

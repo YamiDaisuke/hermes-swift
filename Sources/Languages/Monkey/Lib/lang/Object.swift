@@ -14,7 +14,7 @@ public typealias ObjectType = String
 /// think of this like the `Any` type of swift or `object`
 /// type in C#
 public protocol Object: VMBaseType {
-    var type: ObjectType { get }
+    static var type: ObjectType { get }
 
     /// Compare agaist other object. Unlike `==` and `!=` this method requires
     /// both values to be of the same type

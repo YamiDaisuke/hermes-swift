@@ -14,7 +14,8 @@ class CompilableTests: XCTestCase {
         let tests: [Int32] = [
             64,
             255,
-            -255
+            -255,
+            65536
         ]
 
         for test in tests {
@@ -23,9 +24,25 @@ class CompilableTests: XCTestCase {
             let integer = Integer(test)
             let bytes = integer.compile()
 
-            XCTAssertEqual(expectedType.hexa, bytes[0..<4].hexa)
-            XCTAssertEqual(UInt32(32).hexa, bytes[4..<8].hexa)
-            XCTAssertEqual(test, bytes.readInt(bytes: 4, startIndex: 8))
+            XCTAssertEqual(expectedType.hexa, bytes[0..<1].hexa)
+            XCTAssertEqual(test, bytes.readInt(bytes: 4, startIndex: 1))
+        }
+    }
+
+    func testIntDecompile() throws {
+        let integerTypeBytes = withUnsafeBytes(of: MonkeyTypes.integer.rawValue.bigEndian, [Byte].init)
+
+        let tests: [([Byte], Int32)] = [
+            (integerTypeBytes + [0, 0, 0, 64], 64),
+            (integerTypeBytes + [0, 0, 0, 255], 255),
+            // two's complement
+            (integerTypeBytes + [255, 255, 255, 1], -255),
+            (integerTypeBytes + [0, 1, 0, 0], 65536)
+        ]
+
+        for test in tests {
+            let integer = try Integer(fromBytes: test.0)
+            XCTAssertEqual(test.1, integer.value)
         }
     }
 }

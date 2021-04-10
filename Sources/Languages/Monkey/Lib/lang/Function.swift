@@ -13,7 +13,7 @@ import Hermes
 /// at any point by having an identifier pointing to it.
 /// Or by explicity calling it at the moment of declaration
 public struct Function: Object {
-    public var type: ObjectType { "function" }
+    public static var type: ObjectType { "function" }
     public var parameters: [String]
     var body: BlockStatement
     /// This will be a reference to the function outer environment
@@ -31,7 +31,7 @@ public struct Function: Object {
 
 /// Same as `Function` but represented with compiled bytecode instructions
 public struct CompiledFunction: Object, VMFunctionDefinition {
-    public var type: ObjectType { "compiledFunction" }
+    public static var type: ObjectType { "compiledFunction" }
 
     public var instructions: Instructions
     public var localsCount: Int

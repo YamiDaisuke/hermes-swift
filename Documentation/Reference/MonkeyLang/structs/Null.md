@@ -9,12 +9,6 @@ public struct Null: Object
 Represents an empty value
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `description`
 
 ```swift

@@ -9,12 +9,6 @@ public struct MFloat: Object, Hashable
 An Float value in Monkey
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `value`
 
 ```swift

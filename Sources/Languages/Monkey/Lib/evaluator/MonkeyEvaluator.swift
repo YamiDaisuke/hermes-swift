@@ -175,11 +175,17 @@ public struct MonkeyEvaluator: Evaluator {
     /// - Throws: `AssignConstantError` if the target is a cosntant value or  `TypeError` if the target if a different type
     /// - Returns: A `null` value
     static func evalAssignStatement(_ statement: AssignStatement, environment: Environment<Object>) throws -> Object? {
-        let value = try eval(node: statement.value, environment: environment)
-        let currentType = environment.get(statement.name.value)?.type
-        guard currentType != nil && value?.type == currentType else {
-            throw TypeError(value?.type ?? "null", expected: currentType ?? "null")
+        let value = try eval(node: statement.value, environment: environment) ?? Null.null
+        guard let currentValue = environment.get(statement.name.value) else {
+            throw ReferenceError(statement.name.value)
         }
+
+        let currentType = type(of: currentValue).type
+        let newType = type(of: value).type
+        guard newType == currentType else {
+            throw TypeError(newType, expected: currentType)
+        }
+
         try environment.set(statement.name.value, value: value)
         return Null.null
     }
@@ -202,7 +208,7 @@ public struct MonkeyEvaluator: Evaluator {
             return try applyBuiltinFunction(function, args: args)
         }
 
-        throw InvalidCallExpression(function?.type ?? "Unknown")
+        throw InvalidCallExpression(type(of: function ?? Null.null).type)
     }
 
     /// Applies a `Function` that's being called
@@ -266,7 +272,7 @@ public struct MonkeyEvaluator: Evaluator {
         for statement in statement.statements {
             result = try eval(node: statement, environment: environment)
 
-            if result?.type == "return" {
+            if type(of: result ?? Null.null).type == "return" {
                 return result
             }
         }

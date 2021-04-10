@@ -11,12 +11,6 @@ to callit `MString` to avoid colissions with swift
 `String`
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `value`
 
 ```swift

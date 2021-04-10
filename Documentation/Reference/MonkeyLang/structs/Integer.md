@@ -9,12 +9,6 @@ public struct Integer: Object, Hashable
 An Integer value in Monkey
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `value`
 
 ```swift

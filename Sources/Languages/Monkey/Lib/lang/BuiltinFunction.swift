@@ -15,7 +15,7 @@ public struct BuiltinFunction: Object {
     /// each function is responsible to validate the number and specific parameter
     /// types. The functions must return either nothing or another `Object`
     public typealias MonkeyFunction = ([Object]) throws -> Object?
-    public var type: ObjectType { "Builtin" }
+    public static var type: ObjectType { "Builtin" }
 
     var name: String
     var function: MonkeyFunction
@@ -55,7 +55,7 @@ extension BuiltinFunction {
             return Integer(array.elements.count)
         }
 
-        throw InvalidArgumentType("String or Array", got: args.first?.type ?? "null")
+        throw InvalidArgumentType("String or Array", got: Swift.type(of: args.first ?? Null.null).type)
     }
 
     /// `first` function expects a single `MArray` parameter and will return
@@ -66,7 +66,7 @@ extension BuiltinFunction {
         }
 
         guard let array = args.first as? MArray else {
-            throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
+            throw InvalidArgumentType("Array", got: Swift.type(of: args.first ?? Null.null).type)
         }
 
         return array[Integer(0)]
@@ -81,7 +81,7 @@ extension BuiltinFunction {
         }
 
         guard let array = args.first as? MArray else {
-            throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
+            throw InvalidArgumentType("Array", got: Swift.type(of: args.first ?? Null.null).type)
         }
 
         return array[Integer(array.elements.count - 1)]
@@ -97,7 +97,7 @@ extension BuiltinFunction {
         }
 
         guard let array = args.first as? MArray else {
-            throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
+            throw InvalidArgumentType("Array", got: Swift.type(of: args.first ?? Null.null).type)
         }
 
         guard !array.elements.isEmpty else {
@@ -120,7 +120,7 @@ extension BuiltinFunction {
         }
 
         guard let array = args.first as? MArray else {
-            throw InvalidArgumentType("Array", got: args.first?.type ?? "null")
+            throw InvalidArgumentType("Array", got: Swift.type(of: args.first ?? Null.null).type)
         }
 
         var newElements = array.elements

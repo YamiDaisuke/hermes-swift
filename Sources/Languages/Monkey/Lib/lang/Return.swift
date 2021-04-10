@@ -9,7 +9,7 @@ import Foundation
 
 /// Wrapper tto represent `return`, control transfer statement
 public struct Return: Object {
-    public var type: ObjectType { "return" }
+    public static var type: ObjectType { "return" }
     /// The returned value
     public var value: Object?
 

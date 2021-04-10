@@ -12,7 +12,7 @@ import Hermes
 /// to callit `MString` to avoid colissions with swift
 /// `String`
 public struct MString: Object, Hashable {
-    public var type: ObjectType { "String" }
+    public static var type: ObjectType { "String" }
     public var value: String
 
     public init(_ value: String) {

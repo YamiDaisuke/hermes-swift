@@ -12,12 +12,6 @@ at any point by having an identifier pointing to it.
 Or by explicity calling it at the moment of declaration
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `parameters`
 
 ```swift

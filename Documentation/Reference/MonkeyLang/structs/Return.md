@@ -9,12 +9,6 @@ public struct Return: Object
 Wrapper tto represent `return`, control transfer statement
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `value`
 
 ```swift

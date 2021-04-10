@@ -49,7 +49,8 @@ struct InvalidPrefixExpression: EvaluatorError {
     var file: String?
 
     init(_ operatorSymbol: String, rhs: Object?, line: Int? = nil, column: Int? = nil, file: String? = nil) {
-        self.message = "Can't apply operator \"\(operatorSymbol)\" to \(rhs?.type ?? "null")"
+        let typeName = type(of: rhs ?? Null.null).type
+        self.message = "Can't apply operator \"\(operatorSymbol)\" to \(typeName)"
         self.line = line
         self.column = column
         self.file = file
@@ -63,7 +64,9 @@ struct InvalidInfixExpression: EvaluatorError, CompilerError {
     var file: String?
 
     init(_ operatorSymbol: String, lhs: Object?, rhs: Object?, line: Int? = nil, column: Int? = nil, file: String? = nil) {
-        self.message = "Can't apply operator \"\(operatorSymbol)\" to \(lhs?.type ?? "null") and \(rhs?.type ?? "null")"
+        let lhsType = type(of: lhs ?? Null.null).type
+        let rhsType = type(of: rhs ?? Null.null).type
+        self.message = "Can't apply operator \"\(operatorSymbol)\" to \(lhsType) and \(rhsType)"
         self.line = line
         self.column = column
         self.file = file

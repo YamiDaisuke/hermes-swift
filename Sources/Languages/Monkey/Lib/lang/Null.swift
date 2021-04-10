@@ -12,7 +12,7 @@ public struct Null: Object {
     /// Convinience constant, there is no need to have a null instance
     /// for each expression that results with null
     public static let null = Null()
-    public var type: ObjectType { "null" }
+    public static var type: ObjectType { "null" }
 
     private init() { }
 

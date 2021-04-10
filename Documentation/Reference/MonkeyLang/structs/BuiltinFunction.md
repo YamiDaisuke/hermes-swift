@@ -10,12 +10,6 @@ This is a wrapper for Monkey Language builtin functions
 such as `len`
 
 ## Properties
-### `type`
-
-```swift
-public var type: ObjectType
-```
-
 ### `description`
 
 ```swift

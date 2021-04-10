@@ -30,6 +30,7 @@ extension CompilableTests {
     // to regenerate.
     static let __allTests__CompilableTests = [
         ("testIntCompile", testIntCompile),
+        ("testIntDecompile", testIntDecompile),
     ]
 }
 

@@ -14,7 +14,7 @@ public struct Boolean: Object, Hashable {
     public static let `true` = Boolean(value: true)
     public static let `false` = Boolean(value: false)
 
-    public var type: ObjectType { "Boolean" }
+    public static var type: ObjectType { "Boolean" }
     public var value: Bool
 
     /// Private init so we only have two instances of `Boolean`
