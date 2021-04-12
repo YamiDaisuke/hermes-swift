@@ -31,8 +31,11 @@ extension CompilableTests {
     static let __allTests__CompilableTests = [
         ("testBooleanCompile", testBooleanCompile),
         ("testBooleanDecompile", testBooleanDecompile),
+        ("testDecompileTypeError", testDecompileTypeError),
         ("testIntCompile", testIntCompile),
         ("testIntDecompile", testIntDecompile),
+        ("testMStringCompile", testMStringCompile),
+        ("testMStringDecompile", testMStringDecompile),
         ("testNullCompile", testNullCompile),
         ("testNullDecompile", testNullDecompile),
     ]

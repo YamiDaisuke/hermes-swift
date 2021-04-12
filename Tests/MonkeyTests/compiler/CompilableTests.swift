@@ -97,4 +97,64 @@ class CompilableTests: XCTestCase {
             XCTAssert(test.1.isEquals(other: null))
         }
     }
+
+    func testMStringCompile() throws {
+        let tests = [
+            "A",
+            "Short",
+            "And a normally not quite but enough long",
+            "With 🍺",
+            "日本語"
+        ]
+
+        for test in tests {
+            let expectedType = MonkeyTypes.string.rawValue
+
+            let mstring = MString(test)
+            let bytes = mstring.compile()
+
+            XCTAssertEqual(expectedType.hexa, bytes[0..<1].hexa)
+            XCTAssertEqual(test.lengthOfBytes(using: .utf8), Int(bytes.readInt(bytes: 4, startIndex: 1) ?? 0))
+            XCTAssertEqual(test, String(bytes: bytes[5...], encoding: .utf8))
+        }
+    }
+
+    func testMStringDecompile() throws {
+        let typeBytes = MonkeyTypes.string.bytes
+        let tests: [([Byte], String)] = [
+            (typeBytes + [0, 0, 0, 1] + [0x41], "A"),
+            (typeBytes + [0, 0, 0, 5] + [0x53, 0x68, 0x6f, 0x72, 0x74], "Short"),
+            (typeBytes + [0, 0, 0, 4] + [0xf0, 0x9f, 0x8d, 0xba], "🍺"),
+            // This one includes junk bytes at the end
+            (typeBytes + [0, 0, 0, 1] + [0x41, 66, 66, 66, 66], "A"),
+            (typeBytes + [0, 0, 0, 9] + [0xe6, 0x97, 0xa5, 0xe6, 0x9c, 0xac, 0xe8, 0xaa, 0x9e], "日本語")
+        ]
+
+        for test in tests {
+            let mstring = try MString(fromBytes: test.0)
+            XCTAssertEqual(test.1, mstring.value)
+        }
+    }
+
+    func testDecompileTypeError() throws {
+        typealias InitFunc = ([UInt8]) throws -> Object
+        let tests: [(MonkeyTypes, InitFunc)] = [
+            (MonkeyTypes.integer, Null.init),
+            (MonkeyTypes.null, Integer.init),
+            (MonkeyTypes.null, Boolean.init),
+            (MonkeyTypes.null, MString.init)
+        ]
+
+        for test in tests {
+            do {
+                let value = try test.1(test.0.bytes)
+                XCTFail("This line should not be reached")
+                XCTAssertNil(value)
+            } catch let error as UnknowValueType {
+                XCTAssertEqual("Unknow value type: \(test.0.bytes.hexa)", error.description)
+            } catch {
+                XCTFail("Unexpected Error")
+            }
+        }
+    }
 }

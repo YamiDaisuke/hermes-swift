@@ -14,6 +14,7 @@ enum MonkeyTypes: UInt8 {
     case null
     case integer
     case boolean
+    case string
 
     var bytes: [Byte] {
         return withUnsafeBytes(of: self.rawValue.bigEndian, [Byte].init)
@@ -89,9 +90,51 @@ extension Boolean: Decompilable {
         }
 
         guard let decompiled = bytes.readInt(bytes: 1, startIndex: 1) else {
-            throw CantDecompileValue(bytes, expectedType: Integer.type)
+            throw CantDecompileValue(bytes, expectedType: Boolean.type)
         }
 
         self = decompiled == 1 ? Self.true : Self.false
+    }
+}
+
+/// Allows an `MString` value to be compiled into Hermes bytecode
+extension MString: Compilable {
+    public func compile() -> [Byte] {
+        let typeBytes = MonkeyTypes.string.bytes
+        /// TODO: Enforce this max value when a MString is allocated
+        let size = Int32(self.value.lengthOfBytes(using: .utf8))
+        let sizeBytes = withUnsafeBytes(
+            of: size.bigEndian,
+            [Byte].init
+        )
+        var output = typeBytes + sizeBytes
+        for char in self.value.utf8 {
+            output += withUnsafeBytes(
+                of: char.bigEndian,
+                [Byte].init
+            )
+        }
+        return output
+    }
+}
+
+/// Allows an `MString` value to be decompiled from Hermes bytecode
+extension MString: Decompilable {
+    public init(fromBytes bytes: [Byte]) throws {
+        let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
+
+        if type != MonkeyTypes.string.rawValue {
+            throw UnknowValueType(type.hexa)
+        }
+
+        guard let size = bytes.readInt(bytes: 4, startIndex: 1) else {
+            throw CantDecompileValue(bytes, expectedType: MString.type)
+        }
+
+        guard let value = String(bytes: bytes[5..<(Int(size) + 5)], encoding: .utf8) else {
+            throw CantDecompileValue(bytes, expectedType: MString.type)
+        }
+
+        self.value = value
     }
 }
