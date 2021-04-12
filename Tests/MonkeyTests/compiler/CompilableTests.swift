@@ -45,4 +45,34 @@ class CompilableTests: XCTestCase {
             XCTAssertEqual(test.1, integer.value)
         }
     }
+
+    func testBooleanCompile() throws {
+        let tests: [Bool] = [
+            true,
+            false
+        ]
+
+        for test in tests {
+            let expectedType = MonkeyTypes.boolean.rawValue
+
+            let boolean = Boolean(test)
+            let bytes = boolean.compile()
+
+            XCTAssertEqual(expectedType.hexa, bytes[0..<1].hexa)
+            XCTAssertEqual(test ? 1 : 0, bytes.readInt(bytes: 1, startIndex: 1))
+        }
+    }
+
+    func testBooleanDecompile() throws {
+        let typeBytes = MonkeyTypes.boolean.bytes
+        let tests: [([Byte], Bool)] = [
+            (typeBytes + [1], true),
+            (typeBytes + [0], false)
+        ]
+
+        for test in tests {
+            let boolean = try Boolean(fromBytes: test.0)
+            XCTAssertEqual(test.1, boolean.value)
+        }
+    }
 }

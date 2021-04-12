@@ -12,12 +12,17 @@ import Hermes
 /// that represent them in Hermes bytecode
 enum MonkeyTypes: UInt8 {
     case integer
+    case boolean
+
+    var bytes: [Byte] {
+        return withUnsafeBytes(of: self.rawValue.bigEndian, [Byte].init)
+    }
 }
 
 /// Allows an `Integer` value to be compiled into Hermes bytecode
 extension Integer: Compilable {
     public func compile() -> [Byte] {
-        let typeBytes = withUnsafeBytes(of: MonkeyTypes.integer.rawValue.bigEndian, [Byte].init)
+        let typeBytes = MonkeyTypes.integer.bytes
         let valueBytes = withUnsafeBytes(of: self.value.bigEndian, [Byte].init)
         return typeBytes + valueBytes
     }
@@ -37,5 +42,34 @@ extension Integer: Decompilable {
         }
 
         self.value = decompiled
+    }
+}
+
+/// Allows an `Boolean` value to be compiled into Hermes bytecode
+extension Boolean: Compilable {
+    public func compile() -> [Byte] {
+        let typeBytes = MonkeyTypes.boolean.bytes
+        let valueBytes = withUnsafeBytes(
+            of: self.value ? UInt8(1).bigEndian : UInt8(0).bigEndian,
+            [Byte].init
+        )
+        return typeBytes + valueBytes
+    }
+}
+
+/// Allows an `Integer` value to be decompiled from Hermes bytecode
+extension Boolean: Decompilable {
+    public init(fromBytes bytes: [Byte]) throws {
+        let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
+
+        if type != MonkeyTypes.boolean.rawValue {
+            throw UnknowValueType(type.hexa)
+        }
+
+        guard let decompiled = bytes.readInt(bytes: 1, startIndex: 1) else {
+            throw CantDecompileValue(bytes, expectedType: Integer.type)
+        }
+
+        self = decompiled == 1 ? Self.true : Self.false
     }
 }

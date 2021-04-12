@@ -29,6 +29,8 @@ extension CompilableTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__CompilableTests = [
+        ("testBooleanCompile", testBooleanCompile),
+        ("testBooleanDecompile", testBooleanDecompile),
         ("testIntCompile", testIntCompile),
         ("testIntDecompile", testIntDecompile),
     ]
