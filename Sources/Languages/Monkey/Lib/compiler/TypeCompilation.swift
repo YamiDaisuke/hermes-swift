@@ -11,11 +11,33 @@ import Hermes
 /// Matches each Monkey lang type to a byte code
 /// that represent them in Hermes bytecode
 enum MonkeyTypes: UInt8 {
+    case null
     case integer
     case boolean
 
     var bytes: [Byte] {
         return withUnsafeBytes(of: self.rawValue.bigEndian, [Byte].init)
+    }
+}
+
+/// Allows an `Null` value to be compiled into Hermes bytecode
+extension Null: Compilable {
+    public func compile() -> [Byte] {
+        let typeBytes = MonkeyTypes.null.bytes
+        return typeBytes
+    }
+}
+
+/// Allows an `Null` value to be decompiled from Hermes bytecode
+extension Null: Decompilable {
+    public init(fromBytes bytes: [Byte]) throws {
+        let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
+
+        if type != MonkeyTypes.null.rawValue {
+            throw UnknowValueType(type.hexa)
+        }
+
+        self = Null.null
     }
 }
 

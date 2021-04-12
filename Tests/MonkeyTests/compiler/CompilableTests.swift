@@ -75,4 +75,26 @@ class CompilableTests: XCTestCase {
             XCTAssertEqual(test.1, boolean.value)
         }
     }
+
+    func testNullCompile() throws {
+        let expectedType = MonkeyTypes.null.rawValue
+
+        let bytes = Null.null.compile()
+
+        XCTAssertEqual(expectedType.hexa, bytes[0..<1].hexa)
+        XCTAssertEqual(bytes.count, 1)
+    }
+
+    func testNullDecompile() throws {
+        let typeBytes = MonkeyTypes.null.bytes
+        let tests: [([Byte], Null)] = [
+            (typeBytes, .null),
+            (typeBytes, .null)
+        ]
+
+        for test in tests {
+            let null = try Null(fromBytes: test.0)
+            XCTAssert(test.1.isEquals(other: null))
+        }
+    }
 }

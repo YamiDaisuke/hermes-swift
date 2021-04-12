@@ -33,6 +33,8 @@ extension CompilableTests {
         ("testBooleanDecompile", testBooleanDecompile),
         ("testIntCompile", testIntCompile),
         ("testIntDecompile", testIntDecompile),
+        ("testNullCompile", testNullCompile),
+        ("testNullDecompile", testNullDecompile),
     ]
 }
 
