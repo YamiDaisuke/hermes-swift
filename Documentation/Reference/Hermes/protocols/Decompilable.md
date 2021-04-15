@@ -14,3 +14,9 @@ Marks a value that can be converted from a Hermes byte representation
 ```swift
 init(fromBytes bytes: [Byte]) throws
 ```
+
+### `init(fromBytes:readBytes:)`
+
+```swift
+init(fromBytes bytes: [Byte], readBytes: inout Int) throws
+```

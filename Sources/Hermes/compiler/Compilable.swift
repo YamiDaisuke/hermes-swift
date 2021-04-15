@@ -14,12 +14,20 @@ public protocol Compilable {
     /// Some types might not required an explicit size so this section can be omited
     /// but we always need a type code byte set 
     /// TODO: Work with bits for small memory foot print
-    func compile() -> [Byte]
+    func compile() throws -> [Byte]
 }
 
 /// Marks a value that can be converted from a Hermes byte representation
 public protocol Decompilable {
     init(fromBytes bytes: [Byte]) throws
+    init(fromBytes bytes: [Byte], readBytes: inout Int) throws
+}
+
+public extension Decompilable {
+    init(fromBytes bytes: [Byte]) throws {
+        var discard = 0
+        try self.init(fromBytes: bytes, readBytes: &discard)
+    }
 }
 
 /// Throw this if the first bytes of a compiled value does not match

@@ -12,7 +12,7 @@ Marks a value that can be converted into Hermes byte representation
 ### `compile()`
 
 ```swift
-func compile() -> [Byte]
+func compile() throws -> [Byte]
 ```
 
 Retunrs a byte array representing this value in a format like the following:

@@ -13,11 +13,48 @@ import Hermes
 enum MonkeyTypes: UInt8 {
     case null
     case integer
+    case float
     case boolean
     case string
+    case array
+    case hash
+    case function
+    case `return`
+    case builtin
 
     var bytes: [Byte] {
         return withUnsafeBytes(of: self.rawValue.bigEndian, [Byte].init)
+    }
+}
+
+extension MonkeyTypes {
+    public func decompile(fromBytes bytes: [Byte]) throws -> (value: Object?, readBytes: Int) {
+        var value: Object?
+        var readBytes = 0
+        switch self {
+        case .null:
+            value = try Null(fromBytes: bytes, readBytes: &readBytes)
+        case .integer:
+            value = try Integer(fromBytes: bytes, readBytes: &readBytes)
+        case .float:
+            value = try MFloat(fromBytes: bytes, readBytes: &readBytes)
+        case .boolean:
+            value = try Boolean(fromBytes: bytes, readBytes: &readBytes)
+        case .string:
+            value = try MString(fromBytes: bytes, readBytes: &readBytes)
+        case .array:
+            value = try MArray(fromBytes: bytes, readBytes: &readBytes)
+        case .hash:
+            value = nil
+        case .function:
+            value = nil
+        case .return:
+            value = nil
+        case .builtin:
+            value = nil
+        }
+
+        return (value, readBytes)
     }
 }
 
@@ -31,7 +68,7 @@ extension Null: Compilable {
 
 /// Allows an `Null` value to be decompiled from Hermes bytecode
 extension Null: Decompilable {
-    public init(fromBytes bytes: [Byte]) throws {
+    public init(fromBytes bytes: [Byte], readBytes: inout Int) throws {
         let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
 
         if type != MonkeyTypes.null.rawValue {
@@ -39,6 +76,7 @@ extension Null: Decompilable {
         }
 
         self = Null.null
+        readBytes = 1
     }
 }
 
@@ -53,7 +91,7 @@ extension Integer: Compilable {
 
 /// Allows an `Integer` value to be decompiled from Hermes bytecode
 extension Integer: Decompilable {
-    public init(fromBytes bytes: [Byte]) throws {
+    public init(fromBytes bytes: [Byte], readBytes: inout Int) throws {
         let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
 
         if type != MonkeyTypes.integer.rawValue {
@@ -65,6 +103,35 @@ extension Integer: Decompilable {
         }
 
         self.value = decompiled
+        readBytes = 5 // 1 for type marker, 4 for Int32 value
+    }
+}
+
+/// Allows an `MFloat` value to be compiled into Hermes bytecode
+extension MFloat: Compilable {
+    public func compile() -> [Byte] {
+        let typeBytes = MonkeyTypes.float.bytes
+        let valueBytes = withUnsafeBytes(of: self.value.bitPattern.bigEndian, [Byte].init)
+        return typeBytes + valueBytes
+    }
+}
+
+/// Allows an `MFloat` value to be decompiled from Hermes bytecode
+extension MFloat: Decompilable {
+    public init(fromBytes bytes: [Byte], readBytes: inout Int) throws {
+        let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
+
+        if type != MonkeyTypes.float.rawValue {
+            throw UnknowValueType(type.hexa)
+        }
+
+
+        let data = Data(bytes[1..<9])
+        let bitPattern = UInt64(bigEndian: data.withUnsafeBytes { $0.load(as: UInt64.self) })
+        let value = Float64(bitPattern: bitPattern)
+
+        self.value = value
+        readBytes = 1 + 8 // 1 for type marker, 8 for Float64 value
     }
 }
 
@@ -82,7 +149,7 @@ extension Boolean: Compilable {
 
 /// Allows an `Integer` value to be decompiled from Hermes bytecode
 extension Boolean: Decompilable {
-    public init(fromBytes bytes: [Byte]) throws {
+    public init(fromBytes bytes: [Byte], readBytes: inout Int) throws {
         let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
 
         if type != MonkeyTypes.boolean.rawValue {
@@ -94,6 +161,7 @@ extension Boolean: Decompilable {
         }
 
         self = decompiled == 1 ? Self.true : Self.false
+        readBytes = 2
     }
 }
 
@@ -120,7 +188,7 @@ extension MString: Compilable {
 
 /// Allows an `MString` value to be decompiled from Hermes bytecode
 extension MString: Decompilable {
-    public init(fromBytes bytes: [Byte]) throws {
+    public init(fromBytes bytes: [Byte], readBytes: inout Int) throws {
         let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
 
         if type != MonkeyTypes.string.rawValue {
@@ -136,5 +204,82 @@ extension MString: Decompilable {
         }
 
         self.value = value
+
+        readBytes = 1 + 4 + Int(size) // 1 for type marker, 4 for size Int32
+    }
+}
+
+///
+
+struct ValueIsNotCompilable: CompilerError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
+
+    public init(_ value: Any, line: Int? = nil, column: Int? = nil, file: String? = nil) {
+        self.message = "Value \(value) is not Compilable"
+        self.line = line
+        self.column = column
+        self.file = file
+    }
+}
+
+
+/// Allows an `MArray` value to be compiled into Hermes bytecode
+extension MArray: Compilable {
+    public func compile() throws -> [Byte] {
+        let typeBytes = MonkeyTypes.array.bytes
+        var output = typeBytes
+
+        let size = Int32(self.elements.count)
+        let sizeBytes = withUnsafeBytes(
+            of: size.bigEndian,
+            [Byte].init
+        )
+        output += sizeBytes
+
+        for element in self.elements {
+            guard let compilable = element as? Compilable else {
+                throw ValueIsNotCompilable(element)
+            }
+
+            output += try compilable.compile()
+        }
+
+        return output
+    }
+}
+
+/// Allows an `MArray` value to be decompiled from Hermes bytecode
+extension MArray: Decompilable {
+    public init(fromBytes bytes: [Byte], readBytes: inout Int) throws {
+        let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
+
+        if type != MonkeyTypes.array.rawValue {
+            throw UnknowValueType(type.hexa)
+        }
+
+        let count = bytes.readInt(bytes: 4, startIndex: 1) ?? 0
+        var elements: [Object] = []
+        var readingBytes = 1 + 4
+        for _ in 0..<count {
+            guard let elementType =
+                MonkeyTypes(rawValue: UInt8(bytes.readInt(bytes: 1, startIndex: readingBytes) ?? -1)) else {
+                throw UnknowValueType(bytes[readingBytes..<(readingBytes + 1)].hexa)
+            }
+
+            let element = try elementType.decompile(fromBytes: Array(bytes[readingBytes...]))
+
+            guard let value = element.value else {
+                throw CantDecompileValue(bytes, expectedType: MString.type)
+            }
+
+            elements.append(value)
+            readingBytes += element.readBytes
+        }
+
+        self.elements = elements
+        readBytes = readingBytes
     }
 }

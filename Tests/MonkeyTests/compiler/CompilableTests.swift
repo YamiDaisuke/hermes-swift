@@ -30,7 +30,7 @@ class CompilableTests: XCTestCase {
     }
 
     func testIntDecompile() throws {
-        let integerTypeBytes = withUnsafeBytes(of: MonkeyTypes.integer.rawValue.bigEndian, [Byte].init)
+        let integerTypeBytes = MonkeyTypes.integer.bytes
 
         let tests: [([Byte], Int32)] = [
             (integerTypeBytes + [0, 0, 0, 64], 64),
@@ -43,6 +43,44 @@ class CompilableTests: XCTestCase {
         for test in tests {
             let integer = try Integer(fromBytes: test.0)
             XCTAssertEqual(test.1, integer.value)
+        }
+    }
+
+    func testMFloatCompile() throws {
+        let tests: [Float64] = [
+            64.5,
+            255.0,
+            -255.255,
+            Float64.greatestFiniteMagnitude
+        ]
+
+        for test in tests {
+            let expectedType = MonkeyTypes.float.rawValue
+
+            let float = MFloat(test)
+            let bytes = float.compile()
+
+            XCTAssertEqual(expectedType.hexa, bytes[0..<1].hexa)
+            let data = Data(bytes[1..<9])
+            let bitPattern = UInt64(bigEndian: data.withUnsafeBytes { $0.load(as: UInt64.self) })
+            let value = Float64(bitPattern: bitPattern)
+            XCTAssertEqual(test, value)
+        }
+    }
+
+    func testMFloatDecompile() throws {
+        let typeBytes = MonkeyTypes.float.bytes
+
+        let tests: [([Byte], Float64)] = [
+            (typeBytes + [0x40, 0x50, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00], 64.5),
+            (typeBytes + [0x40, 0x6F, 0xE0, 0x00, 0x00, 0x00, 0x00, 0x00], 255.0),
+            (typeBytes + [0xC0, 0x6F, 0xE8, 0x28, 0xF5, 0xC2, 0x8F, 0x5C], -255.255),
+            (typeBytes + [0x7F, 0xEF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF], Float64.greatestFiniteMagnitude)
+        ]
+
+        for test in tests {
+            let float = try MFloat(fromBytes: test.0)
+            XCTAssertEqual(test.1, float.value)
         }
     }
 
@@ -136,13 +174,82 @@ class CompilableTests: XCTestCase {
         }
     }
 
+    func testMArrayCompile() throws {
+        let tests: [MArray] = [
+            MArray(elements: []),
+            MArray(elements: [Integer(1), Integer(2)]),
+            MArray(elements: [Integer(1), Boolean.false]),
+            MArray(elements: [Boolean.true, MString("false")]),
+            MArray(elements: [
+                MArray(elements: []),
+                MArray(elements: [Integer(1), Integer(2)])
+            ])
+        ]
+
+        for test in tests {
+            let expectedType = MonkeyTypes.array.rawValue
+
+            let bytes = try test.compile()
+
+            XCTAssertEqual(expectedType.hexa, bytes[0..<1].hexa)
+            XCTAssertEqual(test.elements.count, Int(bytes.readInt(bytes: 4, startIndex: 1) ?? -1))
+            var startIndex = 5
+            for element in test.elements {
+                if let compilable = element as? Compilable {
+                    let elementBytes = try compilable.compile()
+                    let current = Array(bytes[startIndex..<(startIndex + elementBytes.count)])
+                    XCTAssertEqual(elementBytes, current)
+                    startIndex += elementBytes.count
+                } else {
+                    XCTFail("Element \(element) must be compilable")
+                }
+            }
+        }
+    }
+
+    func testMArrayDecompile() throws {
+        let typeBytes = MonkeyTypes.array.bytes
+        let innerArrayTest1 = try MArray(elements: []).compile()
+        let innerArrayTest2 = try MArray(elements: [Integer(1), Integer(2)]).compile()
+
+        let tests: [([Byte], MArray)] = [
+            (typeBytes + [0, 0, 0, 0], MArray(elements: [])),
+            (
+                typeBytes + [0, 0, 0, 2] + Integer(1).compile() + Integer(2).compile(),
+                MArray(elements: [Integer(1), Integer(2)])
+            ),
+            (
+                typeBytes + [0, 0, 0, 2] + Integer(1).compile() + Boolean.false.compile(),
+                MArray(elements: [Integer(1), Boolean.false])
+            ),
+            (
+                typeBytes + [0, 0, 0, 2] + Boolean.true.compile() + MString("false").compile(),
+                MArray(elements: [Boolean.true, MString("false")])
+            ),
+            (
+                typeBytes + [0, 0, 0, 2] + innerArrayTest1 + innerArrayTest2,
+                MArray(elements: [
+                    MArray(elements: []),
+                    MArray(elements: [Integer(1), Integer(2)])
+                ])
+            )
+        ]
+
+        for test in tests {
+            let array = try MArray(fromBytes: test.0)
+            XCTAssert(test.1.isEquals(other: array))
+        }
+    }
+
     func testDecompileTypeError() throws {
         typealias InitFunc = ([UInt8]) throws -> Object
         let tests: [(MonkeyTypes, InitFunc)] = [
             (MonkeyTypes.integer, Null.init),
             (MonkeyTypes.null, Integer.init),
+            (MonkeyTypes.null, MFloat.init),
             (MonkeyTypes.null, Boolean.init),
-            (MonkeyTypes.null, MString.init)
+            (MonkeyTypes.null, MString.init),
+            (MonkeyTypes.null, MArray.init)
         ]
 
         for test in tests {

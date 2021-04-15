@@ -1,15 +1,15 @@
 **EXTENSION**
 
-# `MString`
+# `MArray`
 ```swift
-extension MString: Compilable
+extension MArray: Compilable
 ```
 
 ## Methods
 ### `compile()`
 
 ```swift
-public func compile() -> [Byte]
+public func compile() throws -> [Byte]
 ```
 
 ### `init(fromBytes:readBytes:)`
