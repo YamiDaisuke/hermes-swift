@@ -241,6 +241,83 @@ class CompilableTests: XCTestCase {
         }
     }
 
+    func testHashCompile() throws {
+        let tests: [Hash] = [
+            Hash(pairs: [:]),
+            Hash(pairs: [Integer(0): Integer(1)]),
+            Hash(pairs: [MString("a"): Integer(1)]),
+            Hash(pairs: [MString("a"): Integer(1), MString("b"): Boolean.true]),
+            Hash(pairs: [MString("a"): Hash(pairs: [:])])
+        ]
+
+        for test in tests {
+            let expectedType = MonkeyTypes.hash.rawValue
+
+            let bytes = try test.compile()
+
+            XCTAssertEqual(expectedType.hexa, bytes[0..<1].hexa)
+            XCTAssertEqual(test.pairs.count, Int(bytes.readInt(bytes: 4, startIndex: 1) ?? -1))
+            var start = 5
+            for pair in test.pairs {
+                if let key = pair.key as? Compilable {
+                    let expected = try key.compile()
+                    let current = Array(bytes[start..<(start + expected.count)])
+                    XCTAssertEqual(current, expected)
+                    start += expected.count
+                } else {
+                    XCTFail("Key: \(pair.key) is not compilable")
+                }
+
+                if let value = pair.value as? Compilable {
+                    let expected = try value.compile()
+                    let current = Array(bytes[start..<(start + expected.count)])
+                    XCTAssertEqual(current, expected)
+                    start += expected.count
+                } else {
+                    XCTFail("Key: \(pair.key) is not compilable")
+                }
+            }
+        }
+    }
+
+    func testHashDecompile() throws {
+        let typeBytes = MonkeyTypes.hash.bytes
+        let inner = try Hash(pairs: [:]).compile()
+
+        // For some reason the swift compiler wasn't able to understand this
+        // expression in a single line.
+        var twoPairs = typeBytes + [0, 0, 0, 2]
+        twoPairs.append(contentsOf: MString("a").compile())
+        twoPairs.append(contentsOf: Integer(1).compile())
+        twoPairs.append(contentsOf: MString("b").compile())
+        twoPairs.append(contentsOf: Boolean.true.compile())
+
+        let tests: [([Byte], Hash)] = [
+            (typeBytes + [0, 0, 0, 0], Hash(pairs: [:])),
+            (
+                typeBytes + [0, 0, 0, 1] + Integer(0).compile() + Integer(1).compile(),
+                Hash(pairs: [Integer(0): Integer(1)])
+            ),
+            (
+                typeBytes + [0, 0, 0, 1] + MString("a").compile() + Integer(1).compile(),
+                Hash(pairs: [MString("a"): Integer(1)])
+            ),
+            (
+                twoPairs,
+                Hash(pairs: [MString("a"): Integer(1), MString("b"): Boolean.true])
+            ),
+            (
+                typeBytes + [0, 0, 0, 1] + MString("a").compile() + inner,
+                Hash(pairs: [MString("a"): Hash(pairs: [:])])
+            )
+        ]
+
+        for test in tests {
+            let hash = try Hash(fromBytes: test.0)
+            XCTAssert(test.1.isEquals(other: hash))
+        }
+    }
+
     func testDecompileTypeError() throws {
         typealias InitFunc = ([UInt8]) throws -> Object
         let tests: [(MonkeyTypes, InitFunc)] = [
@@ -249,7 +326,8 @@ class CompilableTests: XCTestCase {
             (MonkeyTypes.null, MFloat.init),
             (MonkeyTypes.null, Boolean.init),
             (MonkeyTypes.null, MString.init),
-            (MonkeyTypes.null, MArray.init)
+            (MonkeyTypes.null, MArray.init),
+            (MonkeyTypes.null, Hash.init)
         ]
 
         for test in tests {

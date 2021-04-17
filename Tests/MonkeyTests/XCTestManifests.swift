@@ -32,6 +32,8 @@ extension CompilableTests {
         ("testBooleanCompile", testBooleanCompile),
         ("testBooleanDecompile", testBooleanDecompile),
         ("testDecompileTypeError", testDecompileTypeError),
+        ("testHashCompile", testHashCompile),
+        ("testHashDecompile", testHashDecompile),
         ("testIntCompile", testIntCompile),
         ("testIntDecompile", testIntDecompile),
         ("testMArrayCompile", testMArrayCompile),

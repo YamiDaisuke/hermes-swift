@@ -10,7 +10,7 @@ import Hermes
 
 /// Matches each Monkey lang type to a byte code
 /// that represent them in Hermes bytecode
-enum MonkeyTypes: UInt8 {
+enum MonkeyTypes: UInt8, CustomStringConvertible {
     case null
     case integer
     case float
@@ -24,6 +24,31 @@ enum MonkeyTypes: UInt8 {
 
     var bytes: [Byte] {
         return withUnsafeBytes(of: self.rawValue.bigEndian, [Byte].init)
+    }
+
+    var description: String {
+        switch self {
+        case .null:
+            return Null.type
+        case .integer:
+            return Integer.type
+        case .float:
+            return MFloat.type
+        case .boolean:
+            return Boolean.type
+        case .string:
+            return MString.type
+        case .array:
+            return MArray.type
+        case .hash:
+            return Hash.type
+        case .function:
+            return Function.type
+        case .return:
+            return Return.type
+        case .builtin:
+            return BuiltinFunction.type
+        }
     }
 }
 
@@ -45,7 +70,7 @@ extension MonkeyTypes {
         case .array:
             value = try MArray(fromBytes: bytes, readBytes: &readBytes)
         case .hash:
-            value = nil
+            value = try Hash(fromBytes: bytes, readBytes: &readBytes)
         case .function:
             value = nil
         case .return:
@@ -272,7 +297,7 @@ extension MArray: Decompilable {
             let element = try elementType.decompile(fromBytes: Array(bytes[readingBytes...]))
 
             guard let value = element.value else {
-                throw CantDecompileValue(bytes, expectedType: MString.type)
+                throw CantDecompileValue(bytes, expectedType: elementType.description)
             }
 
             elements.append(value)
@@ -280,6 +305,83 @@ extension MArray: Decompilable {
         }
 
         self.elements = elements
+        readBytes = readingBytes
+    }
+}
+
+/// Allows an `Hash` value to be compiled into Hermes bytecode
+extension Hash: Compilable {
+    public func compile() throws -> [Byte] {
+        let typeBytes = MonkeyTypes.hash.bytes
+        var output = typeBytes
+
+        let size = Int32(self.pairs.count)
+        let sizeBytes = withUnsafeBytes(
+            of: size.bigEndian,
+            [Byte].init
+        )
+        output += sizeBytes
+
+        for pair in self.pairs {
+            guard let key = pair.key as? Compilable else {
+                throw ValueIsNotCompilable(pair.key)
+            }
+
+            guard let value = pair.value as? Compilable else {
+                throw ValueIsNotCompilable(pair.value)
+            }
+
+            output += try key.compile()
+            output += try value.compile()
+        }
+
+        return output
+    }
+}
+
+/// Allows an `Hash` value to be decompiled from Hermes bytecode
+extension Hash: Decompilable {
+    public init(fromBytes bytes: [Byte], readBytes: inout Int) throws {
+        let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
+
+        if type != MonkeyTypes.hash.rawValue {
+            throw UnknowValueType(type.hexa)
+        }
+
+        let count = bytes.readInt(bytes: 4, startIndex: 1) ?? 0
+        var elements: [AnyHashable: Object] = [:]
+        var readingBytes = 1 + 4
+        for _ in 0..<count {
+            guard let keyType =
+                MonkeyTypes(rawValue: UInt8(bytes.readInt(bytes: 1, startIndex: readingBytes) ?? -1)) else {
+                throw UnknowValueType(bytes[readingBytes..<(readingBytes + 1)].hexa)
+            }
+
+            let decompiledKey = try keyType.decompile(fromBytes: Array(bytes[readingBytes...]))
+
+            guard let key = decompiledKey.value as? AnyHashable else {
+                throw CantDecompileValue(bytes, expectedType: keyType.description)
+            }
+
+            readingBytes += decompiledKey.readBytes
+
+            guard let valueType =
+                MonkeyTypes(rawValue: UInt8(bytes.readInt(bytes: 1, startIndex: readingBytes) ?? -1)) else {
+                throw UnknowValueType(bytes[readingBytes..<(readingBytes + 1)].hexa)
+            }
+
+            let decompiledValue = try valueType.decompile(fromBytes: Array(bytes[readingBytes...]))
+
+            guard let value = decompiledValue.value else {
+                throw CantDecompileValue(bytes, expectedType: valueType.description)
+            }
+
+            readingBytes += decompiledValue.readBytes
+
+            elements[key] = value
+        }
+
+        self.pairs = elements
         readBytes = readingBytes
     }
 }
