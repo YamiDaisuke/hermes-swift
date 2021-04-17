@@ -30,6 +30,31 @@ public extension Decompilable {
     }
 }
 
+// MARK: - Extensions
+
+/// Utility to print a byte array as a hex string
+extension Sequence where Element == Byte {
+    public var hexa: String { map { .init(format: "%02x", $0) }.joined(separator: " ") }
+}
+
+extension FixedWidthInteger {
+    /// Utility to print a swift integer values into a hex string
+    public var hexa: String {
+        let bytes = withUnsafeBytes(of: self.bigEndian, [Byte].init)
+        return bytes.hexa
+    }
+
+    /// Converts swift integer values into a byte array
+    public var bytes: [Byte] {
+        return withUnsafeBytes(
+            of: self.bigEndian,
+            [Byte].init
+        )
+    }
+}
+
+// MARK: - Errors
+
 /// Throw this if the first bytes of a compiled value does not match
 /// a type supported by the language
 public struct UnknowValueType: CompilerError {
@@ -61,15 +86,17 @@ public struct CantDecompileValue: CompilerError {
     }
 }
 
-/// Utility to print a byte array as a hex string
-extension Sequence where Element == Byte {
-    public var hexa: String { map { .init(format: "%02x", $0) }.joined(separator: " ") }
-}
+/// Throws this if a nested value is not compilable
+public struct ValueIsNotCompilable: CompilerError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
 
-/// Utility to print a UInt32 into a hex string
-extension FixedWidthInteger {
-    public var hexa: String {
-        let bytes = withUnsafeBytes(of: self.bigEndian, [Byte].init)
-        return bytes.hexa
+    public init(_ value: Any, line: Int? = nil, column: Int? = nil, file: String? = nil) {
+        self.message = "Value \(value) is not Compilable"
+        self.line = line
+        self.column = column
+        self.file = file
     }
 }

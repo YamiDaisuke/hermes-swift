@@ -38,7 +38,7 @@
 		F86805182619125500725307 /* MFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86805172619125500725307 /* MFloat.swift */; };
 		F8B3D9CB261E7E520039945F /* MonkeyCErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */; };
 		F8D3A5DF2620F9C600FE84FD /* Compilable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A5DE2620F9C600FE84FD /* Compilable.swift */; };
-		F8D3A5FD2621020300FE84FD /* CompilableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A5FC2621020300FE84FD /* CompilableTests.swift */; };
+		F8D3A5FD2621020300FE84FD /* CompilableValuesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A5FC2621020300FE84FD /* CompilableValuesTests.swift */; };
 		F8D3A62A2621027200FE84FD /* TypeCompilation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A60C2621026C00FE84FD /* TypeCompilation.swift */; };
 		OBJ_255 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Error.swift */; };
 		OBJ_256 /* Bytecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Bytecode.swift */; };
@@ -427,7 +427,7 @@
 		F86805172619125500725307 /* MFloat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MFloat.swift; sourceTree = "<group>"; };
 		F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCErrorTests.swift; sourceTree = "<group>"; };
 		F8D3A5DE2620F9C600FE84FD /* Compilable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compilable.swift; sourceTree = "<group>"; };
-		F8D3A5FC2621020300FE84FD /* CompilableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilableTests.swift; sourceTree = "<group>"; };
+		F8D3A5FC2621020300FE84FD /* CompilableValuesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilableValuesTests.swift; sourceTree = "<group>"; };
 		F8D3A60C2621026C00FE84FD /* TypeCompilation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeCompilation.swift; sourceTree = "<group>"; };
 		"Hermes::Hermes::Product" /* Hermes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Hermes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesREPL::Product" /* HermesREPL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HermesREPL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -765,7 +765,7 @@
 				OBJ_108 /* MonkeyCScopesTests.swift */,
 				OBJ_109 /* MonkeyCompilerTests.swift */,
 				F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */,
-				F8D3A5FC2621020300FE84FD /* CompilableTests.swift */,
+				F8D3A5FC2621020300FE84FD /* CompilableValuesTests.swift */,
 			);
 			path = compiler;
 			sourceTree = "<group>";
@@ -1599,7 +1599,7 @@
 				OBJ_315 /* LexerTests.swift in Sources */,
 				OBJ_316 /* ReadFileTests.swift in Sources */,
 				OBJ_317 /* StringExtensionsTests.swift in Sources */,
-				F8D3A5FD2621020300FE84FD /* CompilableTests.swift in Sources */,
+				F8D3A5FD2621020300FE84FD /* CompilableValuesTests.swift in Sources */,
 				OBJ_318 /* XCTestManifests.swift in Sources */,
 				OBJ_319 /* BytecodeTests.swift in Sources */,
 				OBJ_320 /* SymbolTableTests.swift in Sources */,

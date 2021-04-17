@@ -9,7 +9,9 @@ import XCTest
 @testable import Hermes
 @testable import MonkeyLang
 
-class CompilableTests: XCTestCase {
+// swiftlint:disable type_body_length
+
+class CompilableValuesTests: XCTestCase {
     func testIntCompile() throws {
         let tests: [Int32] = [
             64,
@@ -318,6 +320,53 @@ class CompilableTests: XCTestCase {
         }
     }
 
+    func testFunctionCompile() throws {
+        let tests: [CompiledFunction] = [
+            CompiledFunction(instructions: [], localsCount: 0, parameterCount: 0),
+            CompiledFunction(instructions: Bytecode.make(.return), localsCount: 10, parameterCount: 10)
+        ]
+
+        for test in tests {
+            let expectedType = MonkeyTypes.function.rawValue
+
+            let bytes = test.compile()
+
+            XCTAssertEqual(expectedType.hexa, bytes[0..<1].hexa)
+            XCTAssertEqual(test.parameterCount, Int(bytes.readInt(bytes: 4, startIndex: 1) ?? -1))
+            XCTAssertEqual(test.localsCount, Int(bytes.readInt(bytes: 4, startIndex: 5) ?? -1))
+            let instructionsCount = Int(bytes.readInt(bytes: 4, startIndex: 9) ?? -1)
+
+            XCTAssertEqual(test.instructions.count, instructionsCount)
+
+            if test.instructions.isEmpty {
+                XCTAssert(bytes.count == 13)
+            } else {
+                XCTAssertEqual(test.instructions, Array(bytes[13...]))
+            }
+        }
+    }
+
+    func testFunctionDecompile() throws {
+        let typeBytes = MonkeyTypes.function.bytes
+
+        let tests: [([Byte], CompiledFunction)] = [
+            (
+                typeBytes + [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                CompiledFunction(instructions: [], localsCount: 0, parameterCount: 0)),
+            (
+                typeBytes + [0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1] + Bytecode.make(.return),
+                CompiledFunction(instructions: Bytecode.make(.return), localsCount: 10, parameterCount: 10)
+            )
+        ]
+
+        for test in tests {
+            let function = try CompiledFunction(fromBytes: test.0)
+            XCTAssert(test.1.isEquals(other: function))
+            XCTAssertEqual(test.1.localsCount, function.localsCount)
+            XCTAssertEqual(test.1.parameterCount, function.parameterCount)
+        }
+    }
+
     func testDecompileTypeError() throws {
         typealias InitFunc = ([UInt8]) throws -> Object
         let tests: [(MonkeyTypes, InitFunc)] = [
@@ -327,7 +376,8 @@ class CompilableTests: XCTestCase {
             (MonkeyTypes.null, Boolean.init),
             (MonkeyTypes.null, MString.init),
             (MonkeyTypes.null, MArray.init),
-            (MonkeyTypes.null, Hash.init)
+            (MonkeyTypes.null, Hash.init),
+            (MonkeyTypes.null, CompiledFunction.init)
         ]
 
         for test in tests {

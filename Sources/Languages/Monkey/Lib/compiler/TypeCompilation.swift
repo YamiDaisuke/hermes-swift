@@ -19,11 +19,9 @@ enum MonkeyTypes: UInt8, CustomStringConvertible {
     case array
     case hash
     case function
-    case `return`
-    case builtin
 
     var bytes: [Byte] {
-        return withUnsafeBytes(of: self.rawValue.bigEndian, [Byte].init)
+        return self.rawValue.bytes
     }
 
     var description: String {
@@ -43,11 +41,7 @@ enum MonkeyTypes: UInt8, CustomStringConvertible {
         case .hash:
             return Hash.type
         case .function:
-            return Function.type
-        case .return:
-            return Return.type
-        case .builtin:
-            return BuiltinFunction.type
+            return CompiledFunction.type
         }
     }
 }
@@ -72,10 +66,6 @@ extension MonkeyTypes {
         case .hash:
             value = try Hash(fromBytes: bytes, readBytes: &readBytes)
         case .function:
-            value = nil
-        case .return:
-            value = nil
-        case .builtin:
             value = nil
         }
 
@@ -109,7 +99,7 @@ extension Null: Decompilable {
 extension Integer: Compilable {
     public func compile() -> [Byte] {
         let typeBytes = MonkeyTypes.integer.bytes
-        let valueBytes = withUnsafeBytes(of: self.value.bigEndian, [Byte].init)
+        let valueBytes = self.value.bytes
         return typeBytes + valueBytes
     }
 }
@@ -136,7 +126,7 @@ extension Integer: Decompilable {
 extension MFloat: Compilable {
     public func compile() -> [Byte] {
         let typeBytes = MonkeyTypes.float.bytes
-        let valueBytes = withUnsafeBytes(of: self.value.bitPattern.bigEndian, [Byte].init)
+        let valueBytes = self.value.bitPattern.bytes
         return typeBytes + valueBytes
     }
 }
@@ -164,10 +154,7 @@ extension MFloat: Decompilable {
 extension Boolean: Compilable {
     public func compile() -> [Byte] {
         let typeBytes = MonkeyTypes.boolean.bytes
-        let valueBytes = withUnsafeBytes(
-            of: self.value ? UInt8(1).bigEndian : UInt8(0).bigEndian,
-            [Byte].init
-        )
+        let valueBytes = (self.value ? UInt8(1) : UInt8(0)).bytes
         return typeBytes + valueBytes
     }
 }
@@ -195,17 +182,11 @@ extension MString: Compilable {
     public func compile() -> [Byte] {
         let typeBytes = MonkeyTypes.string.bytes
         /// TODO: Enforce this max value when a MString is allocated
-        let size = Int32(self.value.lengthOfBytes(using: .utf8))
-        let sizeBytes = withUnsafeBytes(
-            of: size.bigEndian,
-            [Byte].init
-        )
+        let sizeBytes = Int32(self.value.lengthOfBytes(using: .utf8)).bytes
+
         var output = typeBytes + sizeBytes
         for char in self.value.utf8 {
-            output += withUnsafeBytes(
-                of: char.bigEndian,
-                [Byte].init
-            )
+            output += char.bytes
         }
         return output
     }
@@ -234,34 +215,13 @@ extension MString: Decompilable {
     }
 }
 
-///
-
-struct ValueIsNotCompilable: CompilerError {
-    public var message: String
-    public var line: Int?
-    public var column: Int?
-    public var file: String?
-
-    public init(_ value: Any, line: Int? = nil, column: Int? = nil, file: String? = nil) {
-        self.message = "Value \(value) is not Compilable"
-        self.line = line
-        self.column = column
-        self.file = file
-    }
-}
-
-
 /// Allows an `MArray` value to be compiled into Hermes bytecode
 extension MArray: Compilable {
     public func compile() throws -> [Byte] {
         let typeBytes = MonkeyTypes.array.bytes
         var output = typeBytes
 
-        let size = Int32(self.elements.count)
-        let sizeBytes = withUnsafeBytes(
-            of: size.bigEndian,
-            [Byte].init
-        )
+        let sizeBytes = Int32(self.elements.count).bytes
         output += sizeBytes
 
         for element in self.elements {
@@ -315,11 +275,7 @@ extension Hash: Compilable {
         let typeBytes = MonkeyTypes.hash.bytes
         var output = typeBytes
 
-        let size = Int32(self.pairs.count)
-        let sizeBytes = withUnsafeBytes(
-            of: size.bigEndian,
-            [Byte].init
-        )
+        let sizeBytes = Int32(self.pairs.count).bytes
         output += sizeBytes
 
         for pair in self.pairs {
@@ -383,5 +339,51 @@ extension Hash: Decompilable {
 
         self.pairs = elements
         readBytes = readingBytes
+    }
+}
+
+/// Allows an `CompiledFunction` value to be compiled into Hermes bytecode
+extension CompiledFunction: Compilable {
+    public func compile() -> [Byte] {
+        let typeBytes = MonkeyTypes.function.bytes
+        var output = typeBytes
+
+        let paramsBytes = Int32(self.parameterCount).bytes
+        output += paramsBytes
+
+        let localsBytes = Int32(self.localsCount).bytes
+        output += localsBytes
+
+        let instructionCountBytes = Int32(self.instructions.count).bytes
+        output += instructionCountBytes
+
+        output += self.instructions
+
+        return output
+    }
+}
+
+/// Allows an `CompiledFunction` value to be decompiled from Hermes bytecode
+extension CompiledFunction: Decompilable {
+    public init(fromBytes bytes: [Byte], readBytes: inout Int) throws {
+        let type = UInt8(bytes.readInt(bytes: 1, startIndex: 0) ?? -1)
+
+        if type != MonkeyTypes.function.rawValue {
+            throw UnknowValueType(type.hexa)
+        }
+
+        self.parameterCount = Int(bytes.readInt(bytes: 4, startIndex: 1) ?? 0)
+        self.localsCount = Int(bytes.readInt(bytes: 4, startIndex: 5) ?? 0)
+
+        let instructionsCount = Int(bytes.readInt(bytes: 4, startIndex: 9) ?? 0)
+
+        if instructionsCount == 0 {
+            self.instructions = []
+        } else {
+            self.instructions = Array(bytes[13..<(13 + instructionsCount)])
+        }
+
+        // type + parameterCount + localsCount + instructionsCountValue + actualInstructions
+        readBytes = 1 + 4 + 4 + 4 + instructionsCount
     }
 }
