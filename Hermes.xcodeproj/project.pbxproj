@@ -36,6 +36,7 @@
 /* Begin PBXBuildFile section */
 		F868050626190DC200725307 /* FloatLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F868050526190DC200725307 /* FloatLiteral.swift */; };
 		F86805182619125500725307 /* MFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86805172619125500725307 /* MFloat.swift */; };
+		F89224022632340400D80A19 /* CompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89224012632340400D80A19 /* CompilerTests.swift */; };
 		F8B3D9CB261E7E520039945F /* MonkeyCErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */; };
 		F8D3A5DF2620F9C600FE84FD /* Compilable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A5DE2620F9C600FE84FD /* Compilable.swift */; };
 		F8D3A5FD2621020300FE84FD /* CompilableValuesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A5FC2621020300FE84FD /* CompilableValuesTests.swift */; };
@@ -425,6 +426,7 @@
 /* Begin PBXFileReference section */
 		F868050526190DC200725307 /* FloatLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatLiteral.swift; sourceTree = "<group>"; };
 		F86805172619125500725307 /* MFloat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MFloat.swift; sourceTree = "<group>"; };
+		F89224012632340400D80A19 /* CompilerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilerTests.swift; sourceTree = "<group>"; };
 		F8B3D9CA261E7E520039945F /* MonkeyCErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkeyCErrorTests.swift; sourceTree = "<group>"; };
 		F8D3A5DE2620F9C600FE84FD /* Compilable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compilable.swift; sourceTree = "<group>"; };
 		F8D3A5FC2621020300FE84FD /* CompilableValuesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilableValuesTests.swift; sourceTree = "<group>"; };
@@ -1268,6 +1270,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_100 /* CompilerScopesTests.swift */,
+				F89224012632340400D80A19 /* CompilerTests.swift */,
 			);
 			path = compiler;
 			sourceTree = "<group>";
@@ -1603,6 +1606,7 @@
 				OBJ_318 /* XCTestManifests.swift in Sources */,
 				OBJ_319 /* BytecodeTests.swift in Sources */,
 				OBJ_320 /* SymbolTableTests.swift in Sources */,
+				F89224022632340400D80A19 /* CompilerTests.swift in Sources */,
 				OBJ_321 /* CompilerScopesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -66,7 +66,7 @@ extension MonkeyTypes {
         case .hash:
             value = try Hash(fromBytes: bytes, readBytes: &readBytes)
         case .function:
-            value = nil
+            value = try CompiledFunction(fromBytes: bytes, readBytes: &readBytes)
         }
 
         return (value, readBytes)
@@ -225,11 +225,7 @@ extension MArray: Compilable {
         output += sizeBytes
 
         for element in self.elements {
-            guard let compilable = element as? Compilable else {
-                throw ValueIsNotCompilable(element)
-            }
-
-            output += try compilable.compile()
+            output += try element.compile()
         }
 
         return output
@@ -283,12 +279,8 @@ extension Hash: Compilable {
                 throw ValueIsNotCompilable(pair.key)
             }
 
-            guard let value = pair.value as? Compilable else {
-                throw ValueIsNotCompilable(pair.value)
-            }
-
             output += try key.compile()
-            output += try value.compile()
+            output += try pair.value.compile()
         }
 
         return output
@@ -387,3 +379,19 @@ extension CompiledFunction: Decompilable {
         readBytes = 1 + 4 + 4 + 4 + instructionsCount
     }
 }
+
+// MARK: Unsupported
+// The following types are not required to work in the compiler
+// so for now we'll only add method stubs
+
+protocol NonCompiled: Compilable, Decompilable {}
+
+extension NonCompiled {
+    public func compile() throws -> [Byte] { [] }
+
+    public init(fromBytes bytes: [Byte], readBytes: inout Int) throws { throw "NotImplemented" }
+}
+
+extension Return: NonCompiled {}
+extension Function: NonCompiled {}
+extension BuiltinFunction: NonCompiled {}

@@ -8,11 +8,17 @@
 import XCTest
 @testable import Hermes
 
-private struct DummyType: VMBaseType {
+private struct DummyType: VMBaseType, Compilable, Decompilable {
+    func compile() throws -> [Byte] { [] }
+
+    init(fromBytes bytes: [Byte], readBytes: inout Int) throws { }
+
     var description: String {
         "dummy"
     }
 }
+
+
 private struct DummyCompiler: Compiler {
     var instructions: Instructions = []
 

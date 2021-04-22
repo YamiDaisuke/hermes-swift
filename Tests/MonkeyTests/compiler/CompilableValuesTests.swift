@@ -197,14 +197,10 @@ class CompilableValuesTests: XCTestCase {
             XCTAssertEqual(test.elements.count, Int(bytes.readInt(bytes: 4, startIndex: 1) ?? -1))
             var startIndex = 5
             for element in test.elements {
-                if let compilable = element as? Compilable {
-                    let elementBytes = try compilable.compile()
-                    let current = Array(bytes[startIndex..<(startIndex + elementBytes.count)])
-                    XCTAssertEqual(elementBytes, current)
-                    startIndex += elementBytes.count
-                } else {
-                    XCTFail("Element \(element) must be compilable")
-                }
+                let elementBytes = try element.compile()
+                let current = Array(bytes[startIndex..<(startIndex + elementBytes.count)])
+                XCTAssertEqual(elementBytes, current)
+                startIndex += elementBytes.count
             }
         }
     }
@@ -270,14 +266,10 @@ class CompilableValuesTests: XCTestCase {
                     XCTFail("Key: \(pair.key) is not compilable")
                 }
 
-                if let value = pair.value as? Compilable {
-                    let expected = try value.compile()
-                    let current = Array(bytes[start..<(start + expected.count)])
-                    XCTAssertEqual(current, expected)
-                    start += expected.count
-                } else {
-                    XCTFail("Key: \(pair.key) is not compilable")
-                }
+                let expected = try pair.value.compile()
+                let current = Array(bytes[start..<(start + expected.count)])
+                XCTAssertEqual(current, expected)
+                start += expected.count
             }
         }
     }

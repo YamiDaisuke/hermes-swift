@@ -8,7 +8,7 @@
 import Foundation
 
 /// Use this protocol to mark the implementing language base type
-public protocol VMBaseType: CustomStringConvertible { }
+public protocol VMBaseType: CustomStringConvertible, Compilable { }
 
 /// Language agnostic representation of functions so they can be
 /// executed by the VM
@@ -42,5 +42,12 @@ public struct Closure: VMBaseType {
 
     public var description: String {
         "Closure:\n\(self.function.instructions.description)"
+    }
+}
+
+extension Closure: Compilable {
+    public func compile() throws -> [Byte] {
+        // TODO: 
+        return []
     }
 }

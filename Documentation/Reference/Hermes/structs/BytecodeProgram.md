@@ -18,5 +18,11 @@ public var instructions: Instructions
 ### `constants`
 
 ```swift
-public var constants: [VMBaseType]
+public var constants: [VMBaseType] = []
+```
+
+### `compiledConstants`
+
+```swift
+public var compiledConstants: [Byte] = []
 ```

@@ -64,5 +64,6 @@ public enum Bytecode {
 /// Holds a compiled program represented in bytecode
 public struct BytecodeProgram {
     public var instructions: Instructions
-    public var constants: [VMBaseType]
+    public var constants: [VMBaseType] = []
+    public var compiledConstants: [Byte] = []
 }

@@ -113,7 +113,16 @@ public extension Compiler {
 
     /// Returns the `BytecodeProgram` with all the compiled instructions
     var bytecode: BytecodeProgram {
-        BytecodeProgram(instructions: self.currentInstructions, constants: self.constants)
+        let compiledConstants: [Byte] = self.constants.reduce([]) {
+            // TODO: Look for a more elagant solution
+            let tmp = try? $1.compile()
+            return $0 + (tmp ?? [])
+        }
+        return BytecodeProgram(
+            instructions: self.currentInstructions,
+            constants: self.constants,
+            compiledConstants: compiledConstants
+        )
     }
 
     /// Activates a new compilation scopes
