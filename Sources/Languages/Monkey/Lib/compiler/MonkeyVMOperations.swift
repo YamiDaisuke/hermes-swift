@@ -17,6 +17,32 @@ public struct MonkeyVMOperations: VMOperations {
 
     public init() { }
 
+    /// Takes constants encoded as byte code and converts them to the right value
+    /// - Parameter bytes: The encoded bytes
+    /// - Throws: A language specific error if a value can't be decompiled
+    /// - Returns: An array of values after decompilation
+    public func decompileConstants(fromBytes bytes: [Byte]) throws -> [VMBaseType] {
+        var elements: [Object] = []
+        var readingBytes = 0
+        while readingBytes < bytes.count {
+            guard let elementType =
+                MonkeyTypes(rawValue: UInt8(bytes.readInt(bytes: 1, startIndex: readingBytes) ?? -1)) else {
+                throw UnknowValueType(bytes[readingBytes..<(readingBytes + 1)].hexa)
+            }
+
+            let element = try elementType.decompile(fromBytes: Array(bytes[readingBytes...]))
+
+            guard let value = element.value else {
+                throw CantDecompileValue(bytes, expectedType: elementType.description)
+            }
+
+            elements.append(value)
+            readingBytes += element.readBytes
+        }
+
+        return elements
+    }
+
     /// Maps and applies binary operation to the right Monkey operation
     ///
     /// Supported variations are:

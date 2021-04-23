@@ -9,7 +9,7 @@ import XCTest
 @testable import Hermes
 @testable import MonkeyLang
 
-// swiftlint:disable type_body_length
+// swiftlint:disable type_body_length file_length
 class MonkeyCompilerTests: XCTestCase, CompilerTestsHelpers {
     func testFloats() throws {
         let tests: [CompilerTestCase] = [
@@ -392,5 +392,48 @@ class MonkeyCompilerTests: XCTestCase, CompilerTestsHelpers {
         ]
 
         try runCompilerTests(tests)
+    }
+
+    func testCompiledConstants() throws {
+        let instructions = Array([
+            Bytecode.make(.getGlobal, 0),
+            Bytecode.make(.getLocal, 0),
+            Bytecode.make(.add),
+            Bytecode.make(.returnVal)
+        ].joined())
+
+        let compiledFunction = CompiledFunction(instructions: instructions, localsCount: 1, parameterCount: 1)
+
+        let tests: [(String, [Object], [Byte])] = [
+            (
+                "1; 2;",
+                [Integer(1), Integer(2)],
+                Integer(1).compile() + Integer(2).compile()
+            ),
+            (
+                "1;",
+                [Integer(1)],
+                Integer(1).compile()
+            ),
+            (
+                """
+                let a = 1;
+                let b = fn(c) { a + c };
+                let d = b(10);
+                """,
+                [
+                    Integer(1),
+                    compiledFunction,
+                    Integer(10)
+                ],
+                Integer(1).compile() + compiledFunction.compile() + Integer(10).compile()
+            )
+        ]
+
+        for test in tests {
+            let program = try compile(test.0)
+            MKAssertConstants(test.1, program.constants)
+            XCTAssertEqual(program.compiledConstants, test.2)
+        }
     }
 }

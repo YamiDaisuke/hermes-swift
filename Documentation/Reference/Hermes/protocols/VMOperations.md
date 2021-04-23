@@ -16,6 +16,23 @@ var null: VMBaseType
 Gets the empty value representation for the implementing language
 
 ## Methods
+### `decompileConstants(fromBytes:)`
+
+```swift
+func decompileConstants(fromBytes bytes: [Byte]) throws -> [VMBaseType]
+```
+
+Takes constants encoded as byte code and converts them to the right value
+- Parameter bytes: The encoded bytes
+- Throws: A language specific error if a value can't be decompiled
+- Returns: An array of values after decompilation
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| bytes | The encoded bytes |
+
 ### `binaryOperation(lhs:rhs:operation:)`
 
 ```swift

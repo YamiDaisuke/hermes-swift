@@ -161,4 +161,25 @@ class VMTests: XCTestCase, VMTestsHelpers {
 
         try self.runVMTests(tests)
     }
+
+    func testConstantDecompile() throws {
+        let tests: [[VMBaseType]] = [
+            [],
+            [Integer(1)],
+            [Integer(1), Integer(2)],
+            [Integer(1), MString("2")],
+            [Integer(1), MArray(elements: [Integer(1), MString("2")])]
+        ]
+
+        for test in tests {
+            let bytes: [Byte] = test.reduce([]) {
+                let out = try? $1.compile()
+                return $0 + (out ?? [])
+            }
+
+            let monkeyVMOperations = MonkeyVMOperations()
+            let constants = try monkeyVMOperations.decompileConstants(fromBytes: bytes)
+            MKAssertConstants(constants, test)
+        }
+    }
 }

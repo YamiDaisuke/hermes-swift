@@ -11,6 +11,12 @@ public protocol VMOperations {
     /// Gets the empty value representation for the implementing language
     var null: VMBaseType { get }
 
+    /// Takes constants encoded as byte code and converts them to the right value
+    /// - Parameter bytes: The encoded bytes
+    /// - Throws: A language specific error if a value can't be decompiled
+    /// - Returns: An array of values after decompilation
+    func decompileConstants(fromBytes bytes: [Byte]) throws -> [VMBaseType]
+
     /// Maps and applies binary operation on the implementing language
     /// - Parameters:
     ///   - lhs: The left hand operand

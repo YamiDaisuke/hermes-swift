@@ -202,7 +202,6 @@ public struct MonkeyLexer: Lexer {
     }
 
     mutating func readNumber() -> String {
-        // TODO: Support floating points
         return self.read { $0.isNumber }
     }
 

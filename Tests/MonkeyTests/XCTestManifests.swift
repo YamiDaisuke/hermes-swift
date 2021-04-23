@@ -128,6 +128,7 @@ extension MonkeyCompilerTests {
     // to regenerate.
     static let __allTests__MonkeyCompilerTests = [
         ("testBooleanExpressions", testBooleanExpressions),
+        ("testCompiledConstants", testCompiledConstants),
         ("testConditionals", testConditionals),
         ("testFloats", testFloats),
         ("testGlobalLetStatements", testGlobalLetStatements),
@@ -263,6 +264,7 @@ extension VMTests {
     static let __allTests__VMTests = [
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
+        ("testConstantDecompile", testConstantDecompile),
         ("testFloatExpressions", testFloatExpressions),
         ("testGlobalLetStatements", testGlobalLetStatements),
         ("testGlobalVarStatements", testGlobalVarStatements),
