@@ -23,7 +23,6 @@ class ReadFileTests: XCTestCase {
         """
         let path = FileManager.default.temporaryDirectory
         self.filePath = path.appendingPathComponent("test.mky")
-        print()
         do {
             try str.write(to: self.filePath, atomically: true, encoding: String.Encoding.utf8)
         } catch {

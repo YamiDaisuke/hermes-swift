@@ -115,3 +115,18 @@ Checks if the last emited instructions matches a given code
 | Name | Description |
 | ---- | ----------- |
 | code | The code to look for |
+
+### `writeToFile(_:)`
+
+```swift
+func writeToFile(_ file: URL)
+```
+
+Writes the compiled program into a binary file
+- Parameter file: The `URL` of the file to write
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| file | The `URL` of the file to write |

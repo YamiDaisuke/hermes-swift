@@ -111,3 +111,18 @@ mutating func leaveScope() -> Instructions
 ```
 
 Closes the current compilation scope and returns the compiled instructions
+
+### `writeToFile(_:)`
+
+```swift
+func writeToFile(_ file: URL)
+```
+
+Writes the compiled program into a binary file
+- Parameter file: The `URL` of the file to write
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| file | The `URL` of the file to write |

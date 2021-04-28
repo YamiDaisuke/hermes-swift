@@ -53,6 +53,18 @@ extension FixedWidthInteger {
     }
 }
 
+extension String {
+    /// Utility to get UTF8 bytes from a string
+    public var bytes: [Byte] {
+        var output: [Byte] = []
+        for char in self.utf8 {
+            output += char.bytes
+        }
+
+        return output
+    }
+}
+
 // MARK: - Errors
 
 /// Throw this if the first bytes of a compiled value does not match

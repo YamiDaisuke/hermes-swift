@@ -41,6 +41,7 @@
 		F8D3A5DF2620F9C600FE84FD /* Compilable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A5DE2620F9C600FE84FD /* Compilable.swift */; };
 		F8D3A5FD2621020300FE84FD /* CompilableValuesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A5FC2621020300FE84FD /* CompilableValuesTests.swift */; };
 		F8D3A62A2621027200FE84FD /* TypeCompilation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D3A60C2621026C00FE84FD /* TypeCompilation.swift */; };
+		F8E565D72638CF1D002C9FAE /* Hermes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E565D62638CF1D002C9FAE /* Hermes.swift */; };
 		OBJ_255 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Error.swift */; };
 		OBJ_256 /* Bytecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Bytecode.swift */; };
 		OBJ_257 /* OpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* OpCode.swift */; };
@@ -431,6 +432,7 @@
 		F8D3A5DE2620F9C600FE84FD /* Compilable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compilable.swift; sourceTree = "<group>"; };
 		F8D3A5FC2621020300FE84FD /* CompilableValuesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilableValuesTests.swift; sourceTree = "<group>"; };
 		F8D3A60C2621026C00FE84FD /* TypeCompilation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeCompilation.swift; sourceTree = "<group>"; };
+		F8E565D62638CF1D002C9FAE /* Hermes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hermes.swift; sourceTree = "<group>"; };
 		"Hermes::Hermes::Product" /* Hermes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Hermes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesREPL::Product" /* HermesREPL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HermesREPL.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Hermes::HermesTests::Product" /* HermesTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = HermesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1229,6 +1231,7 @@
 				OBJ_23 /* parser */,
 				OBJ_28 /* utils */,
 				OBJ_30 /* vm */,
+				F8E565D62638CF1D002C9FAE /* Hermes.swift */,
 			);
 			name = Hermes;
 			path = Sources/Hermes;
@@ -1562,6 +1565,7 @@
 				OBJ_261 /* EvaluatorErrors.swift in Sources */,
 				OBJ_262 /* Lexer.swift in Sources */,
 				OBJ_263 /* StringExtensions.swift in Sources */,
+				F8E565D72638CF1D002C9FAE /* Hermes.swift in Sources */,
 				OBJ_264 /* Token.swift in Sources */,
 				OBJ_265 /* Node.swift in Sources */,
 				OBJ_266 /* ParseError.swift in Sources */,

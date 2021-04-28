@@ -98,6 +98,10 @@ public protocol Compiler {
 
     /// Closes the current compilation scope and returns the compiled instructions
     mutating func leaveScope() -> Instructions
+
+    /// Writes the compiled program into a binary file
+    /// - Parameter file: The `URL` of the file to write
+    func writeToFile(_ file: URL)
 }
 
 public extension Compiler {
@@ -189,6 +193,25 @@ public extension Compiler {
     /// - Returns: `true` if the last emitted code is equals to `code`
     func lastInstructionIs(_ code: OpCodes) -> Bool {
         return self.currentScope.lastInstruction?.code == code
+    }
+
+    /// Writes the compiled program into a binary file
+    /// - Parameter file: The `URL` of the file to write
+    func writeToFile(_ file: URL) {
+        do {
+            var allBytes = Hermes.fileSignature.bytes
+            allBytes += Hermes.byteCodeVersion.bytes
+            // Number of instructions
+            // We use explicit 32 bytes for OS compatibilty
+            allBytes += Int32(self.bytecode.instructions.count).bytes
+            allBytes += self.bytecode.instructions
+            allBytes += self.bytecode.compiledConstants
+            let data = Data(allBytes)
+
+            try data.write(to: file)
+        } catch {
+            // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+        }
     }
 }
 

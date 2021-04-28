@@ -6,6 +6,14 @@ extension String
 ```
 
 ## Properties
+### `bytes`
+
+```swift
+public var bytes: [Byte]
+```
+
+Utility to get UTF8 bytes from a string
+
 ### `isLetter`
 
 ```swift
