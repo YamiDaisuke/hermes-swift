@@ -182,4 +182,44 @@ class VMTests: XCTestCase, VMTestsHelpers {
             MKAssertConstants(constants, test)
         }
     }
+
+    func testExecuteBinary() throws {
+        let path = FileManager.default.temporaryDirectory
+        let tests = [
+            VMTestCase("true", Boolean.true),
+            VMTestCase("false", Boolean.false),
+            VMTestCase("1 < 2", Boolean.true),
+            VMTestCase("1 > 2", Boolean.false),
+            VMTestCase("var one = 1; var two = one + one; one + two", Integer(3)),
+            VMTestCase("(5 + 10 * 2 + 15 / 3) * 2 + -10", Integer(50)),
+            VMTestCase("len(\"\")", Integer(0)),
+            VMTestCase(
+                """
+                let newClosure = fn(a) {
+                    fn() { a; }
+                };
+                let closure = newClosure(99);
+                closure();
+                """,
+                Integer(99)
+            )
+        ]
+
+        for test in tests {
+            let program = try parse(test.input)
+            var compiler = MonkeyC()
+            try compiler.compile(program)
+            let filePath = path.appendingPathComponent("test\(Date.timeIntervalSinceReferenceDate).mkc")
+            compiler.writeToFile(filePath)
+
+            var vm = try VM(filePath, operations: MonkeyVMOperations())
+            try vm.run()
+
+            let element = vm.lastPoped as? Object
+            XCTAssert(
+                element?.isEquals(other: test.expected) ?? false,
+                "\(element?.description ?? "nil") is not equal to \(test.expected)"
+            )
+        }
+    }
 }

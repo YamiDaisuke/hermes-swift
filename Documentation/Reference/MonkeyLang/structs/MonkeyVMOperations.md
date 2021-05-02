@@ -7,6 +7,15 @@ public struct MonkeyVMOperations: VMOperations
 ```
 
 ## Properties
+### `languageSignature`
+
+```swift
+public var languageSignature: UInt32
+```
+
+A magic number used to check if a binary file was generated
+by a compiler compatible with this VMOperations.
+
 ### `null`
 
 ```swift

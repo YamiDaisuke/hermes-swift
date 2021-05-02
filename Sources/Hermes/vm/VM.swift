@@ -111,6 +111,47 @@ public struct VM<Operations: VMOperations> {
         )
     }
 
+    public init(_ filePath: URL, operations: Operations) throws {
+        let data = try Data(contentsOf: filePath)
+        let bytes = [Byte](data)
+
+        var pointer = 0
+        let fileSignature = bytes.readInt(bytes: .dword) ?? -1
+        pointer += Sizes.dword.rawValue
+        let languageSignature = bytes.readInt(bytes: .dword, startIndex: pointer) ?? -1
+        pointer += Sizes.dword.rawValue
+
+        guard fileSignature == Hermes.fileSignature else {
+            throw InvalidBinary(filePath)
+        }
+
+        guard languageSignature == operations.languageSignature else {
+            throw InvalidLanguage(filePath)
+        }
+
+        // SemVersion size 3 components of 16bits = 6 bytes
+        let hermesVersion = SemVersion(Array(bytes[pointer..<(pointer + 6)]))
+        pointer += 6
+        guard Hermes.byteCodeVersion.isCompatible(hermesVersion, component: .minor) else {
+            throw InvalidVersion(hermesVersion, expected: Hermes.byteCodeVersion)
+        }
+
+        guard let instructionCount = bytes.readInt(bytes: .dword, startIndex: pointer) else {
+            throw InvalidBinary(filePath)
+        }
+        pointer += Sizes.dword.rawValue
+
+        /// This can overflow we should have a cap
+        let instructions = Array(bytes[pointer..<(pointer + Int(instructionCount))])
+        pointer += Int(instructionCount)
+
+        let constants: [VMBaseType] = try operations.decompileConstants(fromBytes: Array(bytes[pointer...]))
+        self.init(
+            BytecodeProgram(instructions: instructions, constants: constants),
+            operations: operations
+        )
+    }
+
     /// Runs the VM against the assigned bytecode
     /// - Throws: `VMError` if anything fails while interpreting the bytecode
     public mutating func run() throws {

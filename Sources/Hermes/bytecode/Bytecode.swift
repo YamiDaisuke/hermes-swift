@@ -51,7 +51,7 @@ public enum Bytecode {
         operands.reserveCapacity(defintion.operandsWidth.count)
         var offset = 0
         for width in defintion.operandsWidth {
-            guard let int = instructions.readInt(bytes: width.rawValue, startIndex: offset) else {
+            guard let int = instructions.readInt(bytes: width, startIndex: offset) else {
                 continue
             }
             operands.append(int)

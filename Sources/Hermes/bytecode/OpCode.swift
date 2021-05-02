@@ -70,6 +70,14 @@ public extension Instructions {
 
     /// Converts a number of bytes to `Int32` representation, the taken bytes must be
     /// between 1 and 4, and reprent an int in big endian encoding
+    /// - Parameter bytes: The number of bytes, represented by the `Sizes` enum goes from 1 to 4 bytes
+    /// - Returns: The `Int32` value
+    func readInt(bytes: Sizes, startIndex: Int = 0) -> Int32? {
+        return readInt(bytes: bytes.rawValue, startIndex: startIndex)
+    }
+
+    /// Converts a number of bytes to `Int32` representation, the taken bytes must be
+    /// between 1 and 4, and reprent an int in big endian encoding
     /// - Parameter bytes: The number of bytes, Must be between 1 and 4
     /// - Returns: The `Int32` value
     func readInt(bytes: Int, startIndex: Int = 0) -> Int32? {
@@ -163,10 +171,14 @@ public enum OpCodes: OpCode {
 
 /// For a clear control on the operands byte sizes
 public enum Sizes: Int {
-    case byte = 1 // 8 bits
-    case word = 2 // 16 bits
-    case dword = 4 // 32 bits
-    case qword = 8 // 64 bits
+    /// 8 bits
+    case byte = 1
+    /// 16 bits
+    case word = 2
+    /// 32 bits
+    case dword = 4
+    /// 64 bits
+    case qword = 8
 }
 
 /// Metadata `struct` to tell the compiler how the VM instructions are composed

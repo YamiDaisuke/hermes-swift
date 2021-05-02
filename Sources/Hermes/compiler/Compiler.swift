@@ -68,6 +68,8 @@ public class CompilationScope {
 
 /// Base Compiler structure for Hermes VM
 public protocol Compiler {
+    /// A magic number to mark the compiler implementation
+    static var languageSignature: UInt32 { get }
     /// Keeps the compiled scopes
     var scopes: [CompilationScope] { get set }
     /// Marks the current scope being compiled
@@ -200,6 +202,7 @@ public extension Compiler {
     func writeToFile(_ file: URL) {
         do {
             var allBytes = Hermes.fileSignature.bytes
+            allBytes += Self.languageSignature.bytes
             allBytes += Hermes.byteCodeVersion.bytes
             // Number of instructions
             // We use explicit 32 bytes for OS compatibilty

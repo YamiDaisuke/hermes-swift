@@ -10,6 +10,11 @@ import Hermes
 
 // swiftlint:disable force_cast
 public struct MonkeyVMOperations: VMOperations {
+    /// A magic number used to check if a binary file was generated
+    /// by a compiler compatible with this VMOperations.
+    public var languageSignature: UInt32 {
+        return MonkeyC.languageSignature
+    }
     /// Gets the empty value representation for the implementing language
     public var null: VMBaseType {
         Null.null

@@ -8,6 +8,12 @@
 import Foundation
 
 public protocol VMOperations {
+    /// A magic number used to check if a binary file was generated
+    /// by a compiler compatible with this VMOperations. The number
+    /// must match the one in the Compiler implementation for the target
+    /// language
+    var languageSignature: UInt32 { get }
+
     /// Gets the empty value representation for the implementing language
     var null: VMBaseType { get }
 

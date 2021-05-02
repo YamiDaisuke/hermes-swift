@@ -10,6 +10,8 @@ import Hermes
 
 /// Monkey Lang compiler for the Hermes  VM
 public struct MonkeyC: Compiler {
+    public static var languageSignature: UInt32 = 1619651409
+
     public var scopes = [CompilationScope()]
     public var scopeIndex: Int = 0
 
@@ -117,13 +119,9 @@ public struct MonkeyC: Compiler {
     /// Replace the last instruction if it is a OpPop operation
     /// - Parameter code: The replacement operation
     func replaceLastPopWith(_ code: OpCodes) {
-        guard self.lastInstructionIs(.pop) else {
-            return
-        }
+        guard self.lastInstructionIs(.pop) else { return }
 
-        guard let last = self.currentScope.lastInstruction?.position else {
-            return
-        }
+        guard let last = self.currentScope.lastInstruction?.position else { return }
 
         self.currentScope.replaceInstructionAt(last, with: Bytecode.make(code))
         self.currentScope.lastInstruction?.code = code

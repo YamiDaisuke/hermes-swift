@@ -265,6 +265,7 @@ extension VMTests {
         ("testBooleanExpressions", testBooleanExpressions),
         ("testConditionals", testConditionals),
         ("testConstantDecompile", testConstantDecompile),
+        ("testExecuteBinary", testExecuteBinary),
         ("testFloatExpressions", testFloatExpressions),
         ("testGlobalLetStatements", testGlobalLetStatements),
         ("testGlobalVarStatements", testGlobalVarStatements),

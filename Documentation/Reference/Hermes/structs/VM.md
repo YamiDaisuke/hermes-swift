@@ -83,6 +83,12 @@ Init a new VM with a set of bytecode to run
 | bytcode | The compiled bytecode |
 | operations | An implementation of `VMOperations` in charge of applying the language specific operations for this VM |
 
+### `init(_:operations:)`
+
+```swift
+public init(_ filePath: URL, operations: Operations) throws
+```
+
 ### `run()`
 
 ```swift

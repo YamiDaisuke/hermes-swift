@@ -18,6 +18,23 @@ Returns a human readable representations of this set of instructions
 ### `readInt(bytes:startIndex:)`
 
 ```swift
+func readInt(bytes: Sizes, startIndex: Int = 0) -> Int32?
+```
+
+Converts a number of bytes to `Int32` representation, the taken bytes must be
+between 1 and 4, and reprent an int in big endian encoding
+- Parameter bytes: The number of bytes, represented by the `Sizes` enum goes from 1 to 4 bytes
+- Returns: The `Int32` value
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| bytes | The number of bytes, represented by the `Sizes` enum goes from 1 to 4 bytes |
+
+### `readInt(bytes:startIndex:)`
+
+```swift
 func readInt(bytes: Int, startIndex: Int = 0) -> Int32?
 ```
 

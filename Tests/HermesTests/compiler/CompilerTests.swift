@@ -21,6 +21,8 @@ private struct DummyType: VMBaseType, Compilable, Decompilable {
 
 
 private struct DummyCompiler: Compiler {
+    static var languageSignature: UInt32 = 100
+
     var scopes: [CompilationScope] = [CompilationScope()]
     var scopeIndex = 0
     var constants: [VMBaseType] = []
@@ -64,6 +66,7 @@ class CompilerTests: XCTestCase {
                 program: BytecodeProgram(instructions: Bytecode.make(.constant)),
                 expected: Data(
                     Hermes.fileSignature.bytes +
+                    DummyCompiler.languageSignature.bytes +
                     Hermes.byteCodeVersion.bytes +
                     // Number of instructions
                     // We use explicit 32 bytes for OS compatibilty
@@ -78,6 +81,7 @@ class CompilerTests: XCTestCase {
                 ),
                 expected: Data(
                     Hermes.fileSignature.bytes +
+                    DummyCompiler.languageSignature.bytes +
                     Hermes.byteCodeVersion.bytes +
                     // Number of instructions
                     // We use explicit 32 bytes for OS compatibilty

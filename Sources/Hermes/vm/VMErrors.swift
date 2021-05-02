@@ -95,3 +95,52 @@ public struct WrongArgumentCount: VMError {
         self.file = file
     }
 }
+
+/// Throw this error when the VM is trying to execute a binary file
+/// that was not compiled with a Hermes compiler
+public struct InvalidBinary: VMError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
+
+    public init(_ filePath: URL, line: Int? = nil, column: Int? = nil, file: String? = nil) {
+        self.message = "Invalid binary file: \(filePath.absoluteString)"
+        self.line = line
+        self.column = column
+        self.file = file
+    }
+}
+
+/// Throw this error when the VM is trying to execute a binary file
+/// that it is targeting a different language than the current VM instance
+public struct InvalidLanguage: VMError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
+
+    public init(_ filePath: URL, line: Int? = nil, column: Int? = nil, file: String? = nil) {
+        self.message = "Invalid original language for file: \(filePath.absoluteString)"
+        self.line = line
+        self.column = column
+        self.file = file
+    }
+}
+
+
+/// Throw this error when the VM is trying to execute a binary file
+/// that it is targeting an incompatible Hermes version
+public struct InvalidVersion: VMError {
+    public var message: String
+    public var line: Int?
+    public var column: Int?
+    public var file: String?
+
+    public init(_ current: SemVersion, expected: SemVersion, line: Int? = nil, column: Int? = nil, file: String? = nil) {
+        self.message = "Invalid Hermes version: \(current). Expecte: \(expected)"
+        self.line = line
+        self.column = column
+        self.file = file
+    }
+}

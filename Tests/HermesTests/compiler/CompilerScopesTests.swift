@@ -18,8 +18,9 @@ private struct DummyType: VMBaseType, Compilable, Decompilable {
     }
 }
 
-
 private struct DummyCompiler: Compiler {
+    static var languageSignature: UInt32 = 100
+
     var instructions: Instructions = []
 
     var scopes: [CompilationScope] = [CompilationScope()]

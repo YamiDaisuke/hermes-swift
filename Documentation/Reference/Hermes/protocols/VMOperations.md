@@ -7,6 +7,17 @@ public protocol VMOperations
 ```
 
 ## Properties
+### `languageSignature`
+
+```swift
+var languageSignature: UInt32
+```
+
+A magic number used to check if a binary file was generated
+by a compiler compatible with this VMOperations. The number
+must match the one in the Compiler implementation for the target
+language
+
 ### `null`
 
 ```swift
