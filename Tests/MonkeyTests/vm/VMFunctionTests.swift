@@ -386,7 +386,7 @@ class VMFunctionTests: XCTestCase, VMTestsHelpers {
                             countDown(x - 1);
                         }
                     };
-                    countDown(1);
+                    countDown(10);
                 };
                 wrapper();
                 """,

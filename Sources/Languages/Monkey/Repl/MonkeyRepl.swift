@@ -15,24 +15,29 @@ import TSCBasic
 enum ReplMode: String, ArgumentKind {
     init(argument: String) throws {
         switch argument {
-        case "interpreted":
-            self = .interpreted
-        case "compiled":
-            self = .compiled
+        case "interpreter":
+            self = .interpreter
+        case "compiler":
+            self = .compiler
         default:
             throw "Invalid mode"
         }
     }
 
     static var completion = ShellCompletion.values([
-        ("interpreted", "Code is interpreted on the fly"),
-        ("compiled", "Code is compiled and then run in the Hermes VM")
+        ("interpreter", "Code is interpreted on the fly"),
+        ("compiler", "Code is compiled and then run in the Hermes VM")
     ])
 
-    case interpreted
-    case compiled
+    case interpreter
+    case compiler
 }
 
+/// The REPL tool for Monkey
+/// ```
+/// $ monkey [file] -m <compiled|interpreted>
+/// ```
+///
 struct MonkeyRepl: Repl {
     // swiftlint:disable indentation_width
     static let monkeyFace: String = #"""
@@ -50,6 +55,7 @@ struct MonkeyRepl: Repl {
     """#
     // swiftlint:enable indentation_width
     let mode: ReplMode
+    let file: String?
 
     let welcomeMessage: String
     let prompt: String
@@ -59,10 +65,12 @@ struct MonkeyRepl: Repl {
     let environment = Environment<Object>()
 
     init(
-        mode: ReplMode = .interpreted,
+        file: String? = nil,
+        mode: ReplMode = .interpreter,
         welcomeMessage: String = "Welcome!!!\nFeel free to type in commands\n",
         prompt: String = ">>>"
     ) {
+        self.file = file
         self.mode = mode
         self.welcomeMessage = welcomeMessage
         self.prompt = prompt
@@ -94,11 +102,11 @@ struct MonkeyRepl: Repl {
             do {
                 if let program = try parser.parseProgram() {
                     switch self.mode {
-                    case .interpreted:
+                    case .interpreter:
                         let result = try MonkeyEvaluator.eval(program: program, environment: environment)
                         controller.write(result?.description ?? "", inColor: .green)
                         controller.endLine()
-                    case .compiled:
+                    case .compiler:
                         var compiler = MonkeyC(withSymbolTable: symbolTable)
                         try compiler.compile(program)
                         constants = compiler.bytecode.constants
