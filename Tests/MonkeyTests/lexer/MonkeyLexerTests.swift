@@ -291,6 +291,43 @@ class MonkeyLexerTests: XCTestCase {
         }
     }
 
+    func testValidIdentifiers() throws {
+        let input = """
+        onlyLetters;
+        CAPITALS;
+        _underscoreStart;
+        _underscores_everywhere;
+        number1;
+        number200;
+        number_200;
+        """
+
+        let tokens: [Token] = [
+            Token(type: .identifier, literal: "onlyLetters", line: 1, column: 0),
+            Token(type: .semicolon, literal: ";", line: 1, column: 11),
+            Token(type: .identifier, literal: "CAPITALS", line: 2, column: 0),
+            Token(type: .semicolon, literal: ";", line: 2, column: 8),
+            Token(type: .identifier, literal: "_underscoreStart", line: 3, column: 0),
+            Token(type: .semicolon, literal: ";", line: 3, column: 16),
+            Token(type: .identifier, literal: "_underscores_everywhere", line: 4, column: 0),
+            Token(type: .semicolon, literal: ";", line: 4, column: 23),
+            Token(type: .identifier, literal: "number1", line: 5, column: 0),
+            Token(type: .semicolon, literal: ";", line: 5, column: 7),
+            Token(type: .identifier, literal: "number200", line: 6, column: 0),
+            Token(type: .semicolon, literal: ";", line: 6, column: 9),
+            Token(type: .identifier, literal: "number_200", line: 7, column: 0),
+            Token(type: .semicolon, literal: ";", line: 7, column: 10)
+        ]
+
+        var lexer = MonkeyLexer(withString: input)
+        for token in tokens {
+            let next = lexer.nextToken()
+            XCTAssertEqual(next, token)
+            XCTAssertEqual(next.line, token.line)
+            XCTAssertEqual(next.column, token.column)
+        }
+    }
+
     func writeToFile(_ string: String, file: String) -> URL {
         let path = FileManager.default.temporaryDirectory
         let filePath = path.appendingPathComponent(file)

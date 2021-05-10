@@ -168,6 +168,7 @@ extension MonkeyLexerTests {
         ("testNextToken", testNextToken),
         ("testNextTokenFromFile", testNextTokenFromFile),
         ("testNextTokenWithLineNumber", testNextTokenWithLineNumber),
+        ("testValidIdentifiers", testValidIdentifiers),
     ]
 }
 

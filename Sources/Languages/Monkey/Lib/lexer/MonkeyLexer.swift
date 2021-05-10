@@ -115,7 +115,7 @@ public struct MonkeyLexer: Lexer {
         case "\"":
             token = self.tokenizeString(char)
         default:
-            if char.isIdentifierLetter {
+            if char.isValidIdentifierStart {
                 let literal = self.readIdentifier()
                 let type: Token.Kind = Token.Kind.keywords.contains(literal) ? literal : .identifier
                 return Token(type: type, literal: literal, file: file, line: startLine, column: startColumn)
@@ -198,7 +198,7 @@ public struct MonkeyLexer: Lexer {
     }
 
     mutating func readIdentifier() -> String {
-        return self.read { $0.isIdentifierLetter }
+        return self.read { $0.isIdentifierCharacter }
     }
 
     mutating func readNumber() -> String {

@@ -15,11 +15,31 @@ extension String {
     }
 }
 
+let latinDigits: Set<Character> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+// swiftlint:disable line_length
+let latinLetters: Set<Character> = [
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+]
+// swiftlint:enable line_length
+
 extension Character {
-    /// Returns `true` if this `Character` contains only characters consider
+    /// Returns `true` if this `Character` is  considered
+    /// a valid letter for identifiers first `Character`
+    public var isValidIdentifierStart: Bool {
+        return latinLetters.contains(self) || self == "_"
+    }
+
+    /// Returns `true` if this `Character` is  considered
     /// a valid letter for identifiers
-    public var isIdentifierLetter: Bool {
-        return self.isLetter || self == "_"
+    public var isIdentifierCharacter: Bool {
+        return latinLetters.contains(self) || latinDigits.contains(self) || self == "_"
+    }
+
+    /// Returns `true` if this `Character` is considered a digit
+    /// with support for only latin digits 0-9
+    public var isDigit: Bool {
+        return latinDigits.contains(self)
     }
 }
 
