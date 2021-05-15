@@ -52,6 +52,15 @@ func execute(_ filepath: Foundation.URL) throws {
     try vm.run()
 }
 
+/// Dumps a string representation of a Monkey language binary file, this file must have been compiled with
+/// a compatible version of Hermes bytecode
+/// - Parameter filepath: The file to execute
+/// - Throws: An error if the file contains invalid binary code or generates a runtime error
+func dump(_ filepath: Foundation.URL) throws {
+    let vm = try VM(filepath, operations: MonkeyVMOperations())
+    print(vm.dump())
+}
+
 /// Starts a Monkey language REPL in interpreter or compiler mode
 /// - Parameter mode: The mode to use for the REPL. Default: `interpreter`
 func repl(_ mode: ReplMode = .interpreter) {
@@ -84,6 +93,13 @@ do {
         completion: ShellCompletion.filename
     )
 
+    let dumpArg = parser.add(
+        option: "--dump",
+        shortName: "-d",
+        kind: Bool.self,
+        usage: "Pass this flag to dump a compiled file as bytecode instead on runing it"
+    )
+
     let argsv = Array(CommandLine.arguments.dropFirst())
     let parguments = try parser.parse(argsv)
 
@@ -98,7 +114,11 @@ do {
                 try interpret(filepath)
             }
         } else if filepath.pathExtension == "mkc" || filepath.pathExtension.isEmpty {
-            try execute(filepath)
+            if parguments.get(dumpArg) ?? false {
+                try dump(filepath)
+            } else {
+                try execute(filepath)
+            }
         } else {
             throw "Unknow file type: \(filepath.standardizedFileURL)"
         }

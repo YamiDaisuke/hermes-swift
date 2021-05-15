@@ -9,6 +9,15 @@ public struct CompiledFunction: Object, VMFunctionDefinition
 Same as `Function` but represented with compiled bytecode instructions
 
 ## Properties
+### `name`
+
+```swift
+public var name: String?
+```
+
+If the function is asigned to a name we keep it here
+for better bytecode analysis
+
 ### `instructions`
 
 ```swift
@@ -32,6 +41,8 @@ public var parameterCount: Int
 ```swift
 public var description: String
 ```
+
+A string representation of the bytecode
 
 ## Methods
 ### `init(instructions:localsCount:parameterCount:)`

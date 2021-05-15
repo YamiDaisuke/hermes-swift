@@ -9,6 +9,8 @@ import XCTest
 @testable import Hermes
 
 private struct DummyType: VMBaseType, Compilable, Decompilable {
+    static var type: String { "dummy" }
+
     func compile() throws -> [Byte] { [1] }
 
     init() { }

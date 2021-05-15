@@ -13,6 +13,18 @@ extension String {
     public var isLetter: Bool {
         self =~ "[a-zA-Z_]"
     }
+
+    /// Prints all lines in the string with a consistent level of indentation
+    /// - Parameters:
+    ///   - level: How many indentation levels to print. Default: 1
+    ///   - spacer: Which string to use as spacer. Default: "\t"
+    /// - Returns: The indented string
+    public func indented(level: Int = 1, spacer: String = "\t") -> String {
+        let tab = String(repeating: spacer, count: level)
+        return self.split(separator: "\n")
+            .map { "\(tab)\($0)" }
+            .joined(separator: "\n")
+    }
 }
 
 let latinDigits: Set<Character> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]

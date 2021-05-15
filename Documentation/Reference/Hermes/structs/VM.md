@@ -89,6 +89,15 @@ Init a new VM with a set of bytecode to run
 public init(_ filePath: URL, operations: Operations) throws
 ```
 
+### `dump()`
+
+```swift
+public func dump() -> String
+```
+
+Dumps the VM instructions and constants for debugging porpuses
+- Returns: The string representation of bytecode and constants
+
 ### `run()`
 
 ```swift

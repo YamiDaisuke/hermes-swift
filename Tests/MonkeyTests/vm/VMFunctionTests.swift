@@ -9,7 +9,7 @@ import XCTest
 @testable import Hermes
 @testable import MonkeyLang
 
-// swiftlint:disable type_body_length function_body_length
+// swiftlint:disable type_body_length function_body_length file_length
 class VMFunctionTests: XCTestCase, VMTestsHelpers {
     func testCallingFunctionsWithoutArguments() throws {
         let tests: [VMTestCase] = [
@@ -266,7 +266,56 @@ class VMFunctionTests: XCTestCase, VMTestsHelpers {
             VMTestCase("rest([1, 2, 3])", MArray(elements: [Integer(2), Integer(3)])),
             VMTestCase("rest([])", Null.null),
             VMTestCase("push([], 1)", MArray(elements: [Integer(1)])),
-            VMTestCase("push(1, 1)", Null.null, "Incorrect argment type expected: Array got: Integer")
+            VMTestCase("push(1, 1)", Null.null, "Incorrect argment type expected: Array got: Integer"),
+            VMTestCase(
+                """
+                let reduce = fn(arr, initial, f) {
+                    let iter = fn(arr, result) {
+                        if (len(arr) == 0) {
+                            result
+                        } else {
+                            iter(rest(arr), f(result, first(arr)));
+                        }
+                    };
+                    iter(arr, initial);
+                };
+
+                let sum = fn(arr) {
+                    reduce(arr, 0, fn(initial, el) { initial + el });
+                };
+
+                let array = [1, 2, 3, 4, 5];
+                sum(array)
+                """,
+                Integer(15)
+            ),
+            VMTestCase(
+                """
+                let localFirst = fn(myArr) {
+                    if (len(myArr) > 0) {
+                        return myArr[0];
+                    }
+                };
+                let reduce = fn(arr, initial, f) {
+                    let iter = fn(arr, result) {
+                        if (len(arr) == 0) {
+                            result
+                        } else {
+                            iter(rest(arr), f(result, localFirst(arr)));
+                        }
+                    };
+                    iter(arr, initial);
+                };
+
+                let sum = fn(arr) {
+                    reduce(arr, 0, fn(initial, el) { initial + el });
+                };
+
+                let array = [1, 2, 3, 4, 5];
+                sum(array);
+                """,
+                Integer(15)
+            )
         ]
 
         for test in tests {

@@ -152,6 +152,21 @@ public struct VM<Operations: VMOperations> {
         )
     }
 
+    /// Dumps the VM instructions and constants for debugging porpuses
+    /// - Returns: The string representation of bytecode and constants
+    public func dump() -> String {
+        var output = ""
+
+        output += "\nInstructions:\n"
+        output += self.currentInstructions.description.indented(spacer: "  ")
+        output += "\nConstants:\n"
+        output += self.constants
+            .map { "\(type(of: $0).type):\n\($0.description.indented(level: 2, spacer: "  "))" }
+            .joined(separator: "\n")
+            .indented(spacer: "  ")
+        return output
+    }
+
     /// Runs the VM against the assigned bytecode
     /// - Throws: `VMError` if anything fails while interpreting the bytecode
     public mutating func run() throws {
@@ -483,7 +498,7 @@ public struct VM<Operations: VMOperations> {
 
         let args = Array(self.stack[(self.stackPointer - Int(numArgs))..<self.stackPointer])
         if let output = try self.operations.executeBuiltinFunction(function, args: args) {
-            self.stackPointer -= Int(numArgs) - 1
+            self.stackPointer -= Int(numArgs) + 1
             self.currentInstructionPointer += 1
             try self.push(output)
             return

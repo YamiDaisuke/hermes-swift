@@ -24,6 +24,25 @@ Returns `true` if this `String` contains only characters consider
 a valid letter for identifiers
 
 ## Methods
+### `indented(level:spacer:)`
+
+```swift
+public func indented(level: Int = 1, spacer: String = "\t") -> String
+```
+
+Prints all lines in the string with a consistent level of indentation
+- Parameters:
+  - level: How many indentation levels to print. Default: 1
+  - spacer: Which string to use as spacer. Default: "\t"
+- Returns: The indented string
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| level | How many indentation levels to print. Default: 1 |
+| spacer | Which string to use as spacer. Default: “\t” |
+
 ### `=~(_:_:)`
 
 ```swift

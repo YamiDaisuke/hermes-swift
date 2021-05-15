@@ -8,7 +8,10 @@
 import Foundation
 
 /// Use this protocol to mark the implementing language base type
-public protocol VMBaseType: CustomStringConvertible, Compilable { }
+public protocol VMBaseType: CustomStringConvertible, Compilable {
+    /// The actual type name. Mostly for better debugging
+    static var type: String { get }
+}
 
 /// Language agnostic representation of functions so they can be
 /// executed by the VM
@@ -30,6 +33,7 @@ struct VMFunction: VMFunctionDefinition {
 
 /// Al functions on this VM are executed and wrapped as closures
 public struct Closure: VMBaseType {
+    public static var type: String { "Closure" }
     /// The function to execute
     var function: VMFunctionDefinition
     /// The variables and constants captured by the closure
@@ -41,7 +45,7 @@ public struct Closure: VMBaseType {
     }
 
     public var description: String {
-        "Closure:\n\(self.function.instructions.description)"
+        "Closure:\n\(self.function)"
     }
 }
 

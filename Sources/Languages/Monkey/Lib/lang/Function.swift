@@ -32,6 +32,9 @@ public struct Function: Object {
 /// Same as `Function` but represented with compiled bytecode instructions
 public struct CompiledFunction: Object, VMFunctionDefinition {
     public static var type: ObjectType { "compiledFunction" }
+    /// If the function is asigned to a name we keep it here
+    /// for better bytecode analysis 
+    public var name: String?
 
     public var instructions: Instructions
     public var localsCount: Int
@@ -43,8 +46,15 @@ public struct CompiledFunction: Object, VMFunctionDefinition {
         self.parameterCount = parameterCount
     }
 
+    /// A string representation of the bytecode
     public var description: String {
-        "CompiledFunction:\n\(instructions.description)"
+        """
+        Name: \(name ?? "anonymous")
+        Instructions:
+        \(instructions.description.indented())
+        Locals Count: \(localsCount)
+        Parameter Count: \(parameterCount)
+        """
     }
 
     public func isEquals(other: Object) -> Bool {

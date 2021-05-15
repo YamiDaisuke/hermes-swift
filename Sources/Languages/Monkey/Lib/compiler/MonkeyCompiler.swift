@@ -253,11 +253,12 @@ public struct MonkeyC: Compiler {
             self.loadSymbol(symbol)
         }
 
-        let compiledFunction = CompiledFunction(
+        var compiledFunction = CompiledFunction(
             instructions: instructions,
             localsCount: localsCount,
             parameterCount: expression.params.count
         )
+        compiledFunction.name = expression.name
         self.emit(.closure, self.addConstant(compiledFunction), Int32(freeSymbols.count))
     }
 
