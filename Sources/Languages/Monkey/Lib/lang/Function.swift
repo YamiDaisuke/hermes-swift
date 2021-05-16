@@ -33,7 +33,7 @@ public struct Function: Object {
 public struct CompiledFunction: Object, VMFunctionDefinition {
     public static var type: ObjectType { "compiledFunction" }
     /// If the function is asigned to a name we keep it here
-    /// for better bytecode analysis 
+    /// for better bytecode analysis
     public var name: String?
 
     public var instructions: Instructions

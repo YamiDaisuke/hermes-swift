@@ -19,6 +19,8 @@ class ParseLiteralsTests: XCTestCase {
         /* multiline with code
         let a = 100;
         */
+        // code(\"hello\")
+        /* code(\"hello\") */
         let b = 20;
         """
 
@@ -26,7 +28,7 @@ class ParseLiteralsTests: XCTestCase {
         var parser = MonkeyParser(lexer: lexer)
 
         let program = try parser.parseProgram()
-        XCTAssertEqual(program?.statements.count, 7)
+        XCTAssertEqual(program?.statements.count, 9)
 
         var expressionStmt = program?.statements[0] as? ExpressionStatement
         XCTAssertNotNil(expressionStmt)
@@ -52,7 +54,15 @@ class ParseLiteralsTests: XCTestCase {
         XCTAssertNotNil(commentStmt)
         XCTAssertEqual(commentStmt?.text, "/* multiline with code\nlet a = 100;\n*/")
 
-        let letStmt = program?.statements[6] as? DeclareStatement
+        commentStmt = program?.statements[6] as? CommentStatement
+        XCTAssertNotNil(commentStmt)
+        XCTAssertEqual(commentStmt?.text, "// code(\"hello\")")
+
+        commentStmt = program?.statements[7] as? CommentStatement
+        XCTAssertNotNil(commentStmt)
+        XCTAssertEqual(commentStmt?.text, "/* code(\"hello\") */")
+
+        let letStmt = program?.statements[8] as? DeclareStatement
         XCTAssertNotNil(letStmt)
         XCTAssertEqual(letStmt?.name.value, "b")
         MKAssertIntegerLiteral(expression: letStmt?.value, expected: 20)

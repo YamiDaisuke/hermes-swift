@@ -47,6 +47,8 @@ class MonkeyLexerTests: XCTestCase {
         */
         3.0;
         4.555;
+        // code(\"hello\")
+        /* code(\"hello\") */
         """
         // swiftlint:enable indentation_width
         let tokens: [Token] = [
@@ -161,6 +163,8 @@ class MonkeyLexerTests: XCTestCase {
             Token(type: .semicolon, literal: ";"),
             Token(type: .float, literal: "4.555"),
             Token(type: .semicolon, literal: ";"),
+            Token(type: .comment, literal: "// code(\"hello\")"),
+            Token(type: .comment, literal: "/* code(\"hello\") */"),
             Token(type: .eof, literal: "")
         ]
 

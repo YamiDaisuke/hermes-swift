@@ -223,7 +223,7 @@ public struct MonkeyLexer: Lexer {
             }
 
             self.readChar()
-        } while self.readingChars?.current != nil && self.readingChars?.current != "\""
+        } while self.readingChars?.current != nil
 
         return output
     }
@@ -257,7 +257,7 @@ public struct MonkeyLexer: Lexer {
                 output += "\n"
             }
             self.readChar()
-        } while self.readingChars?.current != nil && self.readingChars?.current != "\""
+        } while self.readingChars?.current != nil
 
         return output + "*/"
     }
