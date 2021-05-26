@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.1] - 2020-03-26
+## [1.0.1] - 2021-03-26
 ### Added
 - Monkey objects now support equality comparison
 - Monkey support single line (//) and multiline (/* */) comments
@@ -15,6 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed REPL copy and paste actions
 
-## [1.0.0] - 2020-01-30
+## [1.0.0] - 2021-01-30
 ### Added
 First release of the Monkey interpreter written in swift!! 🍺🐒
