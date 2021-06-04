@@ -46,18 +46,48 @@ Documentation can be found [here](Documentation/Reference/README.md)
 Download the latest release binaries or compile using `swift build -c release` and include the `monkey` binary in your path. Then execute:
 
 ```bash
-## To start the interactive REPL console
+## To start the interactive REPL console. By default will use
+## interpreter mode
 $ monkey
 
+## To start the interactive REPL console using compiled
+## mode
+$ monkey -m compiler
+
 ### To evaluate a file containing Monkey code
-$ monkey filename.mky
+$ monkey filename.mk -m interpreter
+
+### To compile a file containing Monkey code
+$ monkey filename.mk -m compiler
+
+### This option will also compile a file by default
+$ monkey filename.mk
+
+### To run a Monkey binary file containing
+$ monkey filename.mkc
+
+### To dump a Monkey binary file bytecode
+$ monkey filename.mkc -d
 ```
 
+## Using the REPL
+
 ![](./images/repl.gif)
+
+While using the REPL:
+
+- Type `.exit` or `ctrl+c` to close the session
+- Type `ctrl+c` to clean the screen
 
 ## Language Extra Features
 
 Besides the language features include in the books, I have added the following by my own:
+
+### Support for floating point values
+
+Floats are now supported with the same operation as integers.
+When an expression uses both float and integer value the resulting
+value will be a float.
 
 ### String scape sequences
 
@@ -106,23 +136,7 @@ Answer to the Ultimate Question of Life, the Universe, and Everything
 */
 puts(a);
 ```
-
-## TODO
-
-Outside the scope of the book my current stretch goals (so far) and aditional taks are:
-
-- [X] Create each component as a swift package not tied to the Monkey language, the idea is that you can
-implement a series of `protocols` and `classes` and provide your very own language that should work
-with this library
-- [X] Modify Lexer to include line and column information for each token
-- [X] Modify Lexer to read from files and parse tokens line by line
-- [X] Implement CI steps
-- [X] Create an standalone build and test script to work without XCode
-- [X] CI steps to build release artifacts
-- [X] Support Linux
-
-After this point TODO will be kept using github projects.
-
+---
 ## Disclaimer
 
 Initially, I named the project "Rosetta" thinking about the archeological artifact associated
