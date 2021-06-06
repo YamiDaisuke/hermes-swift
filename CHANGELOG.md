@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2021-06-06
+### Added
+- A compiler and VM implementation for Monkey lang
+- Support for floating point values
+- REPL support for compiled mode
+
 ## [1.0.1] - 2021-03-26
 ### Added
 - Monkey objects now support equality comparison
