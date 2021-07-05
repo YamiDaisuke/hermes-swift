@@ -121,7 +121,7 @@ public struct VM<Operations: VMOperations> {
         let languageSignature = bytes.readInt(bytes: .dword, startIndex: pointer) ?? -1
         pointer += Sizes.dword.rawValue
 
-        guard fileSignature == Hermes.fileSignature else {
+        guard fileSignature == HermesMetadata.fileSignature else {
             throw InvalidBinary(filePath)
         }
 
@@ -132,8 +132,8 @@ public struct VM<Operations: VMOperations> {
         // SemVersion size 3 components of 16bits = 6 bytes
         let hermesVersion = SemVersion(Array(bytes[pointer..<(pointer + 6)]))
         pointer += 6
-        guard Hermes.byteCodeVersion.isCompatible(hermesVersion, component: .minor) else {
-            throw InvalidVersion(hermesVersion, expected: Hermes.byteCodeVersion)
+        guard HermesMetadata.byteCodeVersion.isCompatible(hermesVersion, component: .minor) else {
+            throw InvalidVersion(hermesVersion, expected: HermesMetadata.byteCodeVersion)
         }
 
         guard let instructionCount = bytes.readInt(bytes: .dword, startIndex: pointer) else {

@@ -201,9 +201,9 @@ public extension Compiler {
     /// - Parameter file: The `URL` of the file to write
     func writeToFile(_ file: URL) {
         do {
-            var allBytes = Hermes.fileSignature.bytes
+            var allBytes = HermesMetadata.fileSignature.bytes
             allBytes += Self.languageSignature.bytes
-            allBytes += Hermes.byteCodeVersion.bytes
+            allBytes += HermesMetadata.byteCodeVersion.bytes
             // Number of instructions
             // We use explicit 32 bytes for OS compatibilty
             allBytes += Int32(self.bytecode.instructions.count).bytes

@@ -67,9 +67,9 @@ class CompilerTests: XCTestCase {
             (
                 program: BytecodeProgram(instructions: Bytecode.make(.constant)),
                 expected: Data(
-                    Hermes.fileSignature.bytes +
+                    HermesMetadata.fileSignature.bytes +
                     DummyCompiler.languageSignature.bytes +
-                    Hermes.byteCodeVersion.bytes +
+                        HermesMetadata.byteCodeVersion.bytes +
                     // Number of instructions
                     // We use explicit 32 bytes for OS compatibilty
                     Int32(1).bytes +
@@ -82,9 +82,9 @@ class CompilerTests: XCTestCase {
                     constants: Array(repeating: DummyType(), count: 10)
                 ),
                 expected: Data(
-                    Hermes.fileSignature.bytes +
+                    HermesMetadata.fileSignature.bytes +
                     DummyCompiler.languageSignature.bytes +
-                    Hermes.byteCodeVersion.bytes +
+                    HermesMetadata.byteCodeVersion.bytes +
                     // Number of instructions
                     // We use explicit 32 bytes for OS compatibilty
                     Int32(1).bytes +

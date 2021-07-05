@@ -65,9 +65,9 @@ public struct SemVersion: CustomStringConvertible {
 }
 
 /// Holds basic informacion about this package
-public struct Hermes { }
+public struct HermesMetadata { }
 
-extension Hermes {
+extension HermesMetadata {
     /// The current version of the byte code supported by this library
     public static var byteCodeVersion: SemVersion {
         /// TODO: Generate this dynamically during compilation
