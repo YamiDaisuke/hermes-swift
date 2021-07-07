@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2021-07-07
+### Changed
+- The name of "Hermes" class to "HermesMetadata" to avoid name conflicts with the package name
+
 ## [2.0.0] - 2021-06-06
 ### Added
 - A compiler and VM implementation for Monkey lang

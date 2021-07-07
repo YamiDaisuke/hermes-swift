@@ -71,7 +71,7 @@ extension HermesMetadata {
     /// The current version of the byte code supported by this library
     public static var byteCodeVersion: SemVersion {
         /// TODO: Generate this dynamically during compilation
-        SemVersion(major: 2, minor: 0, patch: 0)
+        SemVersion(major: 2, minor: 0, patch: 1)
     }
 
     /// A magic number to mark a binary file valid for the Hermes VM
